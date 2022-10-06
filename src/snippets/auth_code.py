@@ -1,9 +1,9 @@
-import http.client
 import urllib
 import requests
 from dotenv import load_dotenv
 import os
-import json
+
+from bs4 import BeautifulSoup
 
 load_dotenv()
 
@@ -16,6 +16,8 @@ if __name__ == "__main__":
     url = os.getenv("OAUTH_URL") + "/oauth/authorize?" + urllib.parse.urlencode(params)
     response = requests.get(url, headers = { "content-type": "application/json" })
     if response.status_code == 200:
-        print(response.text)
 
-    code = "Uhkx8IQRe7CbR3XkqyJ5mchP+G7kuei3lzTqCaum/DW4YDNCW82qGNHlGWYENfiSGNNtIYPHhp6AHyfAi5QQyg=="
+        soup = BeautifulSoup(response.text, 'html.parser')
+        for tag in soup.find_all("meta"):
+            if tag.get("name", None) == "csrf-token":
+                auth_code = tag.get("content", None)
