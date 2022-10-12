@@ -7,12 +7,12 @@ if os.getenv("CLIENT_ID") is None:
     load_dotenv()
 
 CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET= os.getenv("CLIENT_SECRET")
-REDIRECT_URI= os.getenv("REDIRECT_URI")
-OAUTH_URL= os.getenv("OAUTH_URL")
-BASE_URL= os.getenv("BASE_URL")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+REDIRECT_URI = os.getenv("REDIRECT_URI")
+OAUTH_URL = os.getenv("OAUTH_URL")
+BASE_URL = os.getenv("BASE_URL")
 
-def get_companies(token, page=1, per_page=100):
+def get(token, page=1, per_page=100):
     """
     
     """

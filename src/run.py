@@ -4,7 +4,7 @@
 # Date Created: 10/04/2022
 # Author: Hagen Fritz
 # Description: Basic utility of the ProCore API with Python
-# Last Edited: 10/06/2022
+# Last Edited: 10/12/2022
 # ---
 
 import argparse
@@ -12,7 +12,7 @@ import pathlib
 from datetime import datetime
 
 from utils import logger, webpage
-from procore import auth, companies, projects
+from pycore import auth, companies, projects
 
 PATH_TO_TOP = f"{pathlib.Path(__file__).resolve().parent.parent}"
 
@@ -23,9 +23,10 @@ def main():
     log = logger.setup("log", level="debug", stream=True)
     log.info(f"Started at {datetime.now()}")
     auth_code = auth.get_auth_code()
-    print(auth_code)
     access, created = auth.get_token(auth_code)
-    _ = companies.get_companies(access)
+
+
+    _ = companies.get(access)
     _ = projects.get_projects(access)
 
 if __name__ == "__main__":
