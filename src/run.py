@@ -11,8 +11,8 @@ import argparse
 import pathlib
 from datetime import datetime
 
-from utils import logger
-from procore import auth
+from utils import logger, webpage
+from procore import auth, companies, projects
 
 PATH_TO_TOP = f"{pathlib.Path(__file__).resolve().parent.parent}"
 
@@ -24,7 +24,9 @@ def main():
     log.info(f"Started at {datetime.now()}")
     auth_code = auth.get_auth_code()
     print(auth_code)
-    access, refresh, created = auth.get_token(auth_code)
+    access, created = auth.get_token(auth_code)
+    _ = companies.get_companies(access)
+    _ = projects.get_projects(access)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
