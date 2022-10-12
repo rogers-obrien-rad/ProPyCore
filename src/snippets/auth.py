@@ -37,16 +37,19 @@ def get_auth_code():
 
 def get_token(code):
     '''
-    DESCRIPTION:
-        Gets the access token by utilizating the authorization code that was
-        previously obtained from the authorization_url call.
-    INPUTS:
-        code = authorization code
-    OUTPUTS:
-        response_json["access_token"]  = user's current access token
-        response_json["refresh_token"] = user's current refresh token
-        response_json['created_at']    = the date and time the user's access
-        token was generated
+    Gets access token from authorization code previously obtained from the get_auth_code call.
+    
+    Parameters
+    ----------
+    code : str
+        temporary authorization code
+
+    Returns
+    -------
+    <token> : str
+        2-hour access token
+    <created> : str
+        time that the access token was created
     '''
     client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
     post_data = {"grant_type": "client_credentials",
@@ -55,6 +58,5 @@ def get_token(code):
                 }
     response = requests.post(BASE_URL+"/oauth/token", auth=client_auth, data=post_data)
     response_json = response.json()
-    print(response_json)
 
     return response_json["access_token"], response_json['created_at']
