@@ -20,7 +20,7 @@ def get_auth_code():
     """
     params = {
         "client_id": CLIENT_ID,
-        "response_type": "code",
+        "response_type": "token",
         "redirect_uri":  REDIRECT_URI
     }
     url = OAUTH_URL + "/oauth/authorize?" + urllib.parse.urlencode(params)
@@ -49,7 +49,7 @@ def get_token(code):
         token was generated
     '''
     client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
-    post_data = {"grant_type": "authorization_code",
+    post_data = {"grant_type": "client_credentials",
                 "code": code,
                 "redirect_uri": REDIRECT_URI
                 }
@@ -57,4 +57,4 @@ def get_token(code):
     response_json = response.json()
     print(response_json)
 
-    return response_json["access_token"], response_json["refresh_token"], response_json['created_at']
+    return response_json["access_token"], response_json['created_at']
