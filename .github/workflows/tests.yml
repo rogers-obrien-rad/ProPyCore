@@ -32,5 +32,10 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
       - name: Test with pytest
-        run: |
-          pytest
+        env:
+          CLIENT_ID: ${{ secrets.TEST_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.TEST_CLIENT_SECRET }}
+          REDIRECT_URI: ${{ secrets.TEST_REDIRECT_URI }}
+          OAUTH_URL: ${{ secrets.TEST_OAUTH_URL }}
+          BASE_URL: ${{ secrets.TEST_BASE_URL }}
+        run: python -m pytest
