@@ -1,0 +1,31 @@
+name: Procore Connection
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.*'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          pip install -r requirements.txt
+
+      - name: Test with pytest
+        env:
+          CLIENT_ID: ${{ secrets.TEST_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.TEST_CLIENT_SECRET }}
+          REDIRECT_URI: ${{ secrets.TEST_REDIRECT_URI }}
+          OAUTH_URL: ${{ secrets.TEST_OAUTH_URL }}
+          BASE_URL: ${{ secrets.TEST_BASE_URL }}
+        run: python tests/integration/test_procore_functionality.py
