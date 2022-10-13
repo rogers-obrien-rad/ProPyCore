@@ -1,4 +1,4 @@
-from src.snippets import auth
+from snippets import auth
 
 class TestAuth:
 
