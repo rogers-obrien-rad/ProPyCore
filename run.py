@@ -15,7 +15,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 from propycore import procore
-from propycore.access import base
 from propycore.utils import logger
 
 # Load environment variables to populate Procore class
