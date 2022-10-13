@@ -1,6 +1,6 @@
 import os
 
-from src.propycore import procore
+from propycore import procore
 
 class TestFunctionality:
 
@@ -26,3 +26,6 @@ class TestFunctionality:
         temp_company = company_list[0]
         temp_projects = self.connection.__projects__.get(company_id=temp_company)
         assert temp_projects is list
+
+if __name__ == "__main__":
+    print("yay!")
