@@ -28,4 +28,4 @@ class TestFunctionality:
         assert temp_projects is list
 
 if __name__ == "__main__":
-    print("yay!")
+    test_connection = TestFunctionality()
