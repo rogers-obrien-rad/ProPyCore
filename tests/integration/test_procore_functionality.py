@@ -13,9 +13,9 @@ class TestFunctionality:
         self.connection = procore.Procore(
             client_id=os.getenv("TEST_CLIENT_ID"),
             client_secret=os.getenv("TEST_CLIENT_SECRET"),
-            redirect_uri=os.getenv("TEST_REDIRECT_URI"),
-            oauth_url=os.getenv("TEST_OAUTH_URL"),
-            base_url=os.getenv("TEST_BASE_URL")
+            redirect_uri="urn:ietf:wg:oauth:2.0:oob",
+            oauth_url="https://sandbox.procore.com",
+            base_url="https://sandbox.procore.com"
         )
 
     def test_connection(self):
