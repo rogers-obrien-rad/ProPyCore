@@ -33,9 +33,9 @@ jobs:
 
       - name: Test with pytest
         env:
-          CLIENT_ID: ${{ secrets.TEST_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.TEST_CLIENT_SECRET }}
-          REDIRECT_URI: ${{ secrets.TEST_REDIRECT_URI }}
-          OAUTH_URL: ${{ secrets.TEST_OAUTH_URL }}
-          BASE_URL: ${{ secrets.TEST_BASE_URL }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REDIRECT_URI: "urn:ietf:wg:oauth:2.0:oob"
+          OAUTH_URL: "https://sandbox.procore.com"
+          BASE_URL: "https://sandbox.procore.com"
         run: python -m pytest

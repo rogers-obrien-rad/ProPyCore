@@ -4,18 +4,23 @@ import pathlib
 PATH_TO_TOP = f"{pathlib.Path(__file__).resolve().parent.parent.parent}"
 sys.path.insert(0, PATH_TO_TOP)
 
+from dotenv import load_dotenv
+
 from propycore import procore
 
 class TestFunctionality:
 
     def __init__(self) -> None:
 
+        if os.getenv("CLIENT_ID") is None:
+            load_dotenv()
+
         self.connection = procore.Procore(
-            client_id=os.getenv("TEST_CLIENT_ID"),
-            client_secret=os.getenv("TEST_CLIENT_SECRET"),
-            redirect_uri="urn:ietf:wg:oauth:2.0:oob",
-            oauth_url="https://sandbox.procore.com",
-            base_url="https://sandbox.procore.com"
+            client_id=os.getenv("CLIENT_ID"),
+            client_secret=os.getenv("CLIENT_SECRET"),
+            redirect_uri=os.getenv("REDIRECT_URI"),
+            oauth_url=os.getenv("OAUTH_URL"),
+            base_url=os.getenv("BASE_URL")
         )
 
     def test_connection(self):

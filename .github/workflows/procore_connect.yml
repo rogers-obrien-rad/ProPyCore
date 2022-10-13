@@ -23,6 +23,9 @@ jobs:
 
       - name: Test with pytest
         env:
-          CLIENT_ID: ${{ secrets.TEST_CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.TEST_CLIENT_SECRET }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REDIRECT_URI: "urn:ietf:wg:oauth:2.0:oob"
+          OAUTH_URL: "https://sandbox.procore.com"
+          BASE_URL: "https://sandbox.procore.com"
         run: python tests/integration/test_procore_functionality.py
