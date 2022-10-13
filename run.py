@@ -4,7 +4,7 @@
 # Date Created: 10/04/2022
 # Author: Hagen Fritz
 # Description: Basic utility of the ProCore API with Python
-# Last Edited: 10/12/2022
+# Last Edited: 10/13/2022
 # ---
 
 import argparse
@@ -15,7 +15,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 from propycore import procore
-from propycore.access import base
 from propycore.utils import logger
 
 # Load environment variables to populate Procore class
@@ -44,6 +43,7 @@ def main():
         oauth_url=OAUTH_URL,
         base_url=BASE_URL
     )
+    
     company_list = connection.__companies__.get()
     company_test = company_list[0]["id"]
     project_test = connection.__projects__.get(company_id=company_test)

@@ -60,3 +60,7 @@ def get_token(code):
     response_json = response.json()
 
     return response_json["access_token"], response_json['created_at']
+
+if __name__ == "__main__":
+    access_token, created_at = get_token("123")
+    print(access_token)
