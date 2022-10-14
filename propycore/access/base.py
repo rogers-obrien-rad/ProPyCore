@@ -22,7 +22,7 @@ class Base:
         self.__access_token = access_token
         self.__server_url = server_url
 
-    def get_request(self, api_url, params=None):
+    def get_request(self, api_url, additional_headers=None, params=None):
         """
         Create a HTTP Get request
 
@@ -30,6 +30,8 @@ class Base:
         ----------
         api_url : str
             endpoint for the specific API call
+        additional_headers : dict, default None
+            additional headers beyond Authorization
         params : dict, default None
             GET parameters to parse
 
@@ -43,9 +45,12 @@ class Base:
         else:
             url = self.__server_url + api_url + "?" + urllib.parse.urlencode(params)
 
-        response = requests.get(url, headers={
-            "Authorization": f"Bearer {self.__access_token}"
-        })
+        headers = {"Authorization": f"Bearer {self.__access_token}"}
+        if additional_headers is not None:
+            for key, value in additional_headers.items():
+                headers[key] = value
+
+        response = requests.get(url, headers=headers)
         
         if response.status_code == 200:
             return response.json()
