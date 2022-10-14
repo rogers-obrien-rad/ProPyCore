@@ -13,7 +13,21 @@ class Documents(Base):
 
     def show(self, company_id, project_id, doc_id):
         """
-        
+        Show information regarding the given folder or file
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        doc_id : int
+            unique identifier for the folder or file
+
+        Returns
+        -------
+        doc_info : dict
+
         """
         
         params = {
@@ -21,7 +35,7 @@ class Documents(Base):
         }
 
         headers = {
-            "Procore-Company-Id": company_id
+            "Procore-Company-Id": f"{company_id}"
         }
 
         doc_info = self.get_request(
@@ -62,14 +76,26 @@ class Folders(Documents):
 
     def get(self, company_id, project_id):
         """
-        
+        Gets the list of root folders and files
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+
+        Returns
+        -------
+        docs : dict
+            json-like information on root folders and files
         """
         params = {
             "project_id": project_id
         }
 
         headers = {
-            "Procore-Company-Id": f"{company_id}"
+            "Procore-Company-Id": f"{company_id}" # needs to be a str
         }
 
         docs = self.get_request(

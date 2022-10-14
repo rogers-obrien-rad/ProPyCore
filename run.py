@@ -44,24 +44,46 @@ def main():
         base_url=BASE_URL
     )
     
+    # Company
     company_list = connection.__companies__.get()
     company_test = company_list[0]["id"]
     log.info(f"Company: {company_test}")
 
+    # Project
     project_list = connection.__projects__.get(company_id=company_test)
     project_test = project_list[0]["id"]
     log.info(f"Project: {project_test}")
 
+    # Folder and Files
+    # ----------------
+    # Folder/File List
     doc_list = connection.__folders__.get(company_id=company_test, project_id=project_test)
-    root_folders = []
+
+    root_folders = {"id":[],"name":[]}
     for folder in doc_list["folders"]:
-        root_folders.append(folder["id"])
+        root_folders["id"].append(folder["id"])
+        root_folders["name"].append(folder["name"])
     log.info(f"Folders in Root: {root_folders}")
-    root_files = []
+
+    root_files = {"id":[],"name":[]}
     for file in doc_list["files"]:
-        root_files.append(file["id"])
+        root_files["id"].append(file["id"])
+        root_files["name"].append(file["name"])
     log.info(f"Files in Root: {root_files}")
-    #file_test = connection.__files__.show(company_id=company_test, project_id=project_test,)
+
+    # Folder info
+    folder_test = root_folders["id"][0]
+    folder_info = connection.__folders__.show(company_id=company_test, project_id=project_test, doc_id=folder_test)
+    subfolders = {"id":[],"name":[]}
+    for subfolder in folder_info["folders"]:
+        subfolders["id"].append(subfolder["id"])
+        subfolders["name"].append(subfolder["name"])
+    log.info(f"Subfolders in first folder: {subfolders}")
+
+    # File info
+    file_test = root_files["id"][0]
+    file_info = connection.__files__.show(company_id=company_test, project_id=project_test, doc_id=file_test)
+    log.debug(file_info)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
