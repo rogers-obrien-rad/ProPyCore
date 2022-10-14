@@ -46,8 +46,22 @@ def main():
     
     company_list = connection.__companies__.get()
     company_test = company_list[0]["id"]
-    project_test = connection.__projects__.get(company_id=company_test)
-    print(project_test)
+    log.info(f"Company: {company_test}")
+
+    project_list = connection.__projects__.get(company_id=company_test)
+    project_test = project_list[0]["id"]
+    log.info(f"Project: {project_test}")
+
+    doc_list = connection.__folders__.get(company_id=company_test, project_id=project_test)
+    root_folders = []
+    for folder in doc_list["folders"]:
+        root_folders.append(folder["id"])
+    log.info(f"Folders in Root: {root_folders}")
+    root_files = []
+    for file in doc_list["files"]:
+        root_files.append(file["id"])
+    log.info(f"Files in Root: {root_files}")
+    #file_test = connection.__files__.show(company_id=company_test, project_id=project_test,)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
