@@ -85,6 +85,20 @@ def main():
     file_info = connection.__files__.show(company_id=company_test, project_id=project_test, doc_id=file_test)
     log.debug(file_info)
 
+    # Create Folder
+    status = connection.__folders__.create(company_id=company_test, project_id=project_test, folder_name="Test Folder")
+    log.info(status)
+
+    # Create some files
+    status_txt = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_txt.txt")
+    log.info(status_txt)
+    status_pdf = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_pdf.pdf")
+    log.info(status_pdf)
+    status_excel = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_excel.xlsx")
+    log.info(status_excel)
+    status_csv = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_csv.csv")
+    log.info(status_csv)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", help="integer argument to pass", default=0, type=int)
