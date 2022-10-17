@@ -63,14 +63,15 @@ class Procore:
             "content-type": "application/json"
         })
 
-        if response.status_code == 200:
+        auth_code = None # pre-allocate
+        if response.ok:
             # use BS to parse the code from the returned html
             soup = BeautifulSoup(response.text, 'html.parser')
             for tag in soup.find_all("meta"):
                 if tag.get("name", None) == "csrf-token":
                     auth_code = tag.get("content", None)
         else:
-            self.raise_exception(response=response)
+            raise_exception(response=response)
 
         return auth_code
 
