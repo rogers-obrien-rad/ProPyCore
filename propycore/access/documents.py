@@ -1,4 +1,6 @@
 from .base import Base
+import urllib
+import requests
 
 class Documents(Base):
     """
@@ -52,12 +54,6 @@ class Documents(Base):
         """
         pass
 
-    def create(self):
-        """
-        
-        """
-        pass
-
     def remove(self):
         """
         
@@ -105,6 +101,46 @@ class Folders(Documents):
         )
 
         return docs
+
+    def create(self, company_id, project_id, folder_name):
+        """
+        Creates a folder 
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        folder_name : str
+            name of the folder to create
+
+        Returns
+        -------
+        <status_message> : str
+            success/error message
+        """
+        data = {
+            "folder":{
+                "name": folder_name,
+            }
+        }
+
+        params = {
+            "project_id": project_id
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        response = self.post_request(api_url=self.endpoint, params=params, additional_headers=headers, data=data)
+        if response.ok:
+            return f"{response.status_code}: succesfully created {folder_name}"
+        elif response.status_code == 400:
+            return f"{response.status_code}: {folder_name} already exists and cannot be overwritten"
+        else:
+            return f"{response.status_code}: failed to create {folder_name}"
         
 class Files(Documents):
     """
@@ -115,3 +151,42 @@ class Files(Documents):
         super().__init__(access_token, server_url)
 
         self.endpoint = "/rest/v1.0/files"
+
+    def create(self, company_id, project_id, filepath):
+        """
+        Creates a file 
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        filepath : str
+            path to the file to upload
+        """
+        params = {
+            "project_id": project_id
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}",
+        }
+
+        data = {
+            "file[name]": f"{filepath.rsplit('/',1)[-1]}",
+        }
+
+        file = [
+            ("file[data]", open(filepath, "rb"))
+        ]
+
+        response = self.post_request(api_url=self.endpoint, additional_headers=headers, params=params, data=data, files=file)
+        if response.ok:
+            return f"{response.status_code}: succesfully created {data['file[name]']}"
+        elif response.status_code == 400:
+            return f"{response.status_code}: {data['file[name]']} already exists and cannot be overwritten"
+        else:
+            return f"{response.status_code}: failed to create {data['file[name]']}"
+
+        
