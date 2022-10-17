@@ -5,6 +5,11 @@ class Projects(Base):
     Access and working with projects from a given company
     """
 
+    def __init__(self, access_token, server_url) -> None:
+        super().__init__(access_token, server_url)
+
+        self.endpoint = "/rest/v1.1/projects"
+
     def get(self, company_id, page=1, per_page=100):
         """
         Gets a list of all the projects from a certain company
@@ -30,7 +35,7 @@ class Projects(Base):
         }
         
         projects = self.get_request(
-            api_url="/rest/v1.1/projects",
+            api_url=self.endpoint,
             params=params
         )
 

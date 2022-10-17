@@ -44,10 +44,72 @@ def main():
         base_url=BASE_URL
     )
     
+    # Company
     company_list = connection.__companies__.get()
     company_test = company_list[0]["id"]
-    project_test = connection.__projects__.get(company_id=company_test)
-    print(project_test)
+    log.info(f"Company: {company_test}")
+
+    # Project
+    project_list = connection.__projects__.get(company_id=company_test)
+    project_test = project_list[0]["id"]
+    log.info(f"Project: {project_test}")
+
+    # Folder and Files
+    # ----------------
+    # Create some files
+    status_txt = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_txt.txt")
+    log.info(status_txt)
+    status_pdf = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_pdf.pdf")
+    log.info(status_pdf)
+    status_excel = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_excel.xlsx")
+    log.info(status_excel)
+    status_csv = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_csv.csv")
+    log.info(status_csv)
+
+    # Create a folder
+    status = connection.__folders__.create(company_id=company_test, project_id=project_test, folder_name="Test Folder")
+    log.info(status)
+
+    # Folder/File List
+    doc_list = connection.__folders__.get(company_id=company_test, project_id=project_test)
+
+    root_folders = {}
+    for folder in doc_list["folders"]:
+        root_folders[folder["id"]] = folder["name"]
+    log.info(f"Folders in Root: {root_folders}")
+
+    root_files = {}
+    for file in doc_list["files"]:
+        root_files[file["id"]] = file["name"]
+    log.info(f"Files in Root: {root_files}")
+
+    # Folder info
+    folder_test = list(root_folders.keys())[0]
+    folder_info = connection.__folders__.show(company_id=company_test, project_id=project_test, doc_id=folder_test)
+    subfolders = {"id":[],"name":[]}
+    for subfolder in folder_info["folders"]:
+        subfolders["id"].append(subfolder["id"])
+        subfolders["name"].append(subfolder["name"])
+    log.info(f"Subfolders in first folder: {subfolders}")
+
+    # File info
+    file_test = list(root_files.keys())[0]
+    file_info = connection.__files__.show(company_id=company_test, project_id=project_test, doc_id=file_test)
+    log.debug(file_info)
+
+    # Delete some files
+    for file_id, file_name in root_files.items():
+        status = connection.__files__.remove(company_id=company_test, project_id=project_test, doc_id=file_id)
+        log.info(f"{status} - {file_name}")
+
+    # Delete the Folder
+    for folder_id, folder_name in root_folders.items():
+        if folder_name == "Test Folder":
+            status = connection.__folders__.remove(company_id=company_test, project_id=project_test, doc_id=folder_id)
+            log.info(f"{status} - {folder_name}")
+        else:
+            log.info(f"Not deleting folder {folder_name}")
+        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

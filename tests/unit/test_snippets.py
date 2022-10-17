@@ -1,5 +1,7 @@
 import sys
-sys.path.insert(0, '../../')
+import pathlib
+PATH_TO_TOP = f"{pathlib.Path(__file__).resolve().parent.parent.parent}"
+sys.path.insert(0, PATH_TO_TOP)
 
 from snippets import auth
 

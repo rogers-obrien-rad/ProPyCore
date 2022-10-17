@@ -5,6 +5,11 @@ class Companies(Base):
     Access and working with Companies with App access
     """
 
+    def __init__(self, access_token, server_url) -> None:
+        super().__init__(access_token, server_url)
+
+        self.endpoint = "/rest/v1.0/companies"
+
     def get(self, page=1, per_page=100):
         """
         Gets all companies with the app installed
@@ -28,7 +33,7 @@ class Companies(Base):
         }
 
         companies = self.get_request(
-            api_url="/rest/v1.0/companies",
+            api_url=self.endpoint,
             params=params
         )
 

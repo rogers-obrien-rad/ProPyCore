@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, projects
+from .access import companies, projects, documents
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -44,6 +44,8 @@ class Procore:
         # create instances of useful procore endpoints
         self.__companies__ = companies.Companies(access_token=self.__access_token, server_url=self.__base_url)
         self.__projects__ = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
+        self.__folders__ = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
+        self.__files__ = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
         
     def get_auth_code(self):
         """
