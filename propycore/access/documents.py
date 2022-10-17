@@ -117,7 +117,7 @@ class Folders(Documents):
 
         return docs
 
-    def create(self, company_id, project_id, folder_name):
+    def create(self, company_id, project_id, folder_name, parent_id=None):
         """
         Creates a folder 
 
@@ -129,17 +129,30 @@ class Folders(Documents):
             unique identifier for the project
         folder_name : str
             name of the folder to create
+        parent_id : int or str, default None
+            the id of the parent folder to place this folder
+            if not included, the folder will placed at the root
 
         Returns
         -------
         <status_message> : str
             success/error message
         """
-        data = {
-            "folder":{
-                "name": folder_name,
+        if parent_id is None:
+            data = {
+                "folder":{
+                    "name": folder_name,
+                    "explicit_permissions": False
+                }
             }
-        }
+        else:
+            data = {
+                "folder":{
+                    "name": folder_name,
+                    "parent_id": str(parent_id),
+                    "explicit_permissions": False
+                }
+            }
 
         params = {
             "project_id": project_id
@@ -167,7 +180,7 @@ class Files(Documents):
 
         self.endpoint = "/rest/v1.0/files"
 
-    def create(self, company_id, project_id, filepath):
+    def create(self, company_id, project_id, filepath, parent_id=None, description=None):
         """
         Creates a file 
 
@@ -179,6 +192,16 @@ class Files(Documents):
             unique identifier for the project
         filepath : str
             path to the file to upload
+        parent_id : int or str, default None
+            the id of the parent folder to place this folder
+            if not included, the folder will placed at the root
+        description : str, default None
+            optional description to include on the file
+
+        Returns
+        -------
+        <status_message> : str
+            success/error message
         """
         params = {
             "project_id": project_id
@@ -190,7 +213,11 @@ class Files(Documents):
 
         data = {
             "file[name]": f"{filepath.rsplit('/',1)[-1]}",
+            "file[description]": "None" if description is None else description,
+            "file[explicit_permissions]": False
         }
+        if parent_id is not None: 
+            data["file[parent_id]"] = str(parent_id)
 
         file = [
             ("file[data]", open(filepath, "rb"))
