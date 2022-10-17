@@ -52,7 +52,7 @@ class Base:
 
         response = requests.get(url, headers=headers)
         
-        if response.status_code == 200:
+        if response.ok:
             return response.json()
         else:
             raise_exception(response)
@@ -74,8 +74,8 @@ class Base:
 
         Returns
         -------
-        response : dict
-            GET response
+        response : HTTP response object
+            GET response details
         """
         # Get URL
         if params is None:
@@ -104,4 +104,40 @@ class Base:
                 files=files
             )
         
+        return response
+
+    def delete_request(self, api_url, additional_headers=None, params=None):
+        """
+        Execute a HTTP DELETE request
+
+        Parameters
+        ----------
+        api_url : str
+            endpoint for the specific API call
+        additional_headers : dict, default None
+            additional headers beyond Authorization
+
+        Returns
+        -------
+        response : HTTP response object
+            DELETE response details
+        """
+        # Get URL
+        if params is None:
+            url = self.__server_url + api_url
+        else:
+            url = self.__server_url + api_url + "?" + urllib.parse.urlencode(params)
+
+        # Get Headers
+        headers = {"Authorization": f"Bearer {self.__access_token}"}
+        if additional_headers is not None:
+            for key, value in additional_headers.items():
+                headers[key] = value
+
+        # DELETE request
+        response = requests.delete(
+            url=url,
+            headers=headers,
+        )
+
         return response

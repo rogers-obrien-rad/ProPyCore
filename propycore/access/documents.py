@@ -1,6 +1,4 @@
 from .base import Base
-import urllib
-import requests
 
 class Documents(Base):
     """
@@ -54,11 +52,28 @@ class Documents(Base):
         """
         pass
 
-    def remove(self):
+    def remove(self, company_id, project_id, doc_id):
         """
         
         """
-        pass
+        params = {
+            "project_id": project_id
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        response = self.delete_request(
+            api_url=f"{self.endpoint}/{doc_id}",
+            additional_headers=headers,
+            params=params
+        )
+
+        if response.ok:
+            return f"{response.status_code}: Successfully deleted document {doc_id}"
+        else:
+            return f"{response.status_code}: Could not delete document {doc_id}"
 
 class Folders(Documents):
     """
