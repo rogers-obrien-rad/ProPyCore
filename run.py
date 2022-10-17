@@ -4,7 +4,7 @@
 # Date Created: 10/04/2022
 # Author: Hagen Fritz
 # Description: Basic utility of the ProCore API with Python
-# Last Edited: 10/13/2022
+# Last Edited: 10/17/2022
 # ---
 
 import argparse
