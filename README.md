@@ -1,3 +1,5 @@
+![Contributors](https://img.shields.io/github/contributors/rogers-obrien-rad/ProPyCore)
+![Last Commit](https://img.shields.io/github/last-commit/rogers-obrien-rad/ProPyCore)
 [![Test Suite](https://github.com/rogers-obrien-rad/ProPyCore/actions/workflows/tests.yml/badge.svg)](https://github.com/rogers-obrien-rad/ProPyCore/actions/workflows/tests.yml)
 
 ![ro_logo](https://github.com/rogers-obrien-rad/general-template/blob/main/images/ro_logo.png)
