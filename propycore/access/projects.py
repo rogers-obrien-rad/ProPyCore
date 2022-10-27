@@ -40,3 +40,30 @@ class Projects(Base):
         )
 
         return projects
+
+    def find(self, project_list, identifier):
+        """
+        Finds a company based on the identifier
+
+        Parameters
+        ----------
+        project_list : list of dict
+            projects from a specific company
+        identifier : int or str
+            project id number or company name
+        
+        Returns
+        -------
+        project : dict
+            project-specific dictionary
+        """
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "name"
+
+        for project in project_list:
+            if project[key] == identifier:
+                return project
+
+        return {}

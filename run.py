@@ -4,7 +4,7 @@
 # Date Created: 10/04/2022
 # Author: Hagen Fritz
 # Description: Basic utility of the ProCore API with Python
-# Last Edited: 10/17/2022
+# Last Edited: 10/25/2022
 # ---
 
 import argparse
@@ -49,13 +49,21 @@ def main():
     company_test = company_list[0]["id"]
     log.info(f"Company: {company_test}")
 
+    print(connection.find_company(identifier="DataPull"))
+
     # Project
     project_list = connection.__projects__.get(company_id=company_test)
     project_test = project_list[0]["id"]
     log.info(f"Project: {project_test}")
+    print(connection.find_project(company_id=connection.find_company("DataPull")["id"],identifier="R&D Test Project"))
 
     # Folder and Files
     # ----------------
+    print(connection.find_dir(
+        company="DataPull",
+        project="R&D Test Project",
+        folderpath="/I-Safety and Environmental/3-Orientations and Training/Subcontractors Orientation"
+    ))
     # Create some files
     status_txt = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_txt.txt")
     log.info(status_txt)
@@ -71,7 +79,7 @@ def main():
     log.info(status)
 
     # Folder/File List
-    doc_list = connection.__folders__.get(company_id=company_test, project_id=project_test)
+    doc_list = connection.__folders__.root(company_id=company_test, project_id=project_test)
 
     root_folders = {}
     for folder in doc_list["folders"]:
