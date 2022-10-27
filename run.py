@@ -59,20 +59,24 @@ def main():
 
     # Folder and Files
     # ----------------
-    print(connection.find_dir(
-        company="DataPull",
-        project="R&D Test Project",
-        folderpath="/I-Safety and Environmental/3-Orientations and Training/Subcontractors Orientation"
-    ))
     # Create some files
     status_txt = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_txt.txt")
     log.info(status_txt)
-    status_pdf = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_pdf.pdf")
+    status_pdf = connection.__files__.create(company_id=company_test, project_id=project_test, description="A PDF file", filepath="./data/test/test_pdf.pdf")
     log.info(status_pdf)
     status_excel = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_excel.xlsx")
     log.info(status_excel)
     status_csv = connection.__files__.create(company_id=company_test, project_id=project_test, filepath="./data/test/test_csv.csv")
     log.info(status_csv)
+    # create file in specified location
+    dir_ids = connection.find_dir(
+        company="DataPull",
+        project="R&D Test Project",
+        folderpath="/I-Safety and Environmental/3-Orientations and Training/Subcontractors Orientation"
+    )
+    log.info(dir_ids)
+    status_specify = connection.__files__.create(company_id=company_test, project_id=project_test, parent_id=dir_ids[1], filepath="./data/test/test_pdf.pdf")
+    log.info(status_specify)
 
     # Create a folder
     status = connection.__folders__.create(company_id=company_test, project_id=project_test, folder_name="Test Folder")
@@ -117,7 +121,6 @@ def main():
             log.info(f"{status} - {folder_name}")
         else:
             log.info(f"Not deleting folder {folder_name}")
-        
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

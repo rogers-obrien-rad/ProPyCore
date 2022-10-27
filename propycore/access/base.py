@@ -94,13 +94,13 @@ class Base:
             response = requests.post(
                 url,
                 headers=headers,
-                json=data
+                data=data
             )
         else:
             response = requests.post(
                 url,
                 headers=headers,
-                json=data,
+                data=data,
                 files=files
             )
         
