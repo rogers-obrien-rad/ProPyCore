@@ -105,3 +105,112 @@ class Procore:
         """
         temp_code = self.get_auth_code()
         self.__access_token = self.get_access_token(temp_code)
+
+    def find_company(self, identifier):
+        """
+        Finds a company based on the identifier
+
+        Parameters
+        ----------
+        identifier : int or str
+            company id number or name
+        
+        Returns
+        -------
+        company : dict
+            company-specific dictionary
+        """
+        # determining which identifier to search for
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "name"
+
+        for company in self.__companies__.get():
+            if company[key] == identifier:
+                return company
+
+        return {}
+
+    def find_project(self, company_id, identifier):
+        """
+        Finds a company based on the identifier
+
+        Parameters
+        ----------
+        company_id : int
+            company id that the project is under
+        identifier : int or str
+            project id number or company name
+        
+        Returns
+        -------
+        project : dict
+            project-specific dictionary
+        """
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "name"
+
+        for project in self.__projects__.get(company_id=company_id):
+            if project[key] == identifier:
+                return project
+
+        return {}
+
+    def find_dir(self, company, project, folderpath):
+        """
+        Traverses the Procore folder tree to find the given directory
+
+        Parameters
+        ----------
+        company : int or str
+            company id number or name
+        project : : int or str
+            project id number or name
+        folderpath : str
+            full path (starting at root) to the final folder separated by forward-slashes ("/")
+        
+        Returns
+        -------
+        ids : list of int
+            folder ids along the way to the specified folder
+        """
+        # get root folder infor
+        company_info = self.find_company(identifier=company)
+        project_info = self.find_project(company_id=company_info["id"], identifier=project)
+        root = self.__folders__.root(company_id=company_info["id"], project_id=project_info["id"])
+
+        # removing any leading/trailing forward-slashes from folderpath
+        if folderpath[0] == "/":
+            folderpath = folderpath[1:]
+        if folderpath[-1] == "/":
+            folderpath = folderpath[:-1]
+
+        subfolders = folderpath.split("/")
+
+        procore_folder_ids = []
+        current_procore_folders = root["folders"]
+        for subfolder in subfolders:
+            folder_found_on_procore = False
+            for procore_subfolder in current_procore_folders:
+                if procore_subfolder["name"] == subfolder:
+                    procore_folder_ids.append(procore_subfolder["id"])
+                    folder_found_on_procore = True
+                    break
+
+            if folder_found_on_procore:
+                next_procore_folder = self.__folders__.show(
+                    company_id=company_info["id"],
+                    project_id=project_info["id"],
+                    doc_id=procore_folder_ids[-1]
+                )
+                if next_procore_folder["has_children_folders"]:
+                    current_procore_folders = next_procore_folder["folders"]
+                else:
+                    return procore_folder_ids
+            else:
+                return []
+
+        return procore_folder_ids
