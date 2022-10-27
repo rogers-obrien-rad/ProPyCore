@@ -85,7 +85,7 @@ class Folders(Documents):
 
         self.endpoint = "/rest/v1.0/folders"
 
-    def get(self, company_id, project_id):
+    def root(self, company_id, project_id):
         """
         Gets the list of root folders and files
 
