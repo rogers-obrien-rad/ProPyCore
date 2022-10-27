@@ -36,5 +36,25 @@ class TestFunctionality:
         temp_projects = self.connection.__projects__.get(company_id=temp_company)
         assert temp_projects is list
 
+    def test_find_company(self):
+        company = self.connection.find_company(identifier="DataPull")
+        assert company is dict
+
+    def test_find_project(self):
+        company = self.connection.find_company(identifier="DataPull")
+        project = self.connection.find_project(
+            company_id=company["id"],
+            identifier="R&D test Project"
+        )
+        assert project is dict
+
+    def test_find_dir(self):
+        dir_ids = self.connection.find_dir(
+            company="DataPull",
+            project="R&D Test Project",
+            folderpath="/I-Safety and Environmental/3-Orientations and Training/Subcontractors Orientation"
+        )
+        assert dir_ids is list
+
 if __name__ == "__main__":
     test_connection = TestFunctionality()
