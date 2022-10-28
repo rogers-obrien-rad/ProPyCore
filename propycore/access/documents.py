@@ -214,10 +214,10 @@ class Files(Documents):
         data = {
             "file[name]": f"{filepath.rsplit('/',1)[-1]}",
             "file[description]": "None" if description is None else description,
-            "file[explicit_permissions]": False
+            "file[explicit_permissions]": False,
         }
-        if parent_id is not None: 
-            data["file[parent_id]"] = str(parent_id)
+        if parent_id is not None:
+            data["file[parent_id]"] = int(parent_id)
 
         file = [
             ("file[data]", open(filepath, "rb"))

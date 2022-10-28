@@ -1,4 +1,4 @@
-name: Procore Connection
+name: procore connection
 
 on: [push]
 
