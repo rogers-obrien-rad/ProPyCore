@@ -110,9 +110,9 @@ def main():
     log.debug(file_info)
 
     # Delete some files
-    for file_id, file_name in root_files.items():
-        status = connection.__files__.remove(company_id=company_test, project_id=project_test, doc_id=file_id)
-        log.info(f"{status} - {file_name}")
+    #for file_id, file_name in root_files.items():
+    #    status = connection.__files__.remove(company_id=company_test, project_id=project_test, doc_id=file_id)
+    #    log.info(f"{status} - {file_name}")
 
     # Delete the Folder
     for folder_id, folder_name in root_folders.items():
