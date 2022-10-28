@@ -27,7 +27,7 @@ class Documents(Base):
         Returns
         -------
         doc_info : dict
-
+            request body
         """
         
         params = {
@@ -46,15 +46,23 @@ class Documents(Base):
 
         return doc_info
 
-    def update(self):
-        """
-        
-        """
-        pass
-
     def remove(self, company_id, project_id, doc_id):
         """
-        
+        Deletes the give document
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        doc_id : int
+            unique identifier for the folder or file
+
+        Returns
+        -------
+        doc_info : dict
+            request body
         """
         params = {
             "project_id": project_id
@@ -64,16 +72,40 @@ class Documents(Base):
             "Procore-Company-Id": f"{company_id}"
         }
 
-        response = self.delete_request(
+        doc_info = self.delete_request(
             api_url=f"{self.endpoint}/{doc_id}",
             additional_headers=headers,
             params=params
         )
 
-        if response.ok:
-            return f"{response.status_code}: Successfully deleted document {doc_id}"
-        else:
-            return f"{response.status_code}: Could not delete document {doc_id}"
+        return doc_info
+
+    def list_all(self, company_id, project_id):
+        """
+        Lists all folders and files in the project
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+
+        Returns
+        -------
+        doc_info : dict
+            request body
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        doc_info = self.get_request(
+            api_url=f"/rest/v1.0/projects/{project_id}/documents",
+            additional_headers=headers
+        )
+
+        return doc_info
 
 class Folders(Documents):
     """
@@ -135,8 +167,8 @@ class Folders(Documents):
 
         Returns
         -------
-        <status_message> : str
-            success/error message
+        doc_info : dict
+            request body
         """
         if parent_id is None:
             data = {
@@ -162,14 +194,61 @@ class Folders(Documents):
             "Procore-Company-Id": f"{company_id}"
         }
 
-        response = self.post_request(api_url=self.endpoint, params=params, additional_headers=headers, data=data)
-        if response.ok:
-            return f"{response.status_code}: succesfully created {folder_name}"
-        elif response.status_code == 400:
-            return f"{response.status_code}: {folder_name} already exists and cannot be overwritten"
-        else:
-            return f"{response.status_code}: failed to create {folder_name}"
+        doc_info = self.post_request(api_url=self.endpoint, params=params, additional_headers=headers, data=data)
         
+        return doc_info
+        
+    def update(self, company_id, project_id, doc_id, parent_id=None, folder_name=None, private=None):
+        """
+        Updates the given folder
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        doc_id : int
+            unique identifier for the folder
+        parent_id : int, default None -> root
+            location where the folder exists
+        folder_name : str, default None
+            new name to assign to the folder
+        private : boolean, default None
+            permissions on the folder
+
+        Returns
+        -------
+        doc_info : dict
+            request body
+        """
+        params = {
+            "project_id": project_id
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        # building the body from available data
+        body = {}
+        for key, val in zip(["parent_id","name","explicit_permissions"], [parent_id, folder_name, private]):
+            if val is not None:
+                body[key] = val
+
+        data={
+            "folder": body
+        }
+
+        doc_info = self.patch_request(
+            api_url=f"{self.endpoint}/{doc_id}",
+            additional_headers=headers,
+            params=params,
+            data=data
+        )
+
+        return doc_info
+
 class Files(Documents):
     """
     Access to and working with Procore files
@@ -200,8 +279,8 @@ class Files(Documents):
 
         Returns
         -------
-        <status_message> : str
-            success/error message
+        doc_info : dict
+            request body
         """
         params = {
             "project_id": project_id
@@ -223,12 +302,67 @@ class Files(Documents):
             ("file[data]", open(filepath, "rb"))
         ]
 
-        response = self.post_request(api_url=self.endpoint, additional_headers=headers, params=params, data=data, files=file)
-        if response.ok:
-            return f"{response.status_code}: succesfully created {data['file[name]']}"
-        elif response.status_code == 400:
-            return f"{response.status_code}: {data['file[name]']} already exists and cannot be overwritten"
-        else:
-            return f"{response.status_code}: failed to create {data['file[name]']}"
-
+        doc_info = self.post_request(api_url=self.endpoint, additional_headers=headers, params=params, data=data, files=file)
         
+        return doc_info
+
+    def update(self, company_id, project_id, doc_id, filepath=None, parent_id=None, filename=None, description=None, private=None):
+        """
+        Updates the given folder
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        doc_id : int
+            unique identifier for the folder
+        parent_id : int, default None -> root
+            location where the folder exists
+        folder_name : str, default None
+            new name to assign to the folder
+        private : boolean, default None
+            permissions on the folder
+
+        Returns
+        -------
+        doc_info : dict
+            request body
+        """
+        params = {
+            "project_id": project_id
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        # building the body from available data
+        data = {}
+        for key, val in zip(["file[parent_id]","file[name]","file[description]","file[private]"], [parent_id, filename, description, private]):
+            if val is not None:
+                data[key] = val
+
+        if filepath is not None:
+            file = [
+                ("file[data]", open(filepath, "rb"))
+            ]
+
+            doc_info = self.patch_request(
+                api_url=f"{self.endpoint}/{doc_id}",
+                additional_headers=headers,
+                params=params,
+                data=data,
+                files=file
+            )
+        else:
+            doc_info = self.patch_request(
+                api_url=f"{self.endpoint}/{doc_id}",
+                additional_headers=headers,
+                params=params,
+                data=data,
+                files=True
+            )
+
+        return doc_info        

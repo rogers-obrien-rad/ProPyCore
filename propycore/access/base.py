@@ -38,7 +38,7 @@ class Base:
         Returns
         -------
         response : dict
-            GET response
+            GET response  in json
         """
         if params is None:
             url = self.__server_url + api_url
@@ -75,7 +75,7 @@ class Base:
         Returns
         -------
         response : HTTP response object
-            GET response details
+            GET response details in json
         """
         # Get URL
         if params is None:
@@ -94,18 +94,82 @@ class Base:
             response = requests.post(
                 url,
                 headers=headers,
-                data=data
+                json=data # use json for folder creation
             )
         else:
             response = requests.post(
                 url,
                 headers=headers,
-                data=data,
+                data=data, # use data for file creation
                 files=files
             )
         
-        return response
+        if response.ok:
+            return response.json()
+        else:
+            raise_exception(response)
 
+    def patch_request(self, api_url, additional_headers=None, params=None, data=None, files=False):
+        """
+        Create a HTTP PATCH request
+
+        Parameters
+        ----------
+        api_url : str
+            endpoint for the specific API call
+        additional_headers : dict, default None
+            additional headers beyond Authorization
+        params : dict, default None
+            PATCH parameters to parse
+        data : dict, default None
+            POST data to send
+        files : dict or boolean, default False
+            False - updating folder so use json request
+            True - updating file, but no file to include
+            dict - updating file with new document
+
+        Returns
+        -------
+        response : HTTP response object
+            PATCH response details in json
+        """
+        # Get URL
+        if params is None:
+            url = self.__server_url + api_url
+        else:
+            url = self.__server_url + api_url + "?" + urllib.parse.urlencode(params)
+
+        # Get Headers
+        headers = {"Authorization": f"Bearer {self.__access_token}"}
+        if additional_headers is not None:
+            for key, value in additional_headers.items():
+                headers[key] = value
+        
+        if files is False:
+            response = requests.patch(
+                url,
+                headers=headers,
+                json=data # json for folder update
+            )
+        elif files is True:
+            response = requests.patch(
+                url,
+                headers=headers,
+                data=data, # data for file update
+            )
+        else:
+            response = requests.patch(
+                url,
+                headers=headers,
+                data=data, # data for file update
+                files=files
+            )
+
+        if response.ok:
+            return response.json()
+        else:
+            raise_exception(response)
+    
     def delete_request(self, api_url, additional_headers=None, params=None):
         """
         Execute a HTTP DELETE request
@@ -116,11 +180,13 @@ class Base:
             endpoint for the specific API call
         additional_headers : dict, default None
             additional headers beyond Authorization
+        params : dict, default None
+            DELETE parameters to parse
 
         Returns
         -------
         response : HTTP response object
-            DELETE response details
+            DELETE response details in json
         """
         # Get URL
         if params is None:
@@ -140,4 +206,7 @@ class Base:
             headers=headers,
         )
 
-        return response
+        if response.ok:
+            return {"status_code":response.status_code}
+        else:
+            raise_exception(response)
