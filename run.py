@@ -98,6 +98,7 @@ def main():
     # Folder info
     folder_test = list(root_folders.keys())[0]
     folder_info = connection.__folders__.show(company_id=company_test, project_id=project_test, doc_id=folder_test)
+    print(folder_info)
     subfolders = {"id":[],"name":[]}
     for subfolder in folder_info["folders"]:
         subfolders["id"].append(subfolder["id"])
@@ -110,17 +111,21 @@ def main():
     log.debug(file_info)
 
     # Delete some files
-    #for file_id, file_name in root_files.items():
-    #    status = connection.__files__.remove(company_id=company_test, project_id=project_test, doc_id=file_id)
-    #    log.info(f"{status} - {file_name}")
+    del_files = True
+    if del_files:
+        for file_id, file_name in root_files.items():
+            status = connection.__files__.remove(company_id=company_test, project_id=project_test, doc_id=file_id)
+            log.info(f"{status} - {file_name}")
 
     # Delete the Folder
-    for folder_id, folder_name in root_folders.items():
-        if folder_name == "Test Folder":
-            status = connection.__folders__.remove(company_id=company_test, project_id=project_test, doc_id=folder_id)
-            log.info(f"{status} - {folder_name}")
-        else:
-            log.info(f"Not deleting folder {folder_name}")
+    del_folders = True
+    if del_folders:
+        for folder_id, folder_name in root_folders.items():
+            if folder_name == "Test Folder":
+                status = connection.__folders__.remove(company_id=company_test, project_id=project_test, doc_id=folder_id)
+                log.info(f"{status} - {folder_name}")
+            else:
+                log.info(f"Not deleting folder {folder_name}")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
