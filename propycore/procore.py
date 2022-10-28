@@ -159,9 +159,39 @@ class Procore:
 
         return {}
 
-    def find_dir(self, company, project, folderpath):
+    def get_docs(self, company_id, project_id):
         """
         Traverses the Procore folder tree to find the given directory
+
+        Parameters
+        ----------
+        connection : ProPycore connection obj
+            API access to Procore
+        filename : str
+            name of the file with file extension
+        
+        Returns
+        -------
+        id : int
+            file id
+        ids : list of int
+            folder ids along the way to the specified file
+        """
+        files_and_folders = self.__files__.list_all(company_id=company_id, project_id=project_id)
+        files = []
+        folders= []
+        for doc in files_and_folders:
+            if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
+                if doc["document_type"] == "folder":
+                    folders.append(doc)
+                else:
+                    files.append(doc)
+
+        return files, folders
+
+    def find_doc(self, company_id, project_id, name, look_for_file=False):
+        """
+        Finds the information from the folder name
 
         Parameters
         ----------
@@ -169,48 +199,24 @@ class Procore:
             company id number or name
         project : : int or str
             project id number or name
-        folderpath : str
-            full path (starting at root) to the final folder separated by forward-slashes ("/")
-        
+        name : str
+            name of the file or folder to look for
+        look_for_file : boolean, default False
+            whether to look for file or folder
+
         Returns
         -------
-        ids : list of int
-            folder ids along the way to the specified folder
+        doc : dict
+            doc-specific dictionary
         """
-        # get root folder infor
-        company_info = self.find_company(identifier=company)
-        project_info = self.find_project(company_id=company_info["id"], identifier=project)
-        root = self.__folders__.root(company_id=company_info["id"], project_id=project_info["id"])
+        files, folders = self.get_docs(company_id=company_id, project_id=project_id)
+        if look_for_file:
+            docs = files
+        else:
+            docs = folders
 
-        # removing any leading/trailing forward-slashes from folderpath
-        if folderpath[0] == "/":
-            folderpath = folderpath[1:]
-        if folderpath[-1] == "/":
-            folderpath = folderpath[:-1]
+        for doc in docs:
+            if doc["name"] == name:
+                return doc
 
-        subfolders = folderpath.split("/")
-
-        procore_folder_ids = []
-        current_procore_folders = root["folders"]
-        for subfolder in subfolders:
-            folder_found_on_procore = False
-            for procore_subfolder in current_procore_folders:
-                if procore_subfolder["name"] == subfolder:
-                    procore_folder_ids.append(procore_subfolder["id"])
-                    folder_found_on_procore = True
-                    break
-
-            if folder_found_on_procore:
-                next_procore_folder = self.__folders__.show(
-                    company_id=company_info["id"],
-                    project_id=project_info["id"],
-                    doc_id=procore_folder_ids[-1]
-                )
-                if next_procore_folder["has_children_folders"]:
-                    current_procore_folders = next_procore_folder["folders"]
-                else:
-                    return procore_folder_ids
-            else:
-                return []
-
-        return procore_folder_ids
+        return {}
