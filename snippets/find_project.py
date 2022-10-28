@@ -4,39 +4,11 @@ import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from propycore.procore import Procore
-from snippets.find_company import find_company
 
 from dotenv import load_dotenv
 
 if os.getenv("CLIENT_ID") is None:
     load_dotenv()
-
-def find_project(project_list, identifier):
-    """
-    Finds a company based on the identifier
-
-    Parameters
-    ----------
-    project_list : list of dict
-        projects from a specific company
-    identifier : int or str
-        project id number or company name
-    
-    Returns
-    -------
-    project : dict
-        project-specific dictionary
-    """
-    if isinstance(identifier, int):
-        key = "id"
-    else:
-        key = "name"
-
-    for project in project_list:
-        if project[key] == identifier:
-            return project
-
-    return {}
 
 if __name__ == "__main__":
     connection = Procore(
@@ -47,11 +19,28 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    # get company called "DataPull"
-    company_list = connection.__companies__.get()
-    company = find_company(company_list, identifier="DataPull")
-    
-    # find the project "R&D Test Project"
-    project_list = connection.__projects__.get(company_id=company["id"])
-    project = find_project(project_list, "R&D Test Project")
-    print(project)
+    company = connection.find_company(identifier="DataPull")
+
+    # Example 1: find project by name (str)
+    # ---------
+    project1 = connection.find_project(
+        company_id=company["id"],
+        identifier="Sandbox Test Project"
+    )
+    print(f"{project1['id']}: {project1['name']}")
+
+    # Example 2: find project by id (int)
+    # ---------
+    project2 = connection.find_project(
+        company_id=company["id"],
+        identifier=108707
+    )
+    print(f"{project2['id']}: {project2['name']}")
+
+    # Example 3: no such project
+    # ---------
+    project3 = connection.find_project(
+            company_id=company["id"],
+            identifier="Fake Project"
+    )
+    print(project3)
