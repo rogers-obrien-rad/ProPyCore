@@ -6,11 +6,13 @@ sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 from propycore.procore import Procore
 
 from dotenv import load_dotenv
+import json
 
 if os.getenv("CLIENT_ID") is None:
     load_dotenv()
 
 if __name__ == "__main__":
+
     connection = Procore(
         client_id=os.getenv("CLIENT_ID"),
         client_secret=os.getenv("CLIENT_SECRET"),
@@ -22,7 +24,7 @@ if __name__ == "__main__":
     company = connection.find_company(identifier="DataPull")
     project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
 
-    # Example 1: Find file in root
+    # Example 1
     # ---------
     file1 = connection.find_doc(
         company_id=company["id"],
@@ -30,24 +32,24 @@ if __name__ == "__main__":
         name="revu.png",
         look_for_file=True
     )
-    print(f"{file1['id']}: {file1['name']}")
+    file1_info = connection.__files__.show(
+        company_id=company["id"],
+        project_id=project["id"],
+        doc_id=file1["id"]
+    )
+    print(json.dumps(file1_info,indent=4))
 
-    # Example 2: Find file in subfolder
-    # ----------
+    # Example 2
+    # ---------
     file2 = connection.find_doc(
         company_id=company["id"],
         project_id=project["id"],
-        name="Masonry Checklist.txt",
+        name="test_pdf.pdf",
         look_for_file=True
     )
-    print(f"{file2['id']}: {file2['name']}")
-
-    # Example 3: No such file
-    # ---------
-    file3 = connection.find_doc(
+    file2_info = connection.__files__.show(
         company_id=company["id"],
         project_id=project["id"],
-        name="Not a file.txt",
-        look_for_file=True
+        doc_id=file2["id"]
     )
-    print(file3)
+    print(json.dumps(file2_info,indent=4))
