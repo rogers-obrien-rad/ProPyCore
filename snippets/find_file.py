@@ -22,7 +22,7 @@ if __name__ == "__main__":
     company = connection.find_company(identifier="DataPull")
     project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
 
-    # Example 1: Find folder in root
+    # Example 1: Find file in root
     # ---------
     file1 = connection.find_doc(
         company_id=company["id"],
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     )
     print(f"{file1['id']}: {file1['name']}")
 
-    # Example 2: Find subfolder
+    # Example 2: Find file in subfolder
     # ----------
     file2 = connection.find_doc(
         company_id=company["id"],
@@ -42,7 +42,7 @@ if __name__ == "__main__":
     )
     print(f"{file2['id']}: {file2['name']}")
 
-    # Example 3: No such folder
+    # Example 3: No such file
     # ---------
     file3 = connection.find_doc(
         company_id=company["id"],
