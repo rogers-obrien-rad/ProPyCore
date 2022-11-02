@@ -7,6 +7,7 @@ from propycore.procore import Procore
 from propycore.exceptions import NotFoundItemError
 
 from dotenv import load_dotenv
+import json
 
 if os.getenv("CLIENT_ID") is None:
     load_dotenv()
@@ -31,6 +32,7 @@ if __name__ == "__main__":
         identifier="1",
     )
     print(f"{rfi1['id']}: {rfi1['number']}")
+    print(json.dumps(rfi1,indent=4))
 
     # Example 2: Find rfi by id
     # ----------
@@ -40,6 +42,7 @@ if __name__ == "__main__":
         identifier=43776
     )
     print(f"{rfi2['id']}: {rfi2['number']}")
+    print(json.dumps(rfi2,indent=4))
 
     # Example 3: No such rfi
     # ---------
