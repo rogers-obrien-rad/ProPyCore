@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     # Example 1: find project by name (str)
     # ---------
-    project1 = connection.find_project(
+    project1 = connection.__projects__.find(
         company_id=company["id"],
         identifier="Sandbox Test Project"
     )
