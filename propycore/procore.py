@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, projects, documents
+from .access import companies, projects, documents, rfis
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -46,6 +46,7 @@ class Procore:
         self.__projects__ = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
         self.__folders__ = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
         self.__files__ = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
+        self.__rfis__ = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
         
     def get_auth_code(self):
         """
@@ -165,10 +166,10 @@ class Procore:
 
         Parameters
         ----------
-        connection : ProPycore connection obj
-            API access to Procore
-        filename : str
-            name of the file with file extension
+        company : int or str
+            company id number or name
+        project : : int or str
+            project id number or name
         
         Returns
         -------
