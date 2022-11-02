@@ -4,7 +4,7 @@ import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from propycore.procore import Procore
-from propycore.exceptions import ProcoreException
+from propycore.exceptions import WrongParamsError
 
 from dotenv import load_dotenv
 
@@ -21,8 +21,8 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.find_company(identifier="DataPull")
-    project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="DataPull")
+    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
 
     # Example 1: Create file in Root (no parent_id provided)
     # ---------
@@ -33,16 +33,16 @@ if __name__ == "__main__":
             filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/test_pdf.pdf"
         )
         print(f"{file_in_root['id']}: {file_in_root['name']}")
-    except ProcoreException:
-        print("Example 1: File already exists in root")
+    except WrongParamsError as e:
+        print(e)
 
     # Example 2: Create file in specified location
     # ---------
     try:
-        folder = connection.find_doc(
+        folder = connection.__folders__.find(
             company_id=company["id"],
             project_id=project["id"],
-            name="Subcontractors Orientation" # this needs to be a folder in your procore project
+            identifier="Subcontractors Orientation" # this needs to be a folder in your procore project
         )
 
         file = connection.__files__.create(
@@ -52,5 +52,5 @@ if __name__ == "__main__":
             filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/test_pdf.pdf"
         )
         print(f"{file['id']}: {file['name']}")
-    except ProcoreException:
-        print("Example 2: File already exists in specified folder")
+    except WrongParamsError as e:
+        print(e)

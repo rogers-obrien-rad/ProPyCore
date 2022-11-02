@@ -20,8 +20,8 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.find_company(identifier="DataPull")
-    project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="DataPull")
+    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
 
     # create a folder
     connection.__folders__.create(
