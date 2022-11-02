@@ -130,7 +130,7 @@ class Procore:
             if company[key] == identifier:
                 return company
 
-        return {}
+        raise NotFoundItemError(f"Could not find company {identifier}")
 
     def find_project(self, company_id, identifier):
         """
@@ -157,7 +157,7 @@ class Procore:
             if project[key] == identifier:
                 return project
 
-        return {}
+        raise NotFoundItemError(f"Could not find project {identifier}")
 
     def get_docs(self, company_id, project_id):
         """
@@ -219,4 +219,4 @@ class Procore:
             if doc["name"] == name:
                 return doc
 
-        return {}
+        raise NotFoundItemError(f"Could not find document {name}")
