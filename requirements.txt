@@ -9,7 +9,7 @@ importlib-metadata==5.0.0
 jaraco.classes==3.2.3
 keyring==23.9.3
 more-itertools==8.14.0
-numpy==1.23.4
+numpy
 pandas==1.5.1
 pkginfo==1.8.3
 Pygments==2.13.0
