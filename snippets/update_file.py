@@ -4,7 +4,7 @@ import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from propycore.procore import Procore
-from propycore.exceptions import ProcoreException
+from propycore.exceptions import NotFoundItemError, WrongParamsError
 
 from dotenv import load_dotenv
 
@@ -21,26 +21,27 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.find_company(identifier="DataPull")
-    project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="DataPull")
+    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
 
     # start by deleting the test files if they are present
     for old_file in ["test_pdf.pdf","renamed_test_pdf.pdf", "another_test_pdf.pdf"]:
         # look for the filename
-        file_temp = connection.find_doc(
-            company_id=company["id"],
-            project_id=project["id"],
-            name=old_file,
-            look_for_file=True
-        )
-        # if the method returned something, delete that file
-        if len(file_temp) != 0:
+        try:
+            file_temp = connection.__files__.find(
+                company_id=company["id"],
+                project_id=project["id"],
+                identifier=old_file
+            )
+            
             response = connection.__files__.remove(
                 company_id=company["id"],
                 project_id=project["id"],
                 doc_id=file_temp["id"],
             )
             print(f"Delete {old_file}:", response["status_code"])
+        except NotFoundItemError as e:
+            print(e)
 
     # create a file
     try:
@@ -50,38 +51,30 @@ if __name__ == "__main__":
             filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/test_pdf.pdf",
             description="Nothing to see here"
         )
-    except ProcoreException:
-        print("File already exists")
+    except WrongParamsError as e:
+        print(e)
 
-    file = connection.find_doc(
+    file_original = connection.__files__.find(
         company_id=company["id"],
         project_id=project["id"],
-        name="test_pdf.pdf",
-        look_for_file=True
-    )
-
-    # get file details - have to do this since the response from above does not include "description"
-    file_original = connection.__files__.show(
-        company_id=company["id"],
-        project_id=project["id"],
-        doc_id=file["id"]
+        identifier="test_pdf.pdf"
     )
 
     # Example 1: Move file
     # ---------
-    subfolder = connection.find_doc(
+    subfolder = connection.__folders__.find(
         company_id=company["id"],
         project_id=project["id"],
-        name="I-Safety and Environmental"
+        identifier="I-Safety and Environmental"
     )
 
     file_new_loc = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
-        doc_id=file["id"],
+        doc_id=file_original["id"],
         parent_id=subfolder["id"]
     )
-    print(f"Original parent ID:", file["parent_id"])
+    print(f"Original parent ID:", file_original["parent_id"])
     print(f"Updated parent ID:", file_new_loc["parent_id"])
 
     # Example 2: Update file name
@@ -89,10 +82,10 @@ if __name__ == "__main__":
     file_new_name = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
-        doc_id=file["id"],
+        doc_id=file_original["id"],
         filename="renamed_test_pdf.pdf"
     )
-    print(f"Original filename:", file["name"])
+    print(f"Original filename:", file_original["name"])
     print(f"Updated filename:", file_new_name["name"])
 
     # Example 3: Change Description
@@ -100,7 +93,7 @@ if __name__ == "__main__":
     file_new_desc = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
-        doc_id=file["id"],
+        doc_id=file_original["id"],
         description="This document now has a fancy description"
     )
     print(f"Original description:", file_original["description"])
@@ -111,10 +104,10 @@ if __name__ == "__main__":
     file_new_permissions = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
-        doc_id=file["id"],
+        doc_id=file_original["id"],
         private=False
     )
-    print(f"Private? (Original):", file["private"])
+    print(f"Private? (Original):", file_original["private"])
     print(f"Private? (Updated):", file_new_permissions["private"])
 
     # Example 5: Update file content
@@ -122,7 +115,7 @@ if __name__ == "__main__":
     file_new_content = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
-        doc_id=file["id"],
+        doc_id=file_original["id"],
         filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/another_test_pdf.pdf"
     )
     print("Original Number of Versions:", len(file_original["file_versions"]))

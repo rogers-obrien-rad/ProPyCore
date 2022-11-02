@@ -22,14 +22,14 @@ if __name__ == "__main__":
 
     # Example 1: find company by name (str)
     # ---------
-    company = connection.find_company(
+    company = connection.__companies__.find(
         identifier="DataPull"
     )
     print(f"{company['id']}: {company['name']}")
 
     # Example 2: find company by id (int)
     # ---------
-    company = connection.find_company(
+    company = connection.__companies__.find(
         identifier=3829471
     )
     print(f"{company['id']}: {company['name']}")
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     # Example 3: non-existent company
     # ---------
     try:
-        company = connection.find_company(
+        company = connection.__companies__.find(
             identifier=1
         )
         print(company)

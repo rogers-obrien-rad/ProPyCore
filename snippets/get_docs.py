@@ -19,12 +19,18 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.find_company(identifier="DataPull")
-    project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="DataPull")
+    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
 
-    files, folders = connection.get_docs(
+    folders = connection.__folders__.get(
         company_id=company["id"],
         project_id=project["id"]
     )
+
+    files = connection.__files__.get(
+        company_id=company["id"],
+        project_id=project["id"]
+    )
+    
     print("Number of folders:", len(folders))
     print("Number of files:", len(files))

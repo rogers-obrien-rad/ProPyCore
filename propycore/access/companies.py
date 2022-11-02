@@ -1,5 +1,11 @@
 from .base import Base
 
+import sys
+import pathlib
+sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+
+from propycore.exceptions import NotFoundItemError
+
 class Companies(Base):
     """
     Access and working with Companies with App access
@@ -38,3 +44,29 @@ class Companies(Base):
         )
 
         return companies
+
+    def find(self, identifier):
+        """
+        Finds a company based on the identifier
+
+        Parameters
+        ----------
+        identifier : int or str
+            company id number or name
+        
+        Returns
+        -------
+        company : dict
+            company-specific dictionary
+        """
+        # determining which identifier to search for
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "name"
+
+        for company in self.get():
+            if company[key] == identifier:
+                return company
+
+        raise NotFoundItemError(f"Could not find company {identifier}")

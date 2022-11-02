@@ -20,37 +20,34 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.find_company(identifier="DataPull")
-    project = connection.find_project(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="DataPull")
+    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
 
     # Example 1: Find folder in root
     # ---------
-    folder1 = connection.find_doc(
+    folder1 = connection.__folders__.find(
         company_id=company["id"],
         project_id=project["id"],
-        name="F-Schedule",
-        look_for_file=False
+        identifier="F-Schedule"
     )
     print(f"{folder1['id']}: {folder1['name']}")
 
     # Example 2: Find subfolder
     # ----------
-    folder2 = connection.find_doc(
+    folder2 = connection.__folders__.find(
         company_id=company["id"],
         project_id=project["id"],
-        name="Subcontractors Orientation",
-        look_for_file=False
+        identifier="Subcontractors Orientation"
     )
     print(f"{folder2['id']}: {folder2['name']}")
 
     # Example 3: No such folder
     # ---------
     try:
-        folder3 = connection.find_doc(
+        folder3 = connection.__folders__.find(
             company_id=company["id"],
             project_id=project["id"],
-            name="Not a folder",
-            look_for_file=False
+            identifier="Not a folder"
         )
         print(folder3)
     except NotFoundItemError as e:

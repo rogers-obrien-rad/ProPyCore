@@ -1,5 +1,11 @@
 from .base import Base
 
+import sys
+import pathlib
+sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+
+from propycore.exceptions import NotFoundItemError, WrongParamsError, ProcoreException
+
 class Documents(Base):
     """
     Wrapper class for Folders and Files - should NOT instantiate directly
@@ -80,9 +86,9 @@ class Documents(Base):
 
         return doc_info
 
-    def list_all(self, company_id, project_id):
+    def get(self, company_id, project_id):
         """
-        Lists all folders and files in the project
+        Gets all folders and files in the project
 
         Parameters
         ----------
@@ -194,7 +200,15 @@ class Folders(Documents):
             "Procore-Company-Id": f"{company_id}"
         }
 
-        doc_info = self.post_request(api_url=self.endpoint, params=params, additional_headers=headers, data=data)
+        try:
+            doc_info = self.post_request(
+                api_url=self.endpoint,
+                params=params,
+                additional_headers=headers,
+                data=data
+            )
+        except ProcoreException:
+            raise WrongParamsError(f"Folder {folder_name} already exists")
         
         return doc_info
         
@@ -249,6 +263,75 @@ class Folders(Documents):
 
         return doc_info
 
+    def get(self, company_id, project_id):
+        """
+        Gets all folders in a project
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+
+        Returns
+        -------
+        folders : list of dict
+            available folders and their corresponding response body
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        doc_info = self.get_request(
+            api_url=f"/rest/v1.0/projects/{project_id}/documents",
+            additional_headers=headers
+        )
+
+        folders= []
+        for doc in doc_info:
+            if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
+                if doc["document_type"] == "folder":
+                    folders.append(doc)
+
+        if len(folders) > 0:
+            return folders
+        else:
+            raise NotFoundItemError(f"No folders are available in Project {project_id}")
+    
+    def find(self, company_id, project_id, identifier):
+        """
+        Finds the information from the folder name
+
+        Parameters
+        ----------
+        company : int or str
+            company id number or name
+        project : : int or str
+            project id number or name
+        identifier : str
+            name of the folder to look for
+
+        Returns
+        -------
+        <folder_info> : dict
+            folder-specific dictionary
+        """
+        folders = self.get(
+            company_id=company_id,
+            project_id=project_id
+        )
+
+        for folder in folders:
+            if folder["name"] == identifier:
+                return self.show(
+                    company_id=company_id,
+                    project_id=project_id,
+                    doc_id=folder["id"]
+                )
+
+        raise NotFoundItemError(f"Could not find document {identifier}")
+
 class Files(Documents):
     """
     Access to and working with Procore files
@@ -290,8 +373,9 @@ class Files(Documents):
             "Procore-Company-Id": f"{company_id}",
         }
 
+        filename = filepath.rsplit('/',1)[-1]
         data = {
-            "file[name]": f"{filepath.rsplit('/',1)[-1]}",
+            "file[name]": f"{filename}",
             "file[description]": "None" if description is None else description,
         }
         if parent_id is not None:
@@ -301,7 +385,16 @@ class Files(Documents):
             ("file[data]", open(filepath, "rb"))
         ]
 
-        doc_info = self.post_request(api_url=self.endpoint, additional_headers=headers, params=params, data=data, files=file)
+        try:
+            doc_info = self.post_request(
+                api_url=self.endpoint,
+                additional_headers=headers,
+                params=params,
+                data=data,
+                files=file
+            )
+        except ProcoreException:
+            raise WrongParamsError(f"File {filename} already exists")
         
         return doc_info
 
@@ -365,3 +458,74 @@ class Files(Documents):
             )
 
         return doc_info        
+
+    def get(self, company_id, project_id):
+        """
+        Gets all files in a project
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+
+        Returns
+        -------
+        files : list of dict
+            available folders and their corresponding response body
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        doc_info = self.get_request(
+            api_url=f"/rest/v1.0/projects/{project_id}/documents",
+            additional_headers=headers
+        )
+
+        files = []
+        for doc in doc_info:
+            if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
+                if doc["document_type"] == "file":
+                    files.append(doc)
+
+        if len(files) > 0:
+            return files
+        else:
+            raise NotFoundItemError(f"No files are available in Project {project_id}")
+    
+    def find(self, company_id, project_id, identifier):
+        """
+        Finds the information from the folder name
+
+        Parameters
+        ----------
+        company : int or str
+            company id number or name
+        project : : int or str
+            project id number or name
+        name : str
+            name of the file or folder to look for
+        look_for_file : boolean, default False
+            whether to look for file or folder
+
+        Returns
+        -------
+        doc : dict
+            doc-specific dictionary
+        """
+        files = self.get(
+            company_id=company_id,
+            project_id=project_id
+        )
+
+        for file in files:
+            if file["name"] == identifier:
+                return self.show(
+                    company_id=company_id,
+                    project_id=project_id,
+                    doc_id=file["id"]
+                )
+
+        raise NotFoundItemError(f"Could not find document {identifier}")
