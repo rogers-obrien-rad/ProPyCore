@@ -38,7 +38,7 @@ class Base:
         Returns
         -------
         response : dict
-            GET response  in json
+            GET response in json
         """
         if params is None:
             url = self.__server_url + api_url
