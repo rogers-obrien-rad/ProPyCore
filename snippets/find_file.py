@@ -4,6 +4,7 @@ import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from propycore.procore import Procore
+from propycore.exceptions import NotFoundItemError
 
 from dotenv import load_dotenv
 
@@ -44,10 +45,13 @@ if __name__ == "__main__":
 
     # Example 3: No such file
     # ---------
-    file3 = connection.find_doc(
-        company_id=company["id"],
-        project_id=project["id"],
-        name="Not a file.txt",
-        look_for_file=True
-    )
-    print(file3)
+    try:
+        file3 = connection.find_doc(
+            company_id=company["id"],
+            project_id=project["id"],
+            name="Not a file.txt",
+            look_for_file=True
+        )
+        print(file3)
+    except NotFoundItemError as e:
+        print(e)
