@@ -4,6 +4,7 @@ import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from propycore.procore import Procore
+from propycore.exceptions import ProcoreException
 
 from dotenv import load_dotenv
 
@@ -25,14 +26,17 @@ if __name__ == "__main__":
 
     # Example 1: Create folder in Root (no parent_id provided)
     # ---------
-    root_folder = connection.__folders__.create(
-        company_id=company["id"],
-        project_id=project["id"],
-        folder_name="Folder_in_Root"
-    )
-    print(f"{root_folder['id']}: {root_folder['name']}")
+    try:
+        root_folder = connection.__folders__.create(
+            company_id=company["id"],
+            project_id=project["id"],
+            folder_name="Folder_in_Root"
+        )
+        print(f"{root_folder['id']}: {root_folder['name']}")
+    except ProcoreException:
+        print("Folder already exists")
 
-    # Example 2: Create file in specified location
+    # Example 2: Create folder in specified location
     # ---------
     folder = connection.find_doc(
         company_id=company["id"],
@@ -40,10 +44,26 @@ if __name__ == "__main__":
         name="I-Safety and Environmental" # this needs to be a path in your procore project
     )
     
-    subfolder = connection.__folders__.create(
-        company_id=company["id"],
-        project_id=project["id"],
-        parent_id=folder["id"],
-        folder_name="Subfolder"
-    )
-    print(f"{subfolder['id']}: {subfolder['name']}")
+    try:
+        subfolder = connection.__folders__.create(
+            company_id=company["id"],
+            project_id=project["id"],
+            parent_id=folder["id"],
+            folder_name="Subfolder"
+        )
+        print(f"{subfolder['id']}: {subfolder['name']}")
+    except ProcoreException:
+        print("Folder already exists")
+
+    # Example 3: Folder already exists
+    # ---------
+    try:
+        existing_folder_name = "I-Safety and Environmental"
+        existing_folder = connection.__folders__.create(
+            company_id=company["id"],
+            project_id=project["id"],
+            folder_name=existing_folder_name
+        )
+        print(f"{existing_folder['id']}: {existing_folder['name']}")
+    except ProcoreException:
+        print(f"Folder {existing_folder_name} already exists")

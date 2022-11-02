@@ -4,6 +4,7 @@ import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from propycore.procore import Procore
+from propycore.exceptions import NotFoundItemError
 
 from dotenv import load_dotenv
 
@@ -35,7 +36,10 @@ if __name__ == "__main__":
 
     # Example 3: non-existent company
     # ---------
-    company = connection.find_company(
-        identifier=1
-    )
-    print(company)
+    try:
+        company = connection.find_company(
+            identifier=1
+        )
+        print(company)
+    except NotFoundItemError as e:
+        print(e)
