@@ -1,0 +1,102 @@
+{
+    "id": 43776,
+    "created_at": "2022-06-03T00:35:25Z",
+    "initiated_at": "2022-06-03T00:35:25Z",
+    "link": "https://sandbox.procore.com/78552/project/rfi/show/43776",
+    "project_stage": null,
+    "time_resolved": null,
+    "assignees": [
+        {
+            "id": 48,
+            "name": "Test Architect (Architect TEST Company)",
+            "locale": "",
+            "login": "sandbox+arch@procore.com",
+            "response_required": false
+        }
+    ],
+    "ball_in_courts": [
+        {
+            "id": 48,
+            "name": "Test Architect (Architect TEST Company)",
+            "locale": "",
+            "login": "sandbox+arch@procore.com",
+            "response_required": false
+        }
+    ],
+    "cost_impact": {
+        "status": null,
+        "value": null
+    },
+    "custom_fields": {},
+    "due_date": "2022-06-06",
+    "full_number": "1",
+    "number": "1",
+    "prefix": null,
+    "private": false,
+    "received_from": null,
+    "rfi_manager": {
+        "id": 46,
+        "login": "sandbox+demo@procore.com",
+        "name": "API Support"
+    },
+    "schedule_impact": {
+        "status": null,
+        "value": null
+    },
+    "status": "open",
+    "subject": "Thermostat Conflict with Wall Finish at Conference Room",
+    "translated_status": "Open",
+    "updated_at": "2022-06-03T00:35:25Z",
+    "assignee": {
+        "id": 48,
+        "name": "Test Architect (Architect TEST Company)",
+        "locale": "",
+        "login": "sandbox+arch@procore.com"
+    },
+    "ball_in_court": {
+        "id": 48,
+        "name": "Test Architect (Architect TEST Company)",
+        "locale": "",
+        "login": "sandbox+arch@procore.com"
+    },
+    "reference": null,
+    "location_id": null,
+    "questions": [
+        {
+            "id": 43775,
+            "created_by": " ",
+            "plain_text_body": "The thermostat in Conference 130 is shown in a millwork wall panel. Clarify if the thermostat should be relocated.",
+            "attachments": [],
+            "answers": [],
+            "question_date": "2022-06-03T00:35:25Z",
+            "rich_text_body": "The thermostat in Conference 130 is shown in a millwork wall panel. Clarify if the thermostat should be relocated."
+        }
+    ],
+    "drawing_number": null,
+    "accepted": false,
+    "ball_in_court_role": "assignees",
+    "change_events": [],
+    "coordination_issues": [],
+    "custom_textfield_1": {
+        "label": null,
+        "value": null
+    },
+    "custom_textfield_2": {
+        "label": null,
+        "value": null
+    },
+    "title": "Thermostat Conflict with Wall Finish at Conference Room",
+    "draft": false,
+    "drawing_ids": [],
+    "distribution_list": [],
+    "cost_code": null,
+    "location": null,
+    "sub_job": null,
+    "responsible_contractor": null,
+    "created_by": {
+        "id": 2,
+        "login": "internal@procore.com",
+        "name": " "
+    },
+    "specification_section": null
+}

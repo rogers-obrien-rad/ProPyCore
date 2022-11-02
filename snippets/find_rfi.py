@@ -7,6 +7,7 @@ from propycore.procore import Procore
 from propycore.exceptions import NotFoundItemError
 
 from dotenv import load_dotenv
+import json
 
 if os.getenv("CLIENT_ID") is None:
     load_dotenv()
@@ -21,30 +22,36 @@ if __name__ == "__main__":
     )
 
     company = connection.find_company(identifier="DataPull")
+    project = connection.find_project(company_id=company["id"], identifier="Sandbox Test Project")
 
-    # Example 1: find project by name (str)
+    # Example 1: Find rfi by number
     # ---------
-    project1 = connection.__projects__.find(
+    rfi1 = connection.__rfis__.find(
         company_id=company["id"],
-        identifier="Sandbox Test Project"
+        project_id=project["id"],
+        identifier="1",
     )
-    print(f"{project1['id']}: {project1['name']}")
+    print(f"{rfi1['id']}: {rfi1['number']}")
+    print(json.dumps(rfi1,indent=4))
 
-    # Example 2: find project by id (int)
-    # ---------
-    project2 = connection.find_project(
+    # Example 2: Find rfi by id
+    # ----------
+    rfi2 = connection.__rfis__.find(
         company_id=company["id"],
-        identifier=108707
+        project_id=project["id"],
+        identifier=43776
     )
-    print(f"{project2['id']}: {project2['name']}")
+    print(f"{rfi2['id']}: {rfi2['number']}")
+    print(json.dumps(rfi2,indent=4))
 
-    # Example 3: no such project
+    # Example 3: No such rfi
     # ---------
     try:
-        project3 = connection.find_project(
-                company_id=company["id"],
-                identifier="Fake Project"
+        rfi3 = connection.__rfis__.find(
+            company_id=company["id"],
+            project_id=project["id"],
+            identifier=2
         )
-        print(project3)
+        print(rfi3)
     except NotFoundItemError as e:
         print(e)

@@ -7,6 +7,7 @@ from propycore.procore import Procore
 from propycore.exceptions import NotFoundItemError
 
 from dotenv import load_dotenv
+import json
 
 if os.getenv("CLIENT_ID") is None:
     load_dotenv()
@@ -21,30 +22,12 @@ if __name__ == "__main__":
     )
 
     company = connection.find_company(identifier="DataPull")
+    project = connection.find_project(company_id=company["id"], identifier="Sandbox Test Project")
 
-    # Example 1: find project by name (str)
+    # Example 1: Find rfi by number
     # ---------
-    project1 = connection.__projects__.find(
+    data = connection.__rfis__.export(
         company_id=company["id"],
-        identifier="Sandbox Test Project"
+        project_id=project["id"],
     )
-    print(f"{project1['id']}: {project1['name']}")
-
-    # Example 2: find project by id (int)
-    # ---------
-    project2 = connection.find_project(
-        company_id=company["id"],
-        identifier=108707
-    )
-    print(f"{project2['id']}: {project2['name']}")
-
-    # Example 3: no such project
-    # ---------
-    try:
-        project3 = connection.find_project(
-                company_id=company["id"],
-                identifier="Fake Project"
-        )
-        print(project3)
-    except NotFoundItemError as e:
-        print(e)
+    print(data)

@@ -1,5 +1,11 @@
 from .base import Base
 
+import sys
+import pathlib
+sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+
+from exceptions import *
+
 class Projects(Base):
     """
     Access and working with projects from a given company
@@ -41,29 +47,17 @@ class Projects(Base):
 
         return projects
 
-    def find(self, project_list, identifier):
+    def find(self, company_id, identifier):
         """
-        Finds a company based on the identifier
-
-        Parameters
-        ----------
-        project_list : list of dict
-            projects from a specific company
-        identifier : int or str
-            project id number or company name
         
-        Returns
-        -------
-        project : dict
-            project-specific dictionary
         """
         if isinstance(identifier, int):
             key = "id"
         else:
             key = "name"
 
-        for project in project_list:
+        for project in self.get(company_id=company_id):
             if project[key] == identifier:
                 return project
 
-        return {}
+        raise NotFoundItemError(f"Could not find project {identifier}")
