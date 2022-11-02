@@ -1,5 +1,11 @@
 from .base import Base
 
+import sys
+import pathlib
+sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+
+from exceptions import *
+
 class RFI(Base):
     """
     Access and working with RFIs in a given project
@@ -76,3 +82,37 @@ class RFI(Base):
         )
 
         return doc_info
+
+    def find(self, company_id, project_id, identifier):
+        """
+        Finds specified RFI and returns data - wrapper for show method
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        identifier : int or str
+            identifier for RFI which can be id (int) or number (str)
+
+        Returns
+        -------
+        rfi_info : dict
+            RFI data
+        """
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "number"
+
+        for rfi in self.get(company_id=company_id, project_id=project_id):
+            if rfi[key] == identifier:
+                rfi_info = self.show(
+                    company_id=company_id,
+                    project_id=project_id,
+                    rfi_id=rfi["id"]
+                )
+                return rfi_info
+
+        raise NotFoundItemError(f"Could not find RFI {identifier}")
