@@ -4,7 +4,7 @@ import sys
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
-from exceptions import *
+from propycore.exceptions import NotFoundItemError
 
 class Projects(Base):
     """
@@ -49,7 +49,19 @@ class Projects(Base):
 
     def find(self, company_id, identifier):
         """
+        Finds a project based on the identifier
+
+        Parameters
+        ----------
+        company_id : int
+            company id that the project is under
+        identifier : int or str
+            project id number or company name
         
+        Returns
+        -------
+        project : dict
+            project-specific dictionary
         """
         if isinstance(identifier, int):
             key = "id"
