@@ -38,30 +38,3 @@ class Companies(Base):
         )
 
         return companies
-
-    def find(self, company_list, identifier):
-        """
-        Finds a company based on the identifier
-
-        Parameters
-        ----------
-        company_list : list of dict
-            companies
-        identifier : int or str
-            company id number or company name
-        
-        Returns
-        -------
-        company : dict
-            company-specific dictionary
-        """
-        if isinstance(identifier, int):
-            key = "id"
-        else:
-            key = "name"
-
-        for company in company_list:
-            if company[key] == identifier:
-                return company
-
-        return {}
