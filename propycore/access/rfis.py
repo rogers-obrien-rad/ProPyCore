@@ -47,4 +47,32 @@ class RFI(Base):
 
         return rfis
 
-    
+    def show(self, company_id, project_id, rfi_id):
+        """
+        Shows the RFI info
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        rfi_id : int
+            unique identifier for the RFI
+
+        Returns
+        -------
+        rfi_info : dict
+            specific rfi information
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        doc_info = self.get_request(
+            api_url=f"{self.endpoint}/{project_id}/rfis/{rfi_id}",
+            additional_headers=headers,
+        )
+
+        return doc_info

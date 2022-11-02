@@ -1,5 +1,11 @@
 from .base import Base
 
+import sys
+import pathlib
+sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+
+from exceptions import *
+
 class Projects(Base):
     """
     Access and working with projects from a given company
@@ -40,3 +46,18 @@ class Projects(Base):
         )
 
         return projects
+
+    def find(self, company_id, identifier):
+        """
+        
+        """
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "name"
+
+        for project in self.get(company_id=company_id):
+            if project[key] == identifier:
+                return project
+
+        raise NotFoundItemError(f"Could not find project {identifier}")
