@@ -1,0 +1,49 @@
+{
+    "id":108707,
+    "accounting_project_number":"None",
+    "active":true,
+    "address":"None",
+    "city":"Austin",
+    "code":"None",
+    "company":{
+       "id":3829260,
+       "name":"DataPull"
+    },
+    "completion_date":"2023-01-01",
+    "country_code":"US",
+    "county":"Travis County",
+    "created_at":"2022-10-25T13:45:59Z",
+    "custom_fields":{
+       
+    },
+    "designated_market_area":"None",
+    "display_name":"220000 - R&D Test Project",
+    "erp_integrated":false,
+    "estimated_value":"5000000.0",
+    "is_demo":false,
+    "latitude":30.2961708,
+    "longitude":-97.7389543,
+    "name":"R&D Test Project",
+    "origin_code":"None",
+    "origin_data":"None",
+    "origin_id":"None",
+    "owners_project_id":"None",
+    "parent_job_id":"None",
+    "phone":"None",
+    "photo_id":1630901,
+    "project_bid_type_id":"None",
+    "project_number":"220000",
+    "project_owner_type_id":"None",
+    "project_region_id":"None",
+    "project_stage":{
+       "id":3,
+       "name":"Course of Construction"
+    },
+    "start_date":"2022-10-25",
+    "state_code":"TX",
+    "store_number":"None",
+    "time_zone":"Central Time (US & Canada)",
+    "total_value":"5000000.0",
+    "updated_at":"2022-10-28T21:37:14Z",
+    "zip":"78705"
+ }
