@@ -20,21 +20,27 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    # Example 1: find company by name (str)
+    # Example 1: list available companies
+    # ---------
+    companies = connection.__companies__.get()
+    for company in companies:
+        print(company)
+
+    # Example 2: find company by name (str)
     # ---------
     company = connection.__companies__.find(
         identifier="DataPull"
     )
     print(f"{company['id']}: {company['name']}")
 
-    # Example 2: find company by id (int)
+    # Example 3: find company by id (int)
     # ---------
     company = connection.__companies__.find(
         identifier=3829471
     )
     print(f"{company['id']}: {company['name']}")
 
-    # Example 3: non-existent company
+    # Example 4: non-existent company
     # ---------
     try:
         company = connection.__companies__.find(

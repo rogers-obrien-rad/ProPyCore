@@ -22,7 +22,15 @@ if __name__ == "__main__":
 
     company = connection.__companies__.find(identifier="DataPull")
 
-    # Example 1: find project by name (str)
+    # Example 1: list all projects
+    # ---------
+    projects = connection.__projects__.get(
+        company_id=company["id"]
+    )
+    for project in projects:
+        print(project)
+
+    # Example 2: find project by name (str)
     # ---------
     project1 = connection.__projects__.find(
         company_id=company["id"],
@@ -30,7 +38,7 @@ if __name__ == "__main__":
     )
     print(f"{project1['id']}: {project1['name']}")
 
-    # Example 2: find project by id (int)
+    # Example 3: find project by id (int)
     # ---------
     project2 = connection.__projects__.find(
         company_id=company["id"],
@@ -38,7 +46,7 @@ if __name__ == "__main__":
     )
     print(f"{project2['id']}: {project2['name']}")
 
-    # Example 3: no such project
+    # Example 4: no such project
     # ---------
     try:
         project3 = connection.__projects__.find(
