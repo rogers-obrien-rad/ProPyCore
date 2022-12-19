@@ -3,6 +3,9 @@ from .base import Base
 import sys
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+from warnings import warn
+
+from fuzzywuzzy import fuzz
 
 from propycore.exceptions import NotFoundItemError, WrongParamsError, ProcoreException
 
@@ -88,7 +91,7 @@ class Documents(Base):
 
     def get(self, company_id, project_id):
         """
-        Gets all folders and files in the project
+        Gets all documents in a project
 
         Parameters
         ----------
@@ -99,19 +102,97 @@ class Documents(Base):
 
         Returns
         -------
-        doc_info : dict
-            request body
+        docs : list of dict
+            available docs and their corresponding response body
         """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
+        n_docs = 1
+        page = 1
+        docs = []
+        while n_docs > 0:
+            params = {
+                "view": "normal",
+                "sort": "name",
+                "page": page,
+                "per_page": 10000
+            }
 
-        doc_info = self.get_request(
-            api_url=f"/rest/v1.0/projects/{project_id}/documents",
-            additional_headers=headers
+            headers = {
+                "Procore-Company-Id": f"{company_id}"
+            }
+
+            doc_info = self.get_request(
+                api_url=f"/rest/v1.0/projects/{project_id}/documents",
+                additional_headers=headers,
+                params=params
+            )
+            n_docs = len(doc_info)
+
+            # get document type (file or folder) from endpoint
+            doc_type = self.endpoint.split("/")[-1][:-1] # remove last char which is an "s"
+
+            for doc in doc_info:
+                if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
+                    if doc["document_type"] == doc_type:
+                        docs.append(doc)
+
+            page += 1 
+
+        if len(docs) > 0:
+            return docs
+        else:
+            raise NotFoundItemError(f"No folders are available in Project {project_id}")
+
+    def search(self, company_id, project_id, value):
+        """
+        Searches through all available files to find the closet match to the given value
+
+        Parameters
+        ----------
+        company : int or str
+            company id number or name
+        project : : int or str
+            project id number or name
+        value : str
+            search criteria
+
+        Returns
+        -------
+        result : dict
+            document reference information
+        """
+        docs = self.get(
+            company_id=company_id,
+            project_id=project_id
         )
 
-        return doc_info
+        # get document type (file or folder) from endpoint
+        doc_type = self.endpoint.split("/")[-1][:-1] # remove last char which is an "s"
+
+        # dummy values for finding best match
+        score = 0
+        n_perfect = 0
+        result = {}
+        for doc in docs:
+            # filter for only active documents
+            if not doc["is_deleted"] and not doc["is_recycle_bin"] and doc["document_type"] == doc_type:
+                temp_score = fuzz.partial_ratio(value, doc["name"])
+                if temp_score == 100:
+                    n_perfect += 1
+                # update match values
+                if temp_score > score:
+                    score = temp_score
+                    result = doc
+
+        # warn if multiple documents provided perfect match
+        if n_perfect > 1:
+            warn("Multiple 100% matches - try refining your search critera for better results")
+
+        # raise an error if the document can't be found
+        if score == 0:
+            raise NotFoundItemError(f"Could not find document {value}")
+        else:
+            result["search_criteria"] = {"value":value, "match":score}
+            return result
 
 class Folders(Documents):
     """
@@ -262,42 +343,6 @@ class Folders(Documents):
         )
 
         return doc_info
-
-    def get(self, company_id, project_id):
-        """
-        Gets all folders in a project
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-
-        Returns
-        -------
-        folders : list of dict
-            available folders and their corresponding response body
-        """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        doc_info = self.get_request(
-            api_url=f"/rest/v1.0/projects/{project_id}/documents",
-            additional_headers=headers
-        )
-
-        folders= []
-        for doc in doc_info:
-            if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
-                if doc["document_type"] == "folder":
-                    folders.append(doc)
-
-        if len(folders) > 0:
-            return folders
-        else:
-            raise NotFoundItemError(f"No folders are available in Project {project_id}")
     
     def find(self, company_id, project_id, identifier):
         """
@@ -458,42 +503,6 @@ class Files(Documents):
             )
 
         return doc_info        
-
-    def get(self, company_id, project_id):
-        """
-        Gets all files in a project
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-
-        Returns
-        -------
-        files : list of dict
-            available folders and their corresponding response body
-        """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        doc_info = self.get_request(
-            api_url=f"/rest/v1.0/projects/{project_id}/documents",
-            additional_headers=headers
-        )
-
-        files = []
-        for doc in doc_info:
-            if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
-                if doc["document_type"] == "file":
-                    files.append(doc)
-
-        if len(files) > 0:
-            return files
-        else:
-            raise NotFoundItemError(f"No files are available in Project {project_id}")
     
     def find(self, company_id, project_id, identifier):
         """
