@@ -24,6 +24,7 @@ if __name__ == "__main__":
 
     # Example 1: list all projects
     # ---------
+    print("Example 1")
     projects = connection.__projects__.get(
         company_id=company["id"]
     )
@@ -32,6 +33,7 @@ if __name__ == "__main__":
 
     # Example 2: find project by name (str)
     # ---------
+    print("\nExample 2")
     project1 = connection.__projects__.find(
         company_id=company["id"],
         identifier="Sandbox Test Project"
@@ -40,6 +42,7 @@ if __name__ == "__main__":
 
     # Example 3: find project by id (int)
     # ---------
+    print("\nExample 3")
     project2 = connection.__projects__.find(
         company_id=company["id"],
         identifier=108707
@@ -48,6 +51,7 @@ if __name__ == "__main__":
 
     # Example 4: no such project
     # ---------
+    print("\nExample 4")
     try:
         project3 = connection.__projects__.find(
             company_id=company["id"],

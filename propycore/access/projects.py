@@ -16,7 +16,7 @@ class Projects(Base):
 
         self.endpoint = "/rest/v1.1/projects"
 
-    def get(self, company_id, page=1, per_page=100):
+    def get(self, company_id, per_page=100):
         """
         Gets a list of all the projects from a certain company
 
@@ -34,16 +34,25 @@ class Projects(Base):
         projects : list of dict
             list where each value is a dict with the project's id, active status (is_active), and name
         """
-        params = {
-            "company_id": company_id,
-            "page": page,
-            "per_page": per_page
-        }
-        
-        projects = self.get_request(
-            api_url=self.endpoint,
-            params=params
-        )
+        projects = []
+        n_projects = 1
+        page = 1
+        while n_projects > 0:
+            params = {
+                "company_id": company_id,
+                "page": page,
+                "per_page": per_page
+            }
+            
+            projects_per_page = self.get_request(
+                api_url=self.endpoint,
+                params=params
+            )
+            n_projects = len(projects_per_page)
+
+            projects += projects_per_page
+
+            page += 1
 
         return projects
 
