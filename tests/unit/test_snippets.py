@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from propycore import procore
 
 from snippets import auth
-from snippets import find_company, find_project, find_folder, find_file, find_rfi
 
 class TestAuth:
 

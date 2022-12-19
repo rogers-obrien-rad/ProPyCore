@@ -28,3 +28,5 @@ twine==4.0.1
 urllib3==1.26.12
 webencodings==0.5.1
 zipp==3.9.0
+fuzzywuzzy
+python-Levenshtein
