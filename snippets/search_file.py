@@ -45,6 +45,7 @@ if __name__ == "__main__":
 
     # Example 3: Find folder 
     # ---------
+    print("\nExample 3")
     doc3 = connection.__folders__.search(
         company_id=company["id"],
         project_id=project["id"],
@@ -53,3 +54,18 @@ if __name__ == "__main__":
     print(doc3)
     # {'id': 10857734, 'created_at': '2022-10-25T13:47:34Z', 'created_by': {'id': 93688, 'company_name': "Rogers O'Brien Construction", 'locale': None, 'login': 'hfritz@r-o.com', 'name': 'Hagen Fritz'}, 'custom_fields': {}, 'document_type': 'folder', 'is_deleted': False, 'is_recycle_bin': False, 'name': 'I-Safety and Environmental', 'name_with_path': 'R&D Test Project/I-Safety and Environmental', 'parent_id': 10857730, 'private': False, 'read_only': False, 'updated_at': '2022-10-25T13:47:34Z', 'search_critera': {'value': 'safety', 'match': 83}} 
     
+    # Example 4: Find subfolders in specified folder 
+    # ---------
+    print("\nExample 4")
+    folder = connection.__folders__.find(
+        company_id=company["id"],
+        project_id=project["id"],
+        identifier="I-Safety and Environmental"
+    )
+    doc4 = connection.__folders__.search(
+        company_id=company["id"],
+        project_id=project["id"],
+        folder_id=folder["id"],
+        value="subcontractor"
+    )
+    print(doc4)
