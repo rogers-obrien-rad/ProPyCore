@@ -1,5 +1,6 @@
 import os
 import sys
+import urllib
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
@@ -20,17 +21,48 @@ if __name__ == "__main__":
     )
 
     company = connection.__companies__.find(identifier="DataPull")
-    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
+    project = connection.__projects__.find(
+        company_id=company["id"],
+        identifier="R&D Test Project"
+    )
 
+    # Example 1: Get all folders
+    # ---------
+    print("Example 1")
     folders = connection.__folders__.get(
         company_id=company["id"],
         project_id=project["id"]
     )
+    print(folders)
 
+    # Example 2: Get all files
+    # ---------
+    print("\nExample 2")
     files = connection.__files__.get(
         company_id=company["id"],
         project_id=project["id"]
     )
+    print(files)
     
     print("Number of folders:", len(folders))
     print("Number of files:", len(files))
+
+    # Example 3: Get all children folders from parent
+    # ---------
+    print("\nExample 3")
+    subfolders = connection.__folders__.get(
+        company_id=company["id"],
+        project_id=project["id"],
+        folder_id=10857735
+    )
+    print(subfolders)
+
+    # Example 4: Get all children files from parent
+    # ---------
+    print("\nExample 4")
+    subfiles = connection.__files__.get(
+        company_id=company["id"],
+        project_id=project["id"],
+        folder_id=10857734
+    )
+    print(subfiles)

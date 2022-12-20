@@ -89,7 +89,7 @@ class Documents(Base):
 
         return doc_info
 
-    def get(self, company_id, project_id):
+    def get(self, company_id, project_id, folder_id=None):
         """
         Gets all documents in a project
 
@@ -105,16 +105,24 @@ class Documents(Base):
         docs : list of dict
             available docs and their corresponding response body
         """
+        # get document type (file or folder) from endpoint
+        doc_type = self.endpoint.split("/")[-1][:-1] # remove last char which is an "s"
+
         n_docs = 1
         page = 1
         docs = []
         while n_docs > 0:
+
             params = {
                 "view": "normal",
                 "sort": "name",
                 "page": page,
-                "per_page": 10000
+                "per_page": 10000,
+                "filters[document_type]": doc_type,
+                "filters[is_in_recycle_bin]": False
             }
+            if folder_id is not None:
+                params["filters[folder_id]"] = folder_id
 
             headers = {
                 "Procore-Company-Id": f"{company_id}"
@@ -125,24 +133,21 @@ class Documents(Base):
                 additional_headers=headers,
                 params=params
             )
+
             n_docs = len(doc_info)
 
-            # get document type (file or folder) from endpoint
-            doc_type = self.endpoint.split("/")[-1][:-1] # remove last char which is an "s"
-
             for doc in doc_info:
-                if doc["is_deleted"] is False and doc["is_recycle_bin"] is False:
-                    if doc["document_type"] == doc_type:
-                        docs.append(doc)
+                if doc["is_deleted"] is False:
+                    docs.append(doc)
 
             page += 1 
 
         if len(docs) > 0:
             return docs
         else:
-            raise NotFoundItemError(f"No folders are available in Project {project_id}")
+            raise NotFoundItemError(f"No documents are available in Project {project_id}")
 
-    def search(self, company_id, project_id, value):
+    def search(self, company_id, project_id, value, folder_id=None):
         """
         Searches through all available files to find the closet match to the given value
 
@@ -154,6 +159,8 @@ class Documents(Base):
             project id number or name
         value : str
             search criteria
+        folder_id : int, default None
+            id of parent folder
 
         Returns
         -------
@@ -162,7 +169,8 @@ class Documents(Base):
         """
         docs = self.get(
             company_id=company_id,
-            project_id=project_id
+            project_id=project_id,
+            folder_id=folder_id
         )
 
         # get document type (file or folder) from endpoint
