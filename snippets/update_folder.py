@@ -20,8 +20,11 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
-    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
+    project = connection.__projects__.find(
+        company_id=company["id"],
+        identifier="Sandbox Test Project"
+    )
 
     # create a folder
     connection.__folders__.create(
@@ -38,6 +41,7 @@ if __name__ == "__main__":
 
     # Example 1: Move folder
     # ---------
+    print("Example 1")
     subfolder = connection.find_doc(
         company_id=company["id"],
         project_id=project["id"],
@@ -53,6 +57,7 @@ if __name__ == "__main__":
 
     # Example 2: Update folder name
     # ---------
+    print("\nExample 2")
     connection.__folders__.update(
         company_id=company["id"],
         project_id=project["id"],
@@ -62,6 +67,7 @@ if __name__ == "__main__":
 
     # Example 3: Change permissions
     # ---------
+    print("\nExample 2")
     connection.__folders__.update(
         company_id=company["id"],
         project_id=project["id"],
