@@ -20,10 +20,10 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
     project = connection.__projects__.find(
         company_id=company["id"],
-        identifier="R&D Test Project"
+        identifier="Sandbox Test Project"
     )
 
     # Example 1: Get all folders
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     subfolders = connection.__folders__.get(
         company_id=company["id"],
         project_id=project["id"],
-        folder_id=10857735
+        folder_id=607848046
     )
     print(subfolders)
 
@@ -63,6 +63,6 @@ if __name__ == "__main__":
     subfiles = connection.__files__.get(
         company_id=company["id"],
         project_id=project["id"],
-        folder_id=10857734
+        folder_id=607848046
     )
     print(subfiles)
