@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
@@ -36,6 +37,8 @@ if __name__ == "__main__":
     )
     print(f"{file1['id']}: {file1['name']}")
     # 607852186: test_pdf.pdf
+    print(json.dumps(file1, indent=4))
+    # See example in /references/
 
     # Example 2: Find file in subfolder
     # ----------

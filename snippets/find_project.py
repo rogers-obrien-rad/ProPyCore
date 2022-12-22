@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
@@ -42,6 +43,8 @@ if __name__ == "__main__":
     )
     print(f"{project1['id']}: {project1['name']}")
     # 291567: Sandbox Test Project
+    print(json.dumps(project1, indent=4))
+    # See example in /references/
 
     # Example 3: find project by id (int)
     # ---------

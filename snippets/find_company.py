@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
@@ -34,6 +35,8 @@ if __name__ == "__main__":
     company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
     print(f"{company['id']}: {company['name']}")
     # 8089: Rogers-O`Brien Construction
+    print(json.dumps(company, indent=4))
+    # See example in /references/
 
     # Example 3: find company by id (int)
     # ---------

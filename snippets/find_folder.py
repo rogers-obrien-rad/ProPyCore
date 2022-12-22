@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
@@ -36,6 +37,8 @@ if __name__ == "__main__":
     )
     print(f"{folder1['id']}: {folder1['name']}")
     # 607848046: Z-Research and Development
+    print(json.dumps(folder1, indent=4))
+    # See example in /references/
 
     # Example 2: Find subfolder
     # ----------
