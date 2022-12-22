@@ -20,7 +20,7 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
 
     # Example 1: list all projects
     # ---------
@@ -29,7 +29,9 @@ if __name__ == "__main__":
         company_id=company["id"]
     )
     for project in projects:
-        print(project)
+        print(f"{project['id']}: {project['name']}")
+    # 1668030: 1301 South Lamar
+    # 291567: Sandbox Test Project
 
     # Example 2: find project by name (str)
     # ---------
@@ -39,15 +41,17 @@ if __name__ == "__main__":
         identifier="Sandbox Test Project"
     )
     print(f"{project1['id']}: {project1['name']}")
+    # 291567: Sandbox Test Project
 
     # Example 3: find project by id (int)
     # ---------
     print("\nExample 3")
     project2 = connection.__projects__.find(
         company_id=company["id"],
-        identifier=108707
+        identifier=1668030
     )
     print(f"{project2['id']}: {project2['name']}")
+    # 1668030: 1301 South Lamar
 
     # Example 4: no such project
     # ---------
@@ -60,3 +64,4 @@ if __name__ == "__main__":
         print(project3)
     except NotFoundItemError as e:
         print(e)
+    # 'Could not find project Fake Project'
