@@ -20,41 +20,47 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
-    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
+    project = connection.__projects__.find(
+        company_id=company["id"],
+        identifier="Sandbox Test Project"
+    )
 
-    # Example 1: Search for public file
+    # Example 1: Search for file with multiple perfect matches
     # ---------
+    print("Example 1")
     doc1 = connection.__files__.search(
         company_id=company["id"],
         project_id=project["id"],
-        value="hagen"
+        value="test"
     )
-    print(doc1)
-    # {'id': 10893611, 'created_at': '2022-11-11T18:36:13Z', 'created_by': {'id': 94241, 'company_name': '', 'locale': None, 'login': 'ro-data-connection-7e2e9a8e@procore.com', 'name': ' ro-data-connection-7e2e9a8e'}, 'custom_fields': {}, 'document_type': 'file', 'is_deleted': False, 'is_recycle_bin': False, 'name': 'rogers-obrien-rd_engineer-fritz-hagen-2022-11-11.pdf', 'name_with_path': 'R&D Test Project/I-Safety and Environmental/3-Orientations and Training/Subcontractors Orientation/rogers-obrien-rd_engineer-fritz-hagen-2022-11-11.pdf', 'parent_id': 10857736, 'private': False, 'read_only': False, 'updated_at': '2022-11-11T18:36:13Z', 'search_critera': {'value': 'hagen', 'match': 100}}
-
+    print(f"{doc1['id']}: {doc1['name']}")
+    # warn("Multiple 100% matches - try refining your search critera for better results")
+    # 607851830: test_pdf.pdf
+    
     # Example 1: Search for private file
     # ---------
+    print("\nExample 2")
     doc2 = connection.__files__.search(
         company_id=company["id"],
         project_id=project["id"],
         value="another"
     )
-    print(doc2)
-    # {'id': 10874954, 'created_at': '2022-11-02T19:01:20Z', 'created_by': {'id': 93809, 'company_name': '', 'locale': None, 'login': 'datapull-8c71be1b@procore.com', 'name': ' datapull-8c71be1b'}, 'custom_fields': {}, 'document_type': 'file', 'is_deleted': False, 'is_recycle_bin': False, 'name': 'another_test_pdf.pdf', 'name_with_path': 'R&D Test Project/I-Safety and Environmental/another_test_pdf.pdf', 'parent_id': 10857734, 'private': True, 'read_only': False, 'updated_at': '2022-11-02T19:01:25Z', 'search_critera': {'value': 'another', 'match': 100}}
-
+    print(f"{doc2['id']}: {doc2['name']}")
+    # 607851830: another_test_pdf.pdf
+    
     # Example 3: Find folder 
     # ---------
     print("\nExample 3")
     doc3 = connection.__folders__.search(
         company_id=company["id"],
         project_id=project["id"],
-        value="safety"
+        value="training"
     )
-    print(doc3)
-    # {'id': 10857734, 'created_at': '2022-10-25T13:47:34Z', 'created_by': {'id': 93688, 'company_name': "Rogers O'Brien Construction", 'locale': None, 'login': 'hfritz@r-o.com', 'name': 'Hagen Fritz'}, 'custom_fields': {}, 'document_type': 'folder', 'is_deleted': False, 'is_recycle_bin': False, 'name': 'I-Safety and Environmental', 'name_with_path': 'R&D Test Project/I-Safety and Environmental', 'parent_id': 10857730, 'private': False, 'read_only': False, 'updated_at': '2022-10-25T13:47:34Z', 'search_critera': {'value': 'safety', 'match': 83}} 
-    
-    # Example 4: Find subfolders in specified folder 
+    print(f"{doc3['id']}: {doc3['name']}")
+    # 607846718: 3-Orientations and Training
+
+    # Example 4: Find file in subfolder 
     # ---------
     print("\nExample 4")
     folder = connection.__folders__.find(
@@ -62,10 +68,28 @@ if __name__ == "__main__":
         project_id=project["id"],
         identifier="I-Safety and Environmental"
     )
-    doc4 = connection.__folders__.search(
+    doc4 = connection.__files__.search(
+        company_id=company["id"],
+        project_id=project["id"],
+        folder_id=folder["id"],
+        value="test"
+    )
+    print(f"{doc4['id']}: {doc4['name']}")
+    # 607851830: another_test_pdf.pdf
+    
+    # Example 5: Find subfolder in specified folder 
+    # ---------
+    print("\nExample 5")
+    folder = connection.__folders__.find(
+        company_id=company["id"],
+        project_id=project["id"],
+        identifier="I-Safety and Environmental"
+    )
+    doc5 = connection.__folders__.search(
         company_id=company["id"],
         project_id=project["id"],
         folder_id=folder["id"],
         value="subcontractor"
     )
-    print(doc4)
+    print(f"{doc5['id']}: {doc5['name']}")
+    # 607846791: Subcontractors Orientation

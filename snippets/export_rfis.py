@@ -21,13 +21,16 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
-    project = connection.__projects__.find(company_id=company["id"], identifier="Sandbox Test Project")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
+    project = connection.__projects__.find(
+        company_id=company["id"],
+        identifier="Sandbox Test Project"
+    )
 
-    # Example 1: Find rfi by number
+    # Example 1: Export all RFIs
     # ---------
+    print("Example 1")
     data = connection.__rfis__.export(
         company_id=company["id"],
         project_id=project["id"],
     )
-    print(data)

@@ -21,11 +21,16 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
-    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
+    project = connection.__projects__.find(
+        company_id=company["id"],
+        identifier="Sandbox Test Project"
+    )
 
+    # Housekeeping
+    # ------------
     # start by deleting the test files if they are present
-    for old_file in ["test_pdf.pdf","renamed_test_pdf.pdf", "another_test_pdf.pdf"]:
+    for old_file in ["test_pdf.pdf", "renamed_test_pdf", "another_test_pdf.pdf"]:
         # look for the filename
         try:
             file_temp = connection.__files__.find(
@@ -62,6 +67,7 @@ if __name__ == "__main__":
 
     # Example 1: Move file
     # ---------
+    print("Example 1")
     subfolder = connection.__folders__.find(
         company_id=company["id"],
         project_id=project["id"],
@@ -72,13 +78,14 @@ if __name__ == "__main__":
         company_id=company["id"],
         project_id=project["id"],
         doc_id=file_original["id"],
-        parent_id=subfolder["id"]
+        folder_id=subfolder["id"]
     )
     print(f"Original parent ID:", file_original["parent_id"])
     print(f"Updated parent ID:", file_new_loc["parent_id"])
 
     # Example 2: Update file name
     # ---------
+    print("\nExample 2")
     file_new_name = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
@@ -90,6 +97,7 @@ if __name__ == "__main__":
 
     # Example 3: Change Description
     # ---------
+    print("\nExample 3")
     file_new_desc = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
@@ -101,6 +109,7 @@ if __name__ == "__main__":
 
     # Example 4: Change permissions
     # ---------
+    print("\nExample 4")
     file_new_permissions = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
@@ -112,6 +121,7 @@ if __name__ == "__main__":
 
     # Example 5: Update file content
     # ---------
+    print("\nExample 5")
     file_new_content = connection.__files__.update(
         company_id=company["id"],
         project_id=project["id"],
