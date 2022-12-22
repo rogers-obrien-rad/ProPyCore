@@ -22,8 +22,6 @@ class Companies(Base):
 
         Parameters
         ----------
-        page : int, default 1
-            page number
         per_page : int, default 100
             number of companies to include
 

@@ -24,8 +24,6 @@ class Projects(Base):
         ----------
         company_id : int
             unique identifier for the company
-        page : int, default 1
-            page number
         per_page : int, default 100
             number of companies to include
 
