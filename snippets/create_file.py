@@ -39,6 +39,7 @@ if __name__ == "__main__":
         print(f"{file_in_root['id']}: {file_in_root['name']}")
     except WrongParamsError as e:
         print(e)
+    # 607852186: test_pdf.pdf
 
     # Example 2: Create file in specified location
     # ---------
@@ -54,8 +55,23 @@ if __name__ == "__main__":
             company_id=company["id"],
             project_id=project["id"],
             folder_id=folder["id"],
-            filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/test_pdf.pdf"
+            filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/another_test_pdf.pdf"
         )
         print(f"{file['id']}: {file['name']}")
     except WrongParamsError as e:
         print(e)
+    # 607851830: another_test_pdf.pdf
+
+    # Example 3: File already exists
+    # ---------
+    try:
+        file = connection.__files__.create(
+            company_id=company["id"],
+            project_id=project["id"],
+            folder_id=folder["id"],
+            filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/another_test_pdf.pdf"
+        )
+        print(f"{file['id']}: {file['name']}")
+    except WrongParamsError as e:
+        print(e)
+    # 'File another_test_pdf.pdf already exists'
