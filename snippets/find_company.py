@@ -22,30 +22,32 @@ if __name__ == "__main__":
 
     # Example 1: list available companies
     # ---------
+    print("Example 1")
     companies = connection.__companies__.get()
     for company in companies:
-        print(company)
+        print(company["name"])
+    # Rogers-O`Brien Construction
 
     # Example 2: find company by name (str)
     # ---------
-    company = connection.__companies__.find(
-        identifier="DataPull"
-    )
+    print("\nExample 2")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
     print(f"{company['id']}: {company['name']}")
+    # 8089: Rogers-O`Brien Construction
 
     # Example 3: find company by id (int)
     # ---------
-    company = connection.__companies__.find(
-        identifier=3829471
-    )
+    print("\nExample 3")
+    company = connection.__companies__.find(identifier=8089)
     print(f"{company['id']}: {company['name']}")
+    # 8089: Rogers-O`Brien Construction
 
     # Example 4: non-existent company
     # ---------
+    print("\nExample 4")
     try:
-        company = connection.__companies__.find(
-            identifier=1
-        )
+        company = connection.__companies__.find(identifier=1)
         print(company)
     except NotFoundItemError as e:
         print(e)
+    # 'Could not find company 1'
