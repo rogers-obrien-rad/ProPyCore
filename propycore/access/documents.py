@@ -145,11 +145,14 @@ class Documents(Base):
         if len(docs) > 0:
             return docs
         else:
-            raise NotFoundItemError(f"No documents are available in Project {project_id}")
+            raise NotFoundItemError(f"No {doc_type}s are available in Project {project_id} from Parent ID {folder_id if folder_id is not None else 'Root'}")
 
     def search(self, company_id, project_id, value, folder_id=None):
         """
-        Searches through all available files to find the closet match to the given value
+        Searches through all available files to find the closet match to the given value.
+        For documents with the same match score, the last document to be found is returned.
+        Folders in root are searched completely first (in alphanumeric order) and then files
+        in the root are considered. 
 
         Parameters
         ----------
@@ -187,7 +190,7 @@ class Documents(Base):
                 if temp_score == 100:
                     n_perfect += 1
                 # update match values
-                if temp_score > score:
+                if temp_score >= score:
                     score = temp_score
                     result = doc
 
@@ -244,7 +247,7 @@ class Folders(Documents):
 
         return docs
 
-    def create(self, company_id, project_id, folder_name, parent_id=None):
+    def create(self, company_id, project_id, folder_name, folder_id=None):
         """
         Creates a folder 
 
@@ -256,7 +259,7 @@ class Folders(Documents):
             unique identifier for the project
         folder_name : str
             name of the folder to create
-        parent_id : int or str, default None
+        folder_id : int or str, default None
             the id of the parent folder to place this folder
             if not included, the folder will placed at the root
 
@@ -265,7 +268,7 @@ class Folders(Documents):
         doc_info : dict
             request body
         """
-        if parent_id is None:
+        if folder_id is None:
             data = {
                 "folder":{
                     "name": folder_name,
@@ -276,7 +279,7 @@ class Folders(Documents):
             data = {
                 "folder":{
                     "name": folder_name,
-                    "parent_id": str(parent_id),
+                    "parent_id": str(folder_id),
                     "explicit_permissions": False
                 }
             }
@@ -301,7 +304,7 @@ class Folders(Documents):
         
         return doc_info
         
-    def update(self, company_id, project_id, doc_id, parent_id=None, folder_name=None, private=None):
+    def update(self, company_id, project_id, doc_id, folder_id=None, folder_name=None, private=None):
         """
         Updates the given folder
 
@@ -313,7 +316,7 @@ class Folders(Documents):
             unique identifier for the project
         doc_id : int
             unique identifier for the folder
-        parent_id : int, default None -> root
+        folder_id : int, default None -> root
             location where the folder exists
         folder_name : str, default None
             new name to assign to the folder
@@ -335,7 +338,7 @@ class Folders(Documents):
 
         # building the body from available data
         body = {}
-        for key, val in zip(["parent_id","name","explicit_permissions"], [parent_id, folder_name, private]):
+        for key, val in zip(["parent_id","name","explicit_permissions"], [folder_id, folder_name, private]):
             if val is not None:
                 body[key] = val
 
@@ -395,7 +398,7 @@ class Files(Documents):
 
         self.endpoint = "/rest/v1.0/files"
 
-    def create(self, company_id, project_id, filepath, parent_id=None, description=None):
+    def create(self, company_id, project_id, filepath, folder_id=None, description=None):
         """
         Creates a file 
 
@@ -407,7 +410,7 @@ class Files(Documents):
             unique identifier for the project
         filepath : str
             path to the file to upload
-        parent_id : int or str, default None
+        folder_id : int or str, default None
             the id of the parent folder to place this folder
             if not included, the folder will placed at the root
         description : str, default None
@@ -431,8 +434,9 @@ class Files(Documents):
             "file[name]": f"{filename}",
             "file[description]": "None" if description is None else description,
         }
-        if parent_id is not None:
-            data["file[parent_id]"] = int(parent_id)
+
+        if folder_id is not None:
+            data["file[parent_id]"] = int(folder_id)
 
         file = [
             ("file[data]", open(filepath, "rb"))
@@ -451,7 +455,7 @@ class Files(Documents):
         
         return doc_info
 
-    def update(self, company_id, project_id, doc_id, filepath=None, parent_id=None, filename=None, description=None, private=None):
+    def update(self, company_id, project_id, doc_id, filepath=None, folder_id=None, filename=None, description=None, private=None):
         """
         Updates the given folder
 
@@ -463,7 +467,7 @@ class Files(Documents):
             unique identifier for the project
         doc_id : int
             unique identifier for the folder
-        parent_id : int, default None -> root
+        folder_id : int, default None -> root
             location where the folder exists
         folder_name : str, default None
             new name to assign to the folder
@@ -485,7 +489,7 @@ class Files(Documents):
 
         # building the body from available data
         data = {}
-        for key, val in zip(["file[parent_id]","file[name]","file[description]","file[private]"], [parent_id, filename, description, private]):
+        for key, val in zip(["file[parent_id]","file[name]","file[description]","file[private]"], [folder_id, filename, description, private]):
             if val is not None:
                 data[key] = val
 
