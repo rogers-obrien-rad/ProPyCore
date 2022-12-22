@@ -21,11 +21,15 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="DataPull")
-    project = connection.__projects__.find(company_id=company["id"], identifier="R&D Test Project")
+    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
+    project = connection.__projects__.find(
+        company_id=company["id"],
+        identifier="Sandbox Test Project"
+    )
 
     # Example 1: Create file in Root (no parent_id provided)
     # ---------
+    print("Example 1")
     try:
         file_in_root = connection.__files__.create(
             company_id=company["id"],
@@ -38,6 +42,7 @@ if __name__ == "__main__":
 
     # Example 2: Create file in specified location
     # ---------
+    print("\nExample 2")
     try:
         folder = connection.__folders__.find(
             company_id=company["id"],
@@ -48,7 +53,7 @@ if __name__ == "__main__":
         file = connection.__files__.create(
             company_id=company["id"],
             project_id=project["id"],
-            parent_id=folder["id"],
+            folder_id=folder["id"],
             filepath=f"{pathlib.Path(__file__).resolve().parent.parent}/data/test/test_pdf.pdf"
         )
         print(f"{file['id']}: {file['name']}")
