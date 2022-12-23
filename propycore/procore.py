@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, projects, documents, rfis
+from .access import companies, projects, documents, rfis, directory
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -41,12 +41,18 @@ class Procore:
         # get access token; resets from nothing
         self.reset_access_token()
 
-        # create instances of useful procore endpoints
+        # create instances of procore endpoints
         self.__companies__ = companies.Companies(access_token=self.__access_token, server_url=self.__base_url)
         self.__projects__ = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
+
         self.__folders__ = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
         self.__files__ = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
+
         self.__rfis__ = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
+
+        self.__users__ = directory.Users(access_token=self.__access_token, server_url=self.__base_url)
+        self.__vendors__ = directory.Vendors(access_token=self.__access_token, server_url=self.__base_url)
+        self.__trades__ = directory.Trades(access_token=self.__access_token, server_url=self.__base_url)
         
     def get_auth_code(self):
         """

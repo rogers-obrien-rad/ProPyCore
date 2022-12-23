@@ -1,0 +1,31 @@
+{
+    "id": 545437,
+    "name": "Todd Wynne",
+    "first_name": "Todd",
+    "initials": "TW",
+    "last_name": "Wynne",
+    "business_id": null,
+    "address": "",
+    "avatar": "https://storage.procore.com/v4/d/us-east-1/pro-core.com/prostore/20170303161437_production_1172347159.jpg?sig=a3fadd5d6d8695ec6a350c4db189e35c67e716e9b93d86e5ea0a58d99580dcee",
+    "business_phone": "(214) 773-7264",
+    "business_phone_extension": null,
+    "city": "",
+    "contact_id": 5181440,
+    "country_code": "US",
+    "email_address": "twynne@r-o.com",
+    "employee_id": "",
+    "erp_integrated_accountant": false,
+    "fax_number": "",
+    "is_active": true,
+    "is_employee": true,
+    "job_title": "Chief Innovation Officer",
+    "mobile_phone": "",
+    "origin_id": null,
+    "state_code": "",
+    "zip": "",
+    "work_classification_id": null,
+    "vendor": {
+        "id": 19174982,
+        "name": "Rogers-O'Brien Construction Company"
+    }
+}
