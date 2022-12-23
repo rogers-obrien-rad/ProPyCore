@@ -12,6 +12,25 @@ This package accesses Procore's API through the _Client Credentials_ [OAuth 2.0 
 ## Installation
 
 ## Examples
+To get started, you need to create an instance of a `Procore` object from `propycore.procore`. To do so, you will need to access information from your Procore Data Connection App:
+* **Client ID**: Accessible from your app at [Procore Developers](https://developers.procore.com/signin) - will vary between sandbox and production modes
+* **Client Secret**: Accessible from your app at [Procore Developers](https://developers.procore.com/signin) - will vary between sandbox and production modes
+* **Redirect URI**: For data connection apps, this value will be "urn:ietf:wg:oauth:2.0:oob"
+* **OAuth URL**: Will be "https://sandbox.procore.com" for sandbox environments or "https://app.procore.com" for production
+* **Base URL**: Will be "https://sandbox.procore.com" for sandbox environments or "https://app.procore.com" for production
+
+Once you have these values, you will use them as parameters in the `Procore` object:
+
+```python
+connection = Procore(
+    client_id=os.getenv("CLIENT_ID"),
+    client_secret=os.getenv("CLIENT_SECRET"),
+    redirect_uri=os.getenv("REDIRECT_URI"),
+    oauth_url=os.getenv("OAUTH_URL"),
+    base_url=os.getenv("BASE_URL")
+)
+
+In this case, I have saved my App information as individual environment variables. For examples on how to access Procore information and create new object, see the [snippets](https://github.com/rogers-obrien-rad/ProPyCore/tree/main/snippets) folder for a rather exhaustive list. 
 
 # Resources
 
