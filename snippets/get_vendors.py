@@ -30,7 +30,7 @@ if __name__ == "__main__":
         company_id=company["id"]
     )
 
-    print("Number of users:", len(comp_vendors))
+    print("Number of vendors:", len(comp_vendors))
     print(json.dumps(comp_vendors[0],indent=4))
     # See example in /references/
 
@@ -48,7 +48,25 @@ if __name__ == "__main__":
         project_id=project["id"]
     )
 
-    print("Number of users:", len(proj_vendors))
+    print("Number of vendors:", len(proj_vendors))
     print(json.dumps(proj_vendors[0],indent=4))
     # See example in /references/
+
+     # Example 3: List all project vendor names
+    # ---------
+    print("\nExample 3")
+    # find project
+    project2 = connection.__projects__.find(
+        company_id=company["id"],
+        identifier=1668030
+    )
+
+    proj_vendors2 = connection.__vendors__.get(
+        company_id=company["id"],
+        project_id=project2["id"]
+    )
+
+    print("Number of vendors:", len(proj_vendors2))
+    for vendor in proj_vendors2:
+        print(vendor["company"])
 

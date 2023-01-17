@@ -355,7 +355,7 @@ class Folders(Documents):
 
         return doc_info
     
-    def find(self, company_id, project_id, identifier):
+    def find(self, company_id, project_id, identifier, folder_id=None):
         """
         Finds the information from the folder name
 
@@ -367,6 +367,9 @@ class Folders(Documents):
             project id number or name
         identifier : str
             name of the folder to look for
+        folder_id : int, default None
+            parent id to get subfolder in
+            None specifies to start at the root
 
         Returns
         -------
@@ -375,7 +378,8 @@ class Folders(Documents):
         """
         folders = self.get(
             company_id=company_id,
-            project_id=project_id
+            project_id=project_id,
+            folder_id=folder_id
         )
 
         for folder in folders:
@@ -516,7 +520,7 @@ class Files(Documents):
 
         return doc_info        
     
-    def find(self, company_id, project_id, identifier):
+    def find(self, company_id, project_id, identifier, folder_id=None):
         """
         Finds the information from the folder name
 
@@ -526,10 +530,11 @@ class Files(Documents):
             company id number or name
         project : : int or str
             project id number or name
-        name : str
+        identifier : str
             name of the file or folder to look for
-        look_for_file : boolean, default False
-            whether to look for file or folder
+        folder_id : int, default None
+            parent id to get subfolder in
+            None specifies to start at the root
 
         Returns
         -------
@@ -538,7 +543,8 @@ class Files(Documents):
         """
         files = self.get(
             company_id=company_id,
-            project_id=project_id
+            project_id=project_id,
+            folder_id=folder_id
         )
 
         for file in files:

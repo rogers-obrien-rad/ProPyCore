@@ -46,4 +46,3 @@ if __name__ == "__main__":
     print(f"{trade['id']}: {trade['name']}")
     print(json.dumps(trade,indent=4))
     # See example in /references/
-

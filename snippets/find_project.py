@@ -55,6 +55,7 @@ if __name__ == "__main__":
     )
     print(f"{project2['id']}: {project2['name']}")
     # 1668030: 1301 South Lamar
+    print(json.dumps(project2, indent=4))
 
     # Example 4: no such project
     # ---------
