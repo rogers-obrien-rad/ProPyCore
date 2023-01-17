@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
 
-    # Example 1: Get company-level users
+    # Example 1: Get company-level vendors
     # ---------
     print("Example 1")
     comp_users = connection.__users__.get(
