@@ -1,49 +1,102 @@
 {
-    "id":108707,
-    "accounting_project_number":"None",
-    "active":true,
-    "address":"None",
-    "city":"Austin",
-    "code":"None",
-    "company":{
-       "id":3829260,
-       "name":"DataPull"
-    },
-    "completion_date":"2023-01-01",
-    "country_code":"US",
-    "county":"Travis County",
-    "created_at":"2022-10-25T13:45:59Z",
-    "custom_fields":{
-       
-    },
-    "designated_market_area":"None",
-    "display_name":"220000 - R&D Test Project",
-    "erp_integrated":false,
-    "estimated_value":"5000000.0",
-    "is_demo":false,
-    "latitude":30.2961708,
-    "longitude":-97.7389543,
-    "name":"R&D Test Project",
-    "origin_code":"None",
-    "origin_data":"None",
-    "origin_id":"None",
-    "owners_project_id":"None",
-    "parent_job_id":"None",
-    "phone":"None",
-    "photo_id":1630901,
-    "project_bid_type_id":"None",
-    "project_number":"220000",
-    "project_owner_type_id":"None",
-    "project_region_id":"None",
-    "project_stage":{
-       "id":3,
-       "name":"Course of Construction"
-    },
-    "start_date":"2022-10-25",
-    "state_code":"TX",
-    "store_number":"None",
-    "time_zone":"Central Time (US & Canada)",
-    "total_value":"5000000.0",
-    "updated_at":"2022-10-28T21:37:14Z",
-    "zip":"78705"
- }
+   "id": 1668030,
+   "accounting_project_number": null,
+   "active": true,
+   "address": "1311 South Lamar Blvd",
+   "city": "Austin",
+   "code": "",
+   "company": {
+       "id": 8089,
+       "name": "Rogers-O`Brien Construction"
+   },
+   "completion_date": "2023-08-02",
+   "country_code": "US",
+   "county": "Travis County",
+   "created_at": "2021-06-04T17:24:06Z",
+   "custom_fields": {
+       "custom_field_168115": {
+           "data_type": "lov_entry",
+           "value": {
+               "id": 137971,
+               "label": "CCIP"
+           }
+       },
+       "custom_field_218239": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_218240": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_218241": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_218242": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_218243": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_218244": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_274577": {
+           "data_type": "decimal",
+           "value": 33.0
+       },
+       "custom_field_289151": {
+           "data_type": "rich_text",
+           "value": ""
+       },
+       "custom_field_289198": {
+           "data_type": "boolean",
+           "value": false
+       },
+       "custom_field_289287": {
+           "data_type": "rich_text",
+           "value": null
+       },
+       "custom_field_294366": {
+           "data_type": "lov_entry",
+           "value": {
+               "id": 254971,
+               "label": "GMP"
+           }
+       }
+   },
+   "designated_market_area": null,
+   "display_name": "212027 - 1301 South Lamar",
+   "erp_integrated": true,
+   "estimated_value": "50000000.0",
+   "is_demo": false,
+   "latitude": 30.2533281,
+   "longitude": -97.76248919999999,
+   "name": "1301 South Lamar",
+   "origin_code": "212027",
+   "origin_data": null,
+   "origin_id": "509748",
+   "owners_project_id": null,
+   "parent_job_id": null,
+   "phone": "",
+   "photo_id": null,
+   "project_bid_type_id": 4859,
+   "project_number": "212027",
+   "project_owner_type_id": null,
+   "project_region_id": 72498,
+   "project_stage": {
+       "id": 3,
+       "name": "Course of Construction"
+   },
+   "start_date": "2021-07-15",
+   "state_code": "TX",
+   "store_number": null,
+   "time_zone": "Central Time (US & Canada)",
+   "total_value": "50000000.0",
+   "updated_at": "2023-01-09T16:06:08Z",
+   "zip": "78745"
+}
