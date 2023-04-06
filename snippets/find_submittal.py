@@ -43,6 +43,7 @@ if __name__ == "__main__":
     submittal2 = connection.__submittals__.find(
         company_id=company["id"],
         project_id=project["id"],
-        identifier="GLAZING - Manufacturers Warranty"
+        identifier="METAL LADDERS"
     )
     print(submittal2["id"])
+    print(json.dumps(submittal2,indent=4))
