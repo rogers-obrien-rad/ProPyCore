@@ -26,24 +26,15 @@ if __name__ == "__main__":
         identifier="Sandbox Test Project"
     )
 
-    # Example 1: Find by ID
+    # Example 1
     # ---------
     print("Example 1")
-    submittal1 = connection.__submittals__.find(
+    tasks1 = connection.__tasks__.get(
         company_id=company["id"],
-        project_id=project["id"],
-        identifier=43460792
+        project_id=project["id"]
     )
+    #for submittal in submittals:
+    #    print(submittal["id"])
 
-    print(submittal1["title"])
-
-    # Example 2: Find by Title
-    # ---------
-    print("Example 2")
-    submittal2 = connection.__submittals__.find(
-        company_id=company["id"],
-        project_id=project["id"],
-        identifier="METAL LADDERS"
-    )
-    print(submittal2["id"])
-    print(json.dumps(submittal2,indent=4))
+    print(f"Number of Tasks: {len(tasks1)}")
+    print(json.dumps(tasks1[0],indent=4))

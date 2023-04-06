@@ -29,21 +29,21 @@ if __name__ == "__main__":
     # Example 1: Find by ID
     # ---------
     print("Example 1")
-    submittal1 = connection.__submittals__.find(
+    task1 = connection.__tasks__.find(
         company_id=company["id"],
         project_id=project["id"],
-        identifier=43460792
+        identifier=86281591
     )
 
-    print(submittal1["title"])
+    print(task1["name"])
 
     # Example 2: Find by Title
     # ---------
     print("Example 2")
-    submittal2 = connection.__submittals__.find(
+    task2 = connection.__tasks__.find(
         company_id=company["id"],
         project_id=project["id"],
-        identifier="METAL LADDERS"
+        identifier="BARKIN\' CREEK IMPROVEMENTS"
     )
-    print(submittal2["id"])
-    print(json.dumps(submittal2,indent=4))
+    print(task2["id"])
+    print(json.dumps(task2,indent=4))
