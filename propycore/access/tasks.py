@@ -9,19 +9,18 @@ from exceptions import *
 import pandas as pd
 from datetime import datetime
 
-class Submittal(Base):
+class Task(Base):
     """
     Access and working with submittals in a given project
     """
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
 
-        self.endpoint = "/rest/v1.1/projects"
+        self.endpoint = "/rest/v1.0/tasks"
 
-
-    def get(self, company_id, project_id, page=1, per_page=100):
+    def get(self, company_id, project_id):
         """
-        Gets all the available RFIs
+        Gets all the available tasks
 
         Parameters
         ----------
@@ -29,66 +28,81 @@ class Submittal(Base):
             unique identifier for the company
         project_id : int
             unique identifier for the project
-        page : int, default 1
-            page number
-        per_page : int, default 100
-            number of companies to include
 
         Returns
         -------
-        rfis : dict
-            available rfi data
+        tasks : dict
+            available submittal data
         """
-        params = {
-            "page": page,
-            "per_page": per_page
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
         }
+
+        n_tasks = 1
+        page = 1
+        tasks = []
+        while n_tasks > 0:
+
+            params = {
+                "project_id": project_id,
+                "page": page,
+                "per_page": 100
+            }
+
+            headers = {
+                "Procore-Company-Id": f"{company_id}"
+            }
+
+            task_selection = self.get_request(
+                api_url=f"{self.endpoint}",
+                additional_headers=headers,
+                params=params
+            )
+
+            n_tasks = len(task_selection)
+            tasks += task_selection
+            page += 1 
+
+        return tasks
+    
+    def show(self, company_id, project_id, task_id):
+        """
+        Shows the task info
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        task_id : int
+            unique identifier for the task
+
+        Returns
+        -------
+        task_info : dict
+            specific task information
+        """
 
         headers = {
             "Procore-Company-Id": f"{company_id}"
         }
 
-        submittals = self.get_request(
-            api_url=f"{self.endpoint}/{project_id}/submittals",
+        params = {
+            "project_id": project_id,
+        }
+
+        task_info = self.get_request(
+            api_url=f"{self.endpoint}/{task_id}",
             additional_headers=headers,
             params=params
         )
 
-        return submittals
-
-    def show(self, company_id, project_id, rfi_id):
-        """
-        Shows the RFI info
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-        rfi_id : int
-            unique identifier for the RFI
-
-        Returns
-        -------
-        rfi_info : dict
-            specific rfi information
-        """
-
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        doc_info = self.get_request(
-            api_url=f"{self.endpoint}/{project_id}/rfis/{rfi_id}",
-            additional_headers=headers,
-        )
-
-        return doc_info
+        return task_info
 
     def find(self, company_id, project_id, identifier):
         """
-        Finds specified RFI and returns data - wrapper for show method
+        Finds specified tasks and returns data
 
         Parameters
         ----------
@@ -97,50 +111,25 @@ class Submittal(Base):
         project_id : int
             unique identifier for the project
         identifier : int or str
-            identifier for RFI which can be id (int) or number (str)
+            identifier for task which can be id (int) or name (str)
 
         Returns
         -------
-        rfi_info : dict
-            RFI data
+        task_info : dict
+            task data
         """
         if isinstance(identifier, int):
             key = "id"
         else:
-            key = "number"
+            key = "name"
 
-        for rfi in self.get(company_id=company_id, project_id=project_id):
-            if rfi[key] == identifier:
-                rfi_info = self.show(
+        for task in self.get(company_id=company_id, project_id=project_id):
+            if task[key] == identifier:
+                task_info = self.show(
                     company_id=company_id,
                     project_id=project_id,
-                    rfi_id=rfi["id"]
+                    task_id=task["id"]
                 )
-                return rfi_info
+                return task_info
 
-        raise NotFoundItemError(f"Could not find RFI {identifier}")
-
-    def export(self, company_id, project_id, save_path=None):
-        """
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-        save_path : str, default None
-            full path to location to save the data
-            None will save the data in the /data/raw directory at root
-        """
-        rfis = self.get(
-            company_id=company_id,
-            project_id=project_id,
-            per_page=10000 # some ridiculous number so that we are catching all of them
-        )
-        df = pd.DataFrame.from_records(data=rfis)
-        
-        date_str = datetime.strftime(datetime.now(),"%Y_%m_%d")
-        if save_path is None:
-            df.to_csv(f"{pathlib.Path(__file__).resolve().parent.parent.parent}/data/raw/rfis-{company_id}-{project_id}-{date_str}.csv",index=False)
-        else:
-            df.to_csv(f"{save_path}/rfis-{company_id}-{project_id}-{date_str}.csv",index=False)
+        raise NotFoundItemError(f"Could not find task {identifier}")
