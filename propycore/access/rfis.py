@@ -79,12 +79,12 @@ class RFI(Base):
             "Procore-Company-Id": f"{company_id}"
         }
 
-        doc_info = self.get_request(
+        rfi_info = self.get_request(
             api_url=f"{self.endpoint}/{project_id}/rfis/{rfi_id}",
             additional_headers=headers,
         )
 
-        return doc_info
+        return rfi_info
 
     def find(self, company_id, project_id, identifier):
         """
