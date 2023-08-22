@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, projects, documents, rfis, directory, submittals, tasks
+from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -51,6 +51,7 @@ class Procore:
         self.__rfis__ = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
         self.__submittals__ = submittals.Submittal(access_token=self.__access_token, server_url=self.__base_url)
         self.__tasks__ = tasks.Task(access_token=self.__access_token, server_url=self.__base_url)
+        self.__tools__ = generic_tools.GenericTool(access_token=self.__access_token, server_url=self.__base_url)
 
         self.__users__ = directory.Users(access_token=self.__access_token, server_url=self.__base_url)
         self.__vendors__ = directory.Vendors(access_token=self.__access_token, server_url=self.__base_url)
