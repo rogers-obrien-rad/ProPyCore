@@ -1,6 +1,5 @@
 import os
 import sys
-import json
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
@@ -49,11 +48,11 @@ if __name__ == "__main__":
         }
     }
     # create the item
-    tool_items = connection.__tools__.create_tool_item(
+    tool_item = connection.__tools__.create_tool_item(
         company_id=company["id"],
         project_id=project["id"],
         tool_id=tool["id"],
         data=data
     )
     # show created item
-    print(tool_items)
+    print(tool_item)
