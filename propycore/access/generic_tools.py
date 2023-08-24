@@ -230,7 +230,7 @@ class GenericTool(Base):
         }
 
         try:
-            item_info = self.post_request(
+            item_info = self.patch_request(
                 api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items/{item_id}",
                 additional_headers=headers,
                 data=data
@@ -239,6 +239,40 @@ class GenericTool(Base):
             raise WrongParamsError(e)
         
         return item_info
+    
+    def delete_tool_item(self, company_id, project_id, tool_id, item_id):
+        """
+        Updates item for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        tool_id : int
+            unique identifier for the generic tool
+        item_id : int
+            unique identifier for the item to change
+
+        Returns
+        -------
+        <status> : str
+            status code and text of the delete
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        try:
+            _ = self.delete_request(
+                api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items/{item_id}",
+                additional_headers=headers
+            )
+        except ProcoreException as e:
+            raise WrongParamsError(e)
+        
+        return "200: Success"
     
     def get_tool_statuses(self, company_id, tool_id):
         """

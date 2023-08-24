@@ -31,23 +31,26 @@ if __name__ == "__main__":
         company_id=company["id"],
         identifier="Idea Submission"
     )
-    status = connection.__tools__.get_tool_statuses(
+    item = connection.__tools__.find_tool_item(
         company_id=company["id"],
-        tool_id=tool["id"]
+        project_id=project["id"],
+        tool_id=tool["id"],
+        identifier="Idea Submited by API 3"
     )
     print("Company:", company["id"])
     print("Project:", project["id"])
     print("Tool:", tool["id"])
-    print("Statuses:", status)
+    print("Item:", item["id"])
 
-    # Example 1: delete new idea submission status
+    # Example 1: delete new idea submission item
     # ---------
     print("Example 1")
     # delete the item
-    _ = connection.__tools__.delete_tool_status(
+    _ = connection.__tools__.delete_tool_item(
         company_id=company["id"],
+        project_id=project["id"],
         tool_id=tool["id"],
-        status_id=1234
+        item_id=item["id"]
     )
 
     
