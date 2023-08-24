@@ -78,7 +78,6 @@ class GenericTool(Base):
 
         raise NotFoundItemError(f"Could not find tool {identifier}")
     
-
     def get_tool_items(self, company_id, project_id, tool_id):
         """
         Gets all the available items for a specific tool
@@ -128,3 +127,37 @@ class GenericTool(Base):
             return items
         else:
             raise NotFoundItemError(f"No items are available in Project {project_id} for tool {tool_id}")
+
+    def create_tool_item(self, company_id, project_id, tool_id, data):
+        """
+        Gets all the available items for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        tool_id : int
+            unique identifier for the generic tool
+
+        Returns
+        -------
+        items : dict
+            available tool item data
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        try:
+            item_info = self.post_request(
+                api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items",
+                additional_headers=headers,
+                data=data
+            )
+        except ProcoreException as e:
+            raise WrongParamsError(e)
+        
+        return item_info
