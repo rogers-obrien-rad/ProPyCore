@@ -119,7 +119,8 @@ class GenericTool(Base):
             )
 
             n_items = len(item_info)
-            items.append(item_info)
+            if n_items > 0:
+                items += item_info
 
             page += 1 
 
@@ -127,7 +128,7 @@ class GenericTool(Base):
             return items
         else:
             raise NotFoundItemError(f"No items are available in Project {project_id} for tool {tool_id}")
-
+    
     def create_tool_item(self, company_id, project_id, tool_id, data):
         """
         Create new item for a specific tool
@@ -164,9 +165,9 @@ class GenericTool(Base):
         
         return item_info
     
-    def get_tool_statuses(self, company_id, project_id, tool_id):
+    def find_tool_item(self, company_id, project_id, tool_id, identifier):
         """
-        Gets all the available statuses for a specific tool
+        Finds a specific generic tool item based on the identifier
 
         Parameters
         ----------
@@ -174,6 +175,79 @@ class GenericTool(Base):
             unique identifier for the company
         project_id : int
             unique identifier for the project
+        tool_id : int
+            unique identifier for the generic tool
+        identifier : int or str
+            item id number or company name
+
+        Returns
+        -------
+        tool_item : dict
+            response body for the given tool item
+        """
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "title"
+
+        tool_items = self.get_tool_items(
+            company_id=company_id,
+            project_id=project_id,
+            tool_id=tool_id
+        )
+
+        for tool_item in tool_items:
+            if tool_item[key] == identifier:
+                return tool_item
+
+        raise NotFoundItemError(f"Could not find tool item {identifier}")
+    
+    def update_tool_item(self, company_id, project_id, tool_id, item_id, data):
+        """
+        Updates item for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        tool_id : int
+            unique identifier for the generic tool
+        item_id : int
+            unique identifier for the item to change
+        data : dict
+            request body data for the new item
+
+        Returns
+        -------
+        item_info : dict
+            updated response body item data
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        try:
+            item_info = self.post_request(
+                api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items/{item_id}",
+                additional_headers=headers,
+                data=data
+            )
+        except ProcoreException as e:
+            raise WrongParamsError(e)
+        
+        return item_info
+    
+    def get_tool_statuses(self, company_id, tool_id):
+        """
+        Gets all the available statuses for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
         tool_id : int
             unique identifier for the generic tool
 
@@ -188,7 +262,35 @@ class GenericTool(Base):
         }
 
         status_info = self.get_request(
-            api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items/available_statuses",
+            api_url=f"/rest/v1.0/companies/{company_id}/generic_tools/{tool_id}/available_statuses",
+            additional_headers=headers
+        )
+        
+        return status_info
+    
+    def get_tool_created_statuses(self, company_id, tool_id):
+        """
+        Gets statuses that were created for a specific tool. Does not include the default statuses that each tool will have.
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        tool_id : int
+            unique identifier for the generic tool
+
+        Returns
+        -------
+        items : dict
+            available tool item data
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        status_info = self.get_request(
+            api_url=f"/rest/v1.0/companies/{company_id}/generic_tools/{tool_id}/statuses",
             additional_headers=headers
         )
         
