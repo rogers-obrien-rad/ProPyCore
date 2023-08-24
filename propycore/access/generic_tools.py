@@ -130,7 +130,43 @@ class GenericTool(Base):
 
     def create_tool_item(self, company_id, project_id, tool_id, data):
         """
-        Gets all the available items for a specific tool
+        Create new item for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        tool_id : int
+            unique identifier for the generic tool
+        data : dict
+            request body data for the new item
+
+        Returns
+        -------
+        item_info : dict
+            new item data
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        try:
+            item_info = self.post_request(
+                api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items",
+                additional_headers=headers,
+                data=data
+            )
+        except ProcoreException as e:
+            raise WrongParamsError(e)
+        
+        return item_info
+    
+    def get_tool_statuses(self, company_id, project_id, tool_id):
+        """
+        Gets all the available statuses for a specific tool
 
         Parameters
         ----------
@@ -151,13 +187,9 @@ class GenericTool(Base):
             "Procore-Company-Id": f"{company_id}"
         }
 
-        try:
-            item_info = self.post_request(
-                api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items",
-                additional_headers=headers,
-                data=data
-            )
-        except ProcoreException as e:
-            raise WrongParamsError(e)
+        status_info = self.get_request(
+            api_url=f"/rest/v1.0/projects/{project_id}/generic_tools/{tool_id}/generic_tool_items/available_statuses",
+            additional_headers=headers
+        )
         
-        return item_info
+        return status_info
