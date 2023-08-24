@@ -193,3 +193,70 @@ class GenericTool(Base):
         )
         
         return status_info
+    
+    def create_tool_status(self, company_id, tool_id, data):
+        """
+        Create new status for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        tool_id : int
+            unique identifier for the generic tool
+        data : dict
+            request body data for the new item
+
+        Returns
+        -------
+        status_info : dict
+            response from new status creation
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        try:
+            status_info = self.post_request(
+                api_url=f"/rest/v1.0/companies/{company_id}/generic_tools/{tool_id}/statuses",
+                additional_headers=headers,
+                data=data
+            )
+        except ProcoreException as e:
+            raise WrongParamsError(e)
+        
+        return status_info
+    
+    def delete_tool_status(self, company_id, tool_id, status_id):
+        """
+        Delete status for a specific tool
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        tool_id : int
+            unique identifier for the generic tool
+        status_id : int
+            status id for removal
+
+        Returns
+        -------
+        status_info : dict
+            response from new status creation
+        """
+        
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        try:
+            _ = self.delete_request(
+                api_url=f"/rest/v1.0/companies/{company_id}/generic_tools/{tool_id}/statuses{status_id}",
+                additional_headers=headers
+            )
+        except ProcoreException as e:
+            raise WrongParamsError(e)
+        
+        return "200: Success"
