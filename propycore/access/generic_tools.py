@@ -101,7 +101,6 @@ class GenericTool(Base):
         page = 1
         items = []
         while n_items > 0:
-            '''
             params = {
                 "view": "extended",
                 "sort": "created_at",
@@ -109,8 +108,6 @@ class GenericTool(Base):
                 "per_page": 10000,
                 "filters[recycle_bin]": False
             }
-            '''
-            params={}
 
             headers = {
                 "Procore-Company-Id": f"{company_id}"
@@ -123,10 +120,7 @@ class GenericTool(Base):
             )
 
             n_items = len(item_info)
-
-            for item in item_info:
-                if item["is_deleted"] is False:
-                    items.append(item)
+            items.append(item_info)
 
             page += 1 
 
