@@ -1,0 +1,669 @@
+[
+    {
+        "id":5015474,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-22T19:28:48Z",
+        "created_by":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"<p>This is my first idea. It isn't amazing, but take it easy on me since it is my first...</p>"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-22T19:28:48Z",
+        "location":"None",
+        "position":"IS-1",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Hagen's First Idea",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"1",
+        "uom":"None",
+        "updated_at":"2023-08-22T19:28:48Z"
+    },
+    {
+        "id":5020031,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-24T14:00:14Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-24T14:00:14Z",
+        "location":"None",
+        "position":"IS-IS-2",
+        "private":false,
+        "quantity":"None",
+        "received_from":"None",
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Idea Submited by API",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"IS-2",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:00:14Z"
+    },
+    {
+        "id":5020043,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-24T14:05:02Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-24T14:05:02Z",
+        "location":"None",
+        "position":"IS-2",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Idea Submited by API 2",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"2",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:05:02Z"
+    },
+    {
+        "id":5020045,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-24T14:05:33Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-24T14:05:33Z",
+        "location":"None",
+        "position":"IS-3",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Idea Submited by API 3",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"3",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:05:33Z"
+    },
+    {
+        "id":5020058,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-24T14:09:32Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-24T14:09:32Z",
+        "location":"None",
+        "position":"IS-4",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Idea Submited by API 3",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"4",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:09:32Z"
+    },
+    {
+        "id":5020059,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-24T14:09:45Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-24T14:09:45Z",
+        "location":"None",
+        "position":"IS-5",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Idea Submited by API 3",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"5",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:09:45Z"
+    },
+    {
+        "id":5020161,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "created_at":"2023-08-24T14:33:03Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API"
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"None",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"2023-08-24T14:33:03Z",
+        "location":"None",
+        "position":"IS-6",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":"None"
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Simple Idea Submited by API",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"6",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:33:03Z"
+    },
+    {
+        "id":5020162,
+        "assignees":[
+            
+        ],
+        "attachments":[
+            {
+                "id":4200098744,
+                "name":"None",
+                "url":"https://storage.procore.com/v4/d/us-east-1/pro-core.com/prostore/20230824143304_production_4200098744?sig=07c4ea860d67fe638afa34ba709375d029c8cc15cd2ccfc86eb1760c0aa85c58"
+            }
+        ],
+        "closed_at":"None",
+        "cost_code":"None",
+        "cost_impact":{
+            "status":"None",
+            "value":0.0
+        },
+        "created_at":"2023-08-24T14:33:04Z",
+        "created_by":{
+            "id":9486187,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"ro-data-connection-0a813c91@procore.com",
+            "name":" ro-data-connection-0a813c91"
+        },
+        "custom_fields":{
+            "custom_field_378362":{
+                "data_type":"rich_text",
+                "value":"This idea was submitted via API and includes more fields in the request body to keep things spicy."
+            }
+        },
+        "description":"None",
+        "distribution_members":[
+            
+        ],
+        "document_management_document_revision_ids":[
+            
+        ],
+        "due_date":"2023-08-25",
+        "generic_tool":{
+            "id":378532,
+            "abbreviation":"IS",
+            "domain_id":-378532,
+            "title":"Idea Submission"
+        },
+        "issued_at":"None",
+        "location":"None",
+        "position":"IS-7",
+        "private":false,
+        "quantity":"None",
+        "received_from":{
+            "id":8780450,
+            "company":{
+                "id":19174982,
+                "name":"Rogers-O'Brien Construction Company"
+            },
+            "locale":"None",
+            "login":"hfritz@r-o.com",
+            "name":"Hagen Fritz"
+        },
+        "responses":[
+            
+        ],
+        "schedule_impact":{
+            "status":"None",
+            "value":0.0
+        },
+        "specification_section":"None",
+        "status":"Open",
+        "status_type":"Open",
+        "sub_job":"None",
+        "task":"None",
+        "tasks":[
+            
+        ],
+        "title":"Complex Idea Submited by API",
+        "trade":"None",
+        "trades":[
+            
+        ],
+        "unformatted_position":"7",
+        "uom":"None",
+        "updated_at":"2023-08-24T14:33:04Z"
+    }
+]
