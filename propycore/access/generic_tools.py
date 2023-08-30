@@ -4,7 +4,7 @@ import sys
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
-from propycore.exceptions import NotFoundItemError
+from propycore.exceptions import NotFoundItemError, NoPrivilegeError, WrongParamsError
 
 from exceptions import *
 
@@ -161,7 +161,10 @@ class GenericTool(Base):
                 data=data
             )
         except ProcoreException as e:
-            raise WrongParamsError(e)
+            if "403" in e:
+                raise NoPrivilegeError(f"Data connection app or permission template does not allow creation of generic tools")
+            else:
+                raise WrongParamsError(e)
         
         return item_info
     

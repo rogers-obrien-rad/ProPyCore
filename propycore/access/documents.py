@@ -7,7 +7,7 @@ from warnings import warn
 
 from fuzzywuzzy import fuzz
 
-from propycore.exceptions import NotFoundItemError, WrongParamsError, ProcoreException
+from propycore.exceptions import NotFoundItemError, WrongParamsError, ProcoreException, NoPrivilegeError
 
 class Documents(Base):
     """
@@ -299,8 +299,11 @@ class Folders(Documents):
                 additional_headers=headers,
                 data=data
             )
-        except ProcoreException:
-            raise WrongParamsError(f"Folder {folder_name} already exists")
+        except ProcoreException as e:
+            if "403" in e:
+                raise NoPrivilegeError(f"Data connection app or permission template does not allow creation of folders")
+            else:
+                raise WrongParamsError(f"Folder {folder_name} already exists")
         
         return doc_info
         
@@ -454,8 +457,11 @@ class Files(Documents):
                 data=data,
                 files=file
             )
-        except ProcoreException:
-            raise WrongParamsError(f"File {filename} already exists")
+        except ProcoreException as e:
+            if "403" in e:
+                raise NoPrivilegeError(f"Data connection app or permission template does not allow creation of files")
+            else:
+                raise WrongParamsError(f"File {filename} already exists")
         
         return doc_info
 
