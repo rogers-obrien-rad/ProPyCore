@@ -300,10 +300,7 @@ class Folders(Documents):
                 data=data
             )
         except ProcoreException as e:
-            if "403" in e:
-                raise NoPrivilegeError(f"Data connection app or permission template does not allow creation of folders")
-            else:
-                raise WrongParamsError(f"Folder {folder_name} already exists")
+            print(e)
         
         return doc_info
         
@@ -458,10 +455,7 @@ class Files(Documents):
                 files=file
             )
         except ProcoreException as e:
-            if "403" in e:
-                raise NoPrivilegeError(f"Data connection app or permission template does not allow creation of files")
-            else:
-                raise WrongParamsError(f"File {filename} already exists")
+            print(e)
         
         return doc_info
 
