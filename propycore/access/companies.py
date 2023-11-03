@@ -69,6 +69,23 @@ class Companies(Base):
 
         raise NotFoundItemError(f"Could not find company {identifier}")
     
+    def get_projects(self, company_id):
+        """
+        
+        """
+        endpoint = f"{self.endpoint}/{company_id}/projects"
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        projects = self.get_request(
+            api_url=endpoint,
+            additional_headers=headers
+        )
+
+        return projects
+    
     def get_regions(self, company_id, page=1, per_page=100):
         """
         Gets all regions for a specified company
