@@ -33,17 +33,24 @@ if __name__ == "__main__":
     company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
     print(json.dumps(company, indent=4))
 
-    # Example 3: Get project regions
+    # Example 3: Get company projects
+    projects = connection.__companies__.get_projects(
+        company_id=company["id"]
+    )
+    print(f"Number of projects: {len(projects)}")
+    print(json.dumps(projects[1], indent=4))
+
+    # Example 4: Get project regions
     # ---------
-    print("Example 3")
+    print("Example 4")
     regions = connection.__companies__.get_regions(
         company_id=company["id"]
     )
     print(json.dumps(regions, indent=4))
 
-    # Example 4: Get project types
+    # Example 5: Get project types
     # ---------
-    print("Example 4")
+    print("Example 5")
     project_types = connection.__companies__.get_project_types(
         company_id=company["id"]
     )
