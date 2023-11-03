@@ -68,3 +68,73 @@ class Companies(Base):
                 return company
 
         raise NotFoundItemError(f"Could not find company {identifier}")
+    
+    def get_regions(self, company_id, page=1, per_page=100):
+        """
+        Gets all regions for a specified company
+
+        Parameters
+        ----------
+        company_id : int
+            The identifier for the company
+        per_page : int, default 100
+            Number of regions to include per page
+
+        Returns
+        -------
+        regions : list of dict
+            List where each value is a dict with the region's details
+        """
+        endpoint = f"{self.endpoint}/{company_id}/project_regions"
+
+        params = {
+            "page": page,
+            "per_page": per_page
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        regions = self.get_request(
+            api_url=endpoint,
+            additional_headers=headers,
+            params=params
+        )
+
+        return regions
+
+    def get_project_types(self, company_id, page=1, per_page=100):
+        """
+        Gets all project types for a specified company
+
+        Parameters
+        ----------
+        company_id : int
+            The identifier for the company
+        per_page : int, default 100
+            Number of project types to include per page
+
+        Returns
+        -------
+        project_types : list of dict
+            List where each value is a dict with the project type's details
+        """
+        endpoint = f"{self.endpoint}/{company_id}/project_types"
+
+        params = {
+            "page": page,
+            "per_page": per_page
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        project_types = self.get_request(
+            api_url=endpoint,
+            additional_headers=headers,
+            params=params
+        )
+
+        return project_types
