@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks
+from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks, budgets
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -56,6 +56,8 @@ class Procore:
         self.__users__ = directory.Users(access_token=self.__access_token, server_url=self.__base_url)
         self.__vendors__ = directory.Vendors(access_token=self.__access_token, server_url=self.__base_url)
         self.__trades__ = directory.Trades(access_token=self.__access_token, server_url=self.__base_url)
+
+        self.__budgets__ = budgets.Budgets(access_token=self.__access_token, server_url=self.__base_url)
         
     def get_auth_code(self):
         """
