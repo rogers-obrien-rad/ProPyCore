@@ -77,4 +77,17 @@ if __name__ == "__main__":
 
     print(json.dumps(row_by_name, indent=4))
 
+    # Example 5: Get budget details
+    # ---------
+    # TODO: Getting ClientNotFoundError
+    '''
+    print("Example 5")
+    details = connection.__budgets__.get_budget_details(
+        company_id=company["id"],
+        project_id=project["id"],
+        budget_view_id=budget_view["id"]
+    )
+
+    print(f"Number of budget line items: {len(details)}")
+    '''
     

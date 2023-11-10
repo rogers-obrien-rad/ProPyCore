@@ -12,7 +12,8 @@ class Budgets(Base):
     """
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
-        # no class endpoint because there is not standard
+        
+        self.endpoint = "/rest/v1.0/budget_views"
 
     def get_views(self, company_id, project_id, page=1, per_page=100):
         """
@@ -45,7 +46,7 @@ class Budgets(Base):
         }
 
         views = self.get_request(
-            api_url="/rest/v1.0/budget_views",
+            api_url=f"{self.endpoint}",
             additional_headers=headers,
             params=params
         )
@@ -108,7 +109,7 @@ class Budgets(Base):
         }
 
         columns = self.get_request(
-            api_url=f"/rest/v1.0/budget_views/{budget_view_id}/budget_detail_columns",
+            api_url=f"{self.endpoint}/{budget_view_id}/budget_detail_columns",
             additional_headers=headers,
             params=params
         )
@@ -174,7 +175,7 @@ class Budgets(Base):
         }
 
         columns = self.get_request(
-            api_url=f"/rest/v1.0/budget_views/{budget_view_id}/detail_rows",
+            api_url=f"{self.endpoint}/{budget_view_id}/detail_rows",
             additional_headers=headers,
             params=params
         )
@@ -211,3 +212,35 @@ class Budgets(Base):
                 return column
 
         raise NotFoundItemError(f"Could not find row {identifier}")
+    
+    def get_budget_details(self, company_id, project_id, budget_view_id):
+        """
+        Return a list of all rows from the Budget Detail Report for a Project and Budget View.
+        
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        budget_view_id : int
+            unique identifier for the budget view
+
+        Returns
+        -------
+        """
+        params = {
+            "project_id": project_id
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        details = self.get_request(
+            api_url=f"{self.endpoint}/{budget_view_id}/budget_details",
+            additional_headers=headers,
+            params=params
+        )
+
+        return details
