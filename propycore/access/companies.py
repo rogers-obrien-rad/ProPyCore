@@ -71,7 +71,17 @@ class Companies(Base):
     
     def get_projects(self, company_id):
         """
-        
+        Gets all projects from the companies
+
+        Parameters
+        ----------
+        company_id : int
+            The identifier for the company
+
+        Returns
+        -------
+        projects : list of dict
+            list where each value is a project within the company
         """
         endpoint = f"{self.endpoint}/{company_id}/projects"
 
