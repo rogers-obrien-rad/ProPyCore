@@ -28,7 +28,7 @@ if __name__ == "__main__":
     budget_view = connection.__budgets__.find_view(
         company_id=company["id"],
         project_id=project["id"],
-        identifier=414205
+        identifier="Detailed Budget View"
     )
 
     # Example 1: List all columns
@@ -64,6 +64,9 @@ if __name__ == "__main__":
     )
 
     print(f"Number of Budget Rows: {len(budget_rows)}")
+    # Uncomment to save budget rows
+    #with open("rows.json", "w") as f:
+    #    json.dump(budget_rows, f, indent=4)
 
     # Example 4: Find row by name
     # ---------
@@ -90,4 +93,3 @@ if __name__ == "__main__":
 
     print(f"Number of budget line items: {len(details)}")
     '''
-    
