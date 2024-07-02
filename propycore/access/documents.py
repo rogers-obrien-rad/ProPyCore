@@ -1,13 +1,9 @@
 from .base import Base
+from ..exceptions import NotFoundItemError, WrongParamsError, ProcoreException, NoPrivilegeError
 
-import sys
-import pathlib
-sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+
 from warnings import warn
-
 from fuzzywuzzy import fuzz
-
-from propycore.exceptions import NotFoundItemError, WrongParamsError, ProcoreException, NoPrivilegeError
 
 class Documents(Base):
     """

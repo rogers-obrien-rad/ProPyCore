@@ -1,10 +1,5 @@
 from .base import Base
-
-import sys
-import pathlib
-sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
-
-from exceptions import *
+from ..exceptions import NotFoundItemError
 
 class Budgets(Base):
     """

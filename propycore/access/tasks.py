@@ -6,9 +6,6 @@ sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from exceptions import *
 
-import pandas as pd
-from datetime import datetime
-
 class Task(Base):
     """
     Access and working with submittals in a given project

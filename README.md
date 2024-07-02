@@ -10,6 +10,11 @@ _A Python-based connection with Procore that doesn't require a user authenticati
 This package accesses Procore's API through the _Client Credentials_ [OAuth 2.0 grant type](https://developers.procore.com/documentation/oauth-choose-grant-type) which is meant for _Data Connection Applications_ i.e. "userless access".
 
 ## Installation
+You can install this package with:
+
+```bash
+pip install ProPyCore
+```
 
 ## Examples
 To get started, you need to create an instance of a `Procore` object from `propycore.procore`. To do so, you will need to access information from your Procore Data Connection App:
@@ -44,4 +49,4 @@ In this case, I have saved my App information as individual environment variable
 * **[Python SDK for Procore](https://github.com/fylein/procore-sdk-py)**: Small SDK that includes basic code to work with Procore. Uses the other OAuth 2.0 grant type. 
 
 # License
-This repository is licensed through the [Apache 2.0 License](https://github.com/rogers-obrien-rad/ProPyCore/blob/main/LICENSE). 
+This repository is licensed through the [MIT License](https://github.com/rogers-obrien-rad/ProPyCore/blob/main/LICENSE). 

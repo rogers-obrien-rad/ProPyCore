@@ -1,12 +1,11 @@
-# test_documents.py
 import pytest
-from propycore.access.documents import Folders, Files
-from propycore.exceptions import NotFoundItemError
+from ProPyCore.access.documents import Folders, Files
+from ProPyCore.exceptions import NotFoundItemError
 
 class TestFolders:
     @pytest.fixture
     def folders(self, mocker):
-        mocker.patch('propycore.access.documents.Base.__init__', return_value=None)  # Mock the base class initializer
+        mocker.patch('ProPyCore.access.documents.Base.__init__', return_value=None)  # Mock the base class initializer
         return Folders('access_token', 'server_url')
 
     def test_root(self, folders, mocker):
@@ -34,7 +33,7 @@ class TestFolders:
 class TestFiles:
     @pytest.fixture
     def files(self, mocker):
-        mocker.patch('propycore.access.documents.Base.__init__', return_value=None)  # Mock the base class initializer
+        mocker.patch('ProPyCore.access.documents.Base.__init__', return_value=None)  # Mock the base class initializer
         return Files('access_token', 'server_url')
     
     def test_find_file_success(self, files, mocker):

@@ -1,7 +1,7 @@
 import urllib
 import requests
 
-from propycore.exceptions import raise_exception
+from ..exceptions import raise_exception
 
 class Base:
     """

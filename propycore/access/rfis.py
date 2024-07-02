@@ -6,9 +6,6 @@ sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from exceptions import *
 
-import pandas as pd
-from datetime import datetime
-
 class RFI(Base):
     """
     Access and working with RFIs in a given project
@@ -119,28 +116,3 @@ class RFI(Base):
                 return rfi_info
 
         raise NotFoundItemError(f"Could not find RFI {identifier}")
-
-    def export(self, company_id, project_id, save_path=None):
-        """
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-        save_path : str, default None
-            full path to location to save the data
-            None will save the data in the /data/raw directory at root
-        """
-        rfis = self.get(
-            company_id=company_id,
-            project_id=project_id,
-            per_page=10000 # some ridiculous number so that we are catching all of them
-        )
-        df = pd.DataFrame.from_records(data=rfis)
-        
-        date_str = datetime.strftime(datetime.now(),"%Y_%m_%d")
-        if save_path is None:
-            df.to_csv(f"{pathlib.Path(__file__).resolve().parent.parent.parent}/data/raw/rfis-{company_id}-{project_id}-{date_str}.csv",index=False)
-        else:
-            df.to_csv(f"{save_path}/rfis-{company_id}-{project_id}-{date_str}.csv",index=False)

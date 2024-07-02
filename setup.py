@@ -1,28 +1,36 @@
 from setuptools import setup, find_packages
 
-with open("README.md", "r") as readme_file:
+with open("README.md", "r", encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
 requirements = [
-    "beautifulsoup4==4.11.1",
-    "python-dotenv==0.21.0",
-    "requests==2.28.1",
-    "twine==1.13.0"
+    "beautifulsoup4",
+    "requests",
+    "fuzzywuzzy",
+    "python-Levenshtein"
 ]
 
 setup(
     name="ProPyCore",
-    version="0.0.1",
+    version="0.0.2",
     author="Hagen E. Fritz",
-    author_email="hagenfritz@gmail.com",
+    author_email="hfritz@r-o.com",
     description="Interact with Procore through Python for data connection applications",
     long_description=readme,
     long_description_content_type="text/markdown",
+    keywords=['procore', 'api', 'python', 'sdk'],
     url="https://github.com/rogers-obrien-rad/ProPyCore",
-    packages=find_packages(),
+    packages=find_packages(exclude=["snippets", "tests"]),
     install_requires=requirements,
+    tests_require=[
+        'pytest',
+        'pytest-mock'
+    ],
     classifiers=[
-        "Programming Language :: Python :: 3.9",
-        "License :: OSI Approved :: Apache License 2.0"
-    ]
+        "Programming Language :: Python :: 3",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
+    python_requires='>=3.6',
 )
