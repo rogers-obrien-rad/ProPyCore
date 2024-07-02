@@ -1,7 +1,7 @@
 import os
 import pytest
-from propycore.procore import Procore
 from dotenv import load_dotenv
+from ProPyCore.procore import Procore
 
 # Load environment variables
 load_dotenv()

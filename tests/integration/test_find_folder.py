@@ -1,9 +1,8 @@
 import os
 import pytest
-import json
 from dotenv import load_dotenv
-from propycore.procore import Procore
-from propycore.exceptions import NotFoundItemError
+
+from ProPyCore.procore import Procore
 
 # Load environment variables from .env file for testing
 load_dotenv()
