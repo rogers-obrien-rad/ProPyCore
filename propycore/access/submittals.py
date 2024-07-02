@@ -6,9 +6,6 @@ sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
 from exceptions import *
 
-import pandas as pd
-from datetime import datetime
-
 class Submittal(Base):
     """
     Access and working with submittals in a given project
@@ -17,7 +14,6 @@ class Submittal(Base):
         super().__init__(access_token, server_url)
 
         self.endpoint = "/rest/v1.1/projects"
-
 
     def get(self, company_id, project_id):
         """
