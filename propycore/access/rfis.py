@@ -1,10 +1,6 @@
 from .base import Base
 
-import sys
-import pathlib
-sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
-
-from exceptions import *
+from ..exceptions import NotFoundItemError
 
 class RFI(Base):
     """
@@ -14,7 +10,6 @@ class RFI(Base):
         super().__init__(access_token, server_url)
 
         self.endpoint = "/rest/v1.0/projects"
-
 
     def get(self, company_id, project_id, page=1, per_page=100):
         """

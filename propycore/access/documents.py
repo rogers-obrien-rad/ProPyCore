@@ -1,7 +1,6 @@
 from .base import Base
 from ..exceptions import NotFoundItemError, WrongParamsError, ProcoreException, NoPrivilegeError
 
-
 from warnings import warn
 from fuzzywuzzy import fuzz
 

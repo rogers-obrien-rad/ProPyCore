@@ -1,5 +1,5 @@
 from .base import Base
-from ..exceptions import NotFoundItemError, NoPrivilegeError, WrongParamsError
+from ..exceptions import NotFoundItemError, NoPrivilegeError, WrongParamsError, ProcoreException
 
 class GenericTool(Base):
     """
