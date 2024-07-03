@@ -4,6 +4,7 @@ on:
   push:
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -41,4 +42,5 @@ jobs:
           REDIRECT_URI: "urn:ietf:wg:oauth:2.0:oob"
           OAUTH_URL: "https://sandbox.procore.com"
           BASE_URL: "https://sandbox.procore.com"
+          PYTHONPATH: ${{ github.workspace }}
         run: python -m pytest
