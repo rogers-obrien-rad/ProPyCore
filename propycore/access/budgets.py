@@ -12,7 +12,7 @@ class Budgets(Base):
 
     def get_views(self, company_id, project_id, page=1, per_page=100):
         """
-        Lists the budget views
+        Lists the budget views: https://developers.procore.com/reference/rest/v1/budget-views?version=1.0#list-budget-views
 
         Parameters
         ----------
@@ -50,7 +50,7 @@ class Budgets(Base):
     
     def find_view(self, company_id, project_id, identifier):
         """
-        Finds specified budget view
+        Finds specified budget view by looping through the results from get_views()
 
         Parameters
         ----------
@@ -65,6 +65,10 @@ class Budgets(Base):
         -------
         view : dict
             budget view data
+
+        Raises
+        ------
+        NotFoundItemError
         """
         if isinstance(identifier, int):
             key = "id"
@@ -79,7 +83,8 @@ class Budgets(Base):
     
     def get_budget_columns(self, company_id, project_id, budget_view_id):
         """
-        Lists the columns in a budget view
+        Lists the columns in a budget view: https://developers.procore.com/reference/rest/v1/budget-detail-columns?version=1.0
+        This endpoint only returns the standard/source column meta data. It does not return any calculated columns.
 
         Parameters
         ----------
@@ -113,7 +118,7 @@ class Budgets(Base):
     
     def find_budget_column(self, company_id, project_id, budget_view_id, identifier):
         """
-        Finds specified budget view column
+        Finds specified budget view column by looping through the results from get_budget_columns()
 
         Parameters
         ----------
@@ -130,6 +135,10 @@ class Budgets(Base):
         -------
         column : dict
             column data
+
+        Raises
+        ------
+        NotFoundItemError
         """
         if isinstance(identifier, int):
             key = "id"
@@ -144,7 +153,7 @@ class Budgets(Base):
     
     def get_budget_rows(self, company_id, project_id, budget_view_id):
         """
-        Lists the rows in a budget view
+        Lists the rows in a budget view: https://developers.procore.com/reference/rest/v1/budget-view-detail-rows?version=1.0#list-budget-view-detail-rows
 
         Parameters
         ----------
@@ -179,7 +188,7 @@ class Budgets(Base):
     
     def find_budget_row(self, company_id, project_id, budget_view_id, identifier):
         """
-        Finds specified budget view row
+        Finds specified budget view row by looping through the results from get_budget_rows()
 
         Parameters
         ----------
@@ -196,6 +205,10 @@ class Budgets(Base):
         -------
         column : dict
             column data
+
+        Raises
+        ------
+        NotFoundItemError
         """
         if isinstance(identifier, int):
             key = "id"
@@ -210,7 +223,7 @@ class Budgets(Base):
     
     def get_budget_details(self, company_id, project_id, budget_view_id):
         """
-        Return a list of all rows from the Budget Detail Report for a Project and Budget View.
+        Return a list of all rows from the Budget Detail Report for a Project and Budget View: https://developers.procore.com/reference/rest/v1/budget-details?version=1.0#list-budget-details
         
         Parameters
         ----------
@@ -232,7 +245,7 @@ class Budgets(Base):
             "Procore-Company-Id": f"{company_id}"
         }
 
-        details = self.get_request(
+        details = self.post_request(
             api_url=f"{self.endpoint}/{budget_view_id}/budget_details",
             additional_headers=headers,
             params=params
