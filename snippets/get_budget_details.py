@@ -3,7 +3,7 @@ import sys
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
-from propycore.procore import Procore
+from ProPyCore.procore import Procore
 
 from dotenv import load_dotenv
 import json
@@ -71,19 +71,20 @@ if __name__ == "__main__":
     # Example 4: Find row by name
     # ---------
     print("Example 4")
-    row_by_name = connection.__budgets__.find_budget_row(
-        company_id=company["id"],
-        project_id=project["id"],
-        budget_view_id=budget_view["id"],
-        identifier="None"
-    )
+    try:
+        row_by_name = connection.__budgets__.find_budget_row(
+            company_id=company["id"],
+            project_id=project["id"],
+            budget_view_id=budget_view["id"],
+            identifier="None"
+        )
 
-    print(json.dumps(row_by_name, indent=4))
+        print(json.dumps(row_by_name, indent=4))
+    except Exception as e:
+        print(e)
 
     # Example 5: Get budget details
     # ---------
-    # TODO: Getting ClientNotFoundError
-    '''
     print("Example 5")
     details = connection.__budgets__.get_budget_details(
         company_id=company["id"],
@@ -92,4 +93,3 @@ if __name__ == "__main__":
     )
 
     print(f"Number of budget line items: {len(details)}")
-    '''
