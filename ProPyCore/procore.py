@@ -42,22 +42,23 @@ class Procore:
         self.reset_access_token()
 
         # create instances of procore endpoints
-        self.__companies__ = companies.Companies(access_token=self.__access_token, server_url=self.__base_url)
-        self.__projects__ = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
-
+        # General
+        self.companies = companies.Companies(access_token=self.__access_token, server_url=self.__base_url)
+        self.projects = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
+        # Documents
         self.__folders__ = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
         self.__files__ = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
-
+        # Tools
         self.__rfis__ = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
         self.__submittals__ = submittals.Submittal(access_token=self.__access_token, server_url=self.__base_url)
         self.__tasks__ = tasks.Task(access_token=self.__access_token, server_url=self.__base_url)
         self.__tools__ = generic_tools.GenericTool(access_token=self.__access_token, server_url=self.__base_url)
-
+        # People
         self.__users__ = directory.Users(access_token=self.__access_token, server_url=self.__base_url)
         self.__vendors__ = directory.Vendors(access_token=self.__access_token, server_url=self.__base_url)
         self.__trades__ = directory.Trades(access_token=self.__access_token, server_url=self.__base_url)
-
-        self.__budgets__ = budgets.Budgets(access_token=self.__access_token, server_url=self.__base_url)
+        # Financials
+        self.budgets = budgets.Budgets(access_token=self.__access_token, server_url=self.__base_url)
         
     def get_auth_code(self):
         """
