@@ -1,3 +1,5 @@
+import json
+
 from .base import Base
 from ..exceptions import NotFoundItemError
 
@@ -9,7 +11,7 @@ class DirectCosts(Base):
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
 
-        self.endpoint = "/rest/v1.0/projects"
+        self.endpoint = "/rest/v1.1/projects"
 
     def get(self, company_id, project_id, page=1, per_page=100):
         """
@@ -107,7 +109,7 @@ class DirectCosts(Base):
 
         raise NotFoundItemError(f"Could not find Direct Cost {identifier}")
     
-    def create(self, company_id, project_id, direct_cost_data, attachments=[]):
+    def create(self, company_id, project_id, direct_cost_data, line_items, attachments=[]):
         """
         Creates a new Direct Cost item in the specified Project.
 
@@ -119,6 +121,8 @@ class DirectCosts(Base):
             unique identifier for the project
         direct_cost_data : dict
             the data for the new Direct Cost item
+        line_items : list
+            the list of line items associated with the direct cost
         attachments : list, default []
             list of attachment file paths
 
@@ -129,23 +133,38 @@ class DirectCosts(Base):
         """
         headers = {
             "Procore-Company-Id": f"{company_id}",
-            "Content-Type": "application/json"
         }
 
-        direct_cost_payload = {
-            "attachments": attachments,
-            "item": direct_cost_data
-        }
+        if attachments:
+            multipart_data = {
+                'direct_cost': (None, json.dumps(direct_cost_data), 'application/json'),
+                'line_items': (None, json.dumps(line_items), 'application/json'),
+            }
 
-        # Log the request details
-        print("URL:", f"{self.endpoint}/{project_id}/direct_costs")
-        print("Headers:", headers)
-        print("Payload:", direct_cost_payload)
+            # Add attachments to multipart/form-data
+            for i, attachment in enumerate(attachments):
+                multipart_data[f'attachments[{i}]'] = (attachment, open(attachment, 'rb'))
 
-        response = self.post_request(
-            api_url=f"{self.endpoint}/{project_id}/direct_costs",
-            additional_headers=headers,
-            data=direct_cost_payload
-        )
+            response = self.post_request(
+                api_url=f"{self.endpoint}/{project_id}/direct_costs",
+                additional_headers=headers,
+                files=multipart_data
+            )
+
+            # Make sure to close the file objects after the request
+            for key in multipart_data:
+                if isinstance(multipart_data[key][1], bytes):
+                    multipart_data[key][1].close()
+        else:
+            direct_cost_payload = {
+                "direct_cost": direct_cost_data,
+                "line_items": line_items
+            }
+
+            response = self.post_request(
+                api_url=f"{self.endpoint}/{project_id}/direct_costs",
+                additional_headers=headers,
+                data=direct_cost_payload
+            )
 
         return response

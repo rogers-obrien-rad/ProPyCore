@@ -89,24 +89,32 @@ class Base:
             for key, value in additional_headers.items():
                 headers[key] = value
 
+        # Log the request details
+        print("URL:", url)
+        print("Headers:", headers)
+        print("Data:", data)
+        if files:
+            print("Files:", files)
+
         # Make the request with file if necessary
         if files is None:
             response = requests.post(
                 url,
                 headers=headers,
-                json=data  # use json for folder creation
+                json=data  # use json for normal data
             )
         else:
             response = requests.post(
                 url,
                 headers=headers,
-                data=data,  # use data for file creation
-                files=files
+                files=files  # use files for multipart/form-data
             )
 
         if response.ok:
             return response.json()
         else:
+            print("Response Status Code:", response.status_code)
+            print("Response Text:", response.text)
             raise_exception(response)
 
     def patch_request(self, api_url, additional_headers=None, params=None, data=None, files=False):
