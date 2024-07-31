@@ -3,8 +3,7 @@ import sys
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
 
-from propycore.procore import Procore
-from propycore.exceptions import NotFoundItemError
+from ProPyCore.procore import Procore
 
 from dotenv import load_dotenv
 import json
@@ -21,12 +20,12 @@ if __name__ == "__main__":
         base_url=os.getenv("BASE_URL")
     )
 
-    company = connection.__companies__.find(identifier="Rogers-O`Brien Construction")
+    company = connection.companies.find(identifier="Rogers-O`Brien Construction")
 
     # Example 1: Get company-level user
     # ---------
     print("Example 1")
-    comp_user = connection.__users__.find(
+    comp_user = connection.directory.users.find(
         company_id=company["id"],
         user_id="Hagen Fritz"
     )
@@ -39,12 +38,12 @@ if __name__ == "__main__":
     # ---------
     print("\nExample 2")
     # find project
-    project = connection.__projects__.find(
+    project = connection.projects.find(
         company_id=company["id"],
         identifier="Sandbox Test Project"
     )
 
-    proj_user = connection.__users__.find(
+    proj_user = connection.directory.users.find(
         company_id=company["id"],
         project_id=project["id"],
         user_id=8780450
