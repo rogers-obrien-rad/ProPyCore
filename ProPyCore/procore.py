@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks, budgets
+from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks, budgets, direct_costs
 import requests
 import urllib
 from bs4 import BeautifulSoup
@@ -59,7 +59,8 @@ class Procore:
         self.__trades__ = directory.Trades(access_token=self.__access_token, server_url=self.__base_url)
         # Financials
         self.budgets = budgets.Budgets(access_token=self.__access_token, server_url=self.__base_url)
-        
+        self.direct_costs = direct_costs.DirectCosts(access_token=self.__access_token, server_url=self.__base_url)
+
     def get_auth_code(self):
         """
         Gets the 10-minute temporary authorization token
@@ -118,3 +119,10 @@ class Procore:
         """
         temp_code = self.get_auth_code()
         self.__access_token = self.get_access_token(temp_code)
+
+    def print_attributes(self):
+        """
+        Print all attributes of the Procore object
+        """
+        for attr, value in self.__dict__.items():
+            print(f"{attr}: {value}")
