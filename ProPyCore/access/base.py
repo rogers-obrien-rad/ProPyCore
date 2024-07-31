@@ -59,7 +59,7 @@ class Base:
 
     def post_request(self, api_url, additional_headers=None, params=None, data=None, files=None):
         """
-        Create a HTTP Get request
+        Create a HTTP Post request
 
         Parameters
         ----------
@@ -75,7 +75,7 @@ class Base:
         Returns
         -------
         response : HTTP response object
-            GET response details in json
+            POST response details in json
         """
         # Get URL
         if params is None:
@@ -94,16 +94,16 @@ class Base:
             response = requests.post(
                 url,
                 headers=headers,
-                json=data # use json for folder creation
+                json=data  # use json for folder creation
             )
         else:
             response = requests.post(
                 url,
                 headers=headers,
-                data=data, # use data for file creation
+                data=data,  # use data for file creation
                 files=files
             )
-        
+
         if response.ok:
             return response.json()
         else:

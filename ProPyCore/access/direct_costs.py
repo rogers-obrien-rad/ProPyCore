@@ -9,7 +9,7 @@ class DirectCosts(Base):
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
 
-        self.endpoint = "/rest/v1.1/projects"
+        self.endpoint = "/rest/v1.0/projects"
 
     def get(self, company_id, project_id, page=1, per_page=100):
         """
@@ -106,3 +106,46 @@ class DirectCosts(Base):
                 return direct_cost_info
 
         raise NotFoundItemError(f"Could not find Direct Cost {identifier}")
+    
+    def create(self, company_id, project_id, direct_cost_data, attachments=[]):
+        """
+        Creates a new Direct Cost item in the specified Project.
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        direct_cost_data : dict
+            the data for the new Direct Cost item
+        attachments : list, default []
+            list of attachment file paths
+
+        Returns
+        -------
+        response : dict
+            response from the API containing the created Direct Cost item
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}",
+            "Content-Type": "application/json"
+        }
+
+        direct_cost_payload = {
+            "attachments": attachments,
+            "item": direct_cost_data
+        }
+
+        # Log the request details
+        print("URL:", f"{self.endpoint}/{project_id}/direct_costs")
+        print("Headers:", headers)
+        print("Payload:", direct_cost_payload)
+
+        response = self.post_request(
+            api_url=f"{self.endpoint}/{project_id}/direct_costs",
+            additional_headers=headers,
+            data=direct_cost_payload
+        )
+
+        return response
