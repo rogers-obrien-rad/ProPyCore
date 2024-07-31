@@ -43,3 +43,82 @@ def test_find_direct_cost_by_id(direct_costs_instance, mocker):
 
     assert isinstance(direct_cost_info, dict)
     assert direct_cost_info == mock_show_response
+
+
+def test_create_direct_cost(direct_costs_instance, mocker):
+    # Mock the post_request method to return a created Direct Cost item
+    mock_response = {
+        'id': 1,
+        'description': 'Invoice for April',
+        'direct_cost_date': '2024-12-14',
+        'employee_id': 43223,
+        'invoice_number': 'Invoice # abc123',
+        'origin_data': 'OD-2398273424',
+        'origin_id': 'px-1990',
+        'payment_date': '2025-01-10',
+        'received_date': '2025-01-08',
+        'status': 'approved',
+        'terms': 'Net 50',
+        'vendor_id': 23423,
+        'direct_cost_type': 'invoice',
+        'line_items': [
+            {
+                'manual_amount': 1000,
+                'wbs_code_id': 1989,
+                'description': "100' of Copper Piping",
+                'direct_cost_id': 81753,
+                'origin_data': 'OD-2398273424',
+                'origin_id': 'px-1990',
+                'quantity': 82.0201,
+                'ref': 'PQRS5678',
+                'unit_cost': 12.03,
+                'uom': 'cubic feet'
+            }
+        ],
+        'attachments': ["path/to/attachment1.pdf", "path/to/attachment2.pdf"]
+    }
+
+    mocker.patch.object(direct_costs_instance, 'post_request', return_value=mock_response)
+
+    direct_cost_data = {
+        "description": "Invoice for April",
+        "direct_cost_date": "2024-12-14",
+        "employee_id": 43223,
+        "invoice_number": "Invoice # abc123",
+        "origin_data": "OD-2398273424",
+        "origin_id": "px-1990",
+        "payment_date": "2025-01-10",
+        "received_date": "2025-01-08",
+        "status": "approved",
+        "terms": "Net 50",
+        "vendor_id": 23423,
+        "direct_cost_type": "invoice"
+    }
+
+    line_items = [
+        {
+            "manual_amount": 1000,
+            "wbs_code_id": 1989,
+            "description": "100' of Copper Piping",
+            "direct_cost_id": 81753,
+            "origin_data": "OD-2398273424",
+            "origin_id": "px-1990",
+            "quantity": 82.0201,
+            "ref": "PQRS5678",
+            "unit_cost": 12.03,
+            "uom": "cubic feet"
+        }
+    ]
+
+    attachments = ["path/to/attachment1.pdf", "path/to/attachment2.pdf"]
+
+    response = direct_costs_instance.create(
+        company_id=123,
+        project_id=456,
+        direct_cost_data=direct_cost_data,
+        line_items=line_items,
+        attachments=attachments
+    )
+
+    assert isinstance(response, dict)
+    assert response == mock_response

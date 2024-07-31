@@ -65,10 +65,37 @@ if __name__ == "__main__":
     # Example 3
     # ---------
     print("Example 3")
-    dc_not_found = connection.direct_costs.find(
+    try:
+        dc_not_found = connection.direct_costs.find(
+            company_id=company["id"],
+            project_id=project["id"],
+            identifier=1
+        )
+
+        print(json.dumps(dc_not_found, indent=4))
+    except Exception as e:
+        print(f"Error: {e}")
+
+    # Example 4
+    # ---------
+    # Example of creating a Direct Cost item
+    direct_cost_data = {
+        "description": "Invoice for April",
+        "direct_cost_date": "2024-12-14",
+        "employee_id": 8780450,
+        "invoice_number": "Invoice # abc123",
+        "origin_data": "OD-2398273424",
+        "origin_id": "px-1990",
+        "payment_date": "2025-01-10",
+        "received_date": "2025-01-08",
+        "status": "approved",
+        "terms": "Net 50",
+        "vendor_id": 5181441,
+        "direct_cost_type": "invoice"
+    }
+
+    created_direct_cost = connection.direct_costs.create(
         company_id=company["id"],
         project_id=project["id"],
-        identifier=1
+        direct_cost_data=direct_cost_data,
     )
-
-    print(json.dumps(dc_not_found, indent=4))
