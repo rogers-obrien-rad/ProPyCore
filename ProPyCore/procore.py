@@ -54,9 +54,7 @@ class Procore:
         self.__tasks__ = tasks.Task(access_token=self.__access_token, server_url=self.__base_url)
         self.__tools__ = generic_tools.GenericTool(access_token=self.__access_token, server_url=self.__base_url)
         # People
-        self.__users__ = directory.Users(access_token=self.__access_token, server_url=self.__base_url)
-        self.__vendors__ = directory.Vendors(access_token=self.__access_token, server_url=self.__base_url)
-        self.__trades__ = directory.Trades(access_token=self.__access_token, server_url=self.__base_url)
+        self.directory = directory.Directory(access_token=self.__access_token, server_url=self.__base_url)
         # Financials
         self.budgets = budgets.Budgets(access_token=self.__access_token, server_url=self.__base_url)
         self.direct_costs = direct_costs.DirectCosts(access_token=self.__access_token, server_url=self.__base_url)
