@@ -4,6 +4,7 @@ import sys
 import random
 import pathlib
 sys.path.append(f"{pathlib.Path(__file__).resolve().parent.parent}")
+PATH_TO_FOLDER = pathlib.Path(__file__).resolve().parent
 
 from ProPyCore.procore import Procore
 from dotenv import load_dotenv
@@ -89,17 +90,17 @@ if __name__ == "__main__":
 
     # Example 4
     # ---------
-    print("Example 4")
+    print("Example 4: Direct Cost with Attachment")
     # Example of creating a Direct Cost item
     # Generate a random date between two dates
     start_date = datetime.strptime('2024-01-01', '%Y-%m-%d')
     end_date = datetime.strptime('2024-12-31', '%Y-%m-%d')
     random_day = random_date(start_date, end_date).date()
     direct_cost_data = {
-        "description": f"Invoice for {random_day.strftime('%B %d, %Y')}",
+        "description": f"Invoice with attachment for {random_day.strftime('%B %d, %Y')}",
         "direct_cost_date": random_day.strftime('%Y-%m-%d'),
         "employee_id": 8780450,
-        "invoice_number": f"Invoice {random_day.strftime('%Y-%m-%d')}",
+        "invoice_number": f"Attachment {random_day.strftime('%Y-%m-%d')}",
         "origin_data": f"OD-{''.join(random.choices('0123456789', k=10))}",
         "origin_id": f"px-{''.join(random.choices('0123456789', k=4))}",
         "payment_date": f"{(start_date + timedelta(days=10)).strftime('%Y-%m-%d')}",
@@ -125,12 +126,35 @@ if __name__ == "__main__":
         }
     ]
 
-    attachments = ["./dummy/direct_costs_module.pdf"]
+    attachments = [os.path.join(PATH_TO_FOLDER, "dummy", "direct_costs_module.pdf")]
 
     created_direct_cost = connection.direct_costs.create(
         company_id=company["id"],
         project_id=project["id"],
         direct_cost_data=direct_cost_data,
         line_items=line_items,
+        attachments=attachments
+    )
+
+    # Example 5
+    # ---------
+    print("Example 5: Find by Invoice Number")
+    invoice_number = "Invoice 2024-12-07"
+    dc_by_invoice = connection.direct_costs.find(
+        company_id=company["id"],
+        project_id=project["id"],
+        identifier=invoice_number
+    )
+    print(dc_by_invoice["id"])
+
+    # Example 6
+    # ---------
+    print("Example 6: Update direct cost with attachment")
+    attachments = [os.path.join(PATH_TO_FOLDER, "dummy", "direct_costs_module.pdf")]
+
+    created_direct_cost = connection.direct_costs.update(
+        company_id=company["id"],
+        project_id=project["id"],
+        direct_cost_id=dc_by_invoice["id"],
         attachments=attachments
     )
