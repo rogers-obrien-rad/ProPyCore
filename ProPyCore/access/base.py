@@ -101,14 +101,16 @@ class Base:
             response = requests.post(
                 url,
                 headers=headers,
-                json=data  # use json for normal data
+                data=data 
             )
-        else:
+        elif data is None:
             response = requests.post(
                 url,
                 headers=headers,
                 files=files  # use files for multipart/form-data
             )
+        else:
+            response = requests.request("POST", url, headers=headers, data=data, files=files)
 
         if response.ok:
             return response.json()

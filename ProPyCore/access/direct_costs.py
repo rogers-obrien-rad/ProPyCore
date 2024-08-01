@@ -1,7 +1,8 @@
 import json
+import mimetypes
 
 from .base import Base
-from ..exceptions import NotFoundItemError
+from ..exceptions import NotFoundItemError, raise_exception
 
 class DirectCosts(Base):
     """
@@ -98,8 +99,13 @@ class DirectCosts(Base):
         direct_cost_info : dict
             Direct Cost data
         """
+        if isinstance(identifier, int):
+            key = "id"
+        else:
+            key = "invoice_number"
+
         for direct_cost in self.get(company_id=company_id, project_id=project_id):
-            if direct_cost["id"] == identifier:
+            if direct_cost[key] == identifier:
                 direct_cost_info = self.show(
                     company_id=company_id,
                     project_id=project_id,
@@ -133,38 +139,115 @@ class DirectCosts(Base):
         """
         headers = {
             "Procore-Company-Id": f"{company_id}",
+            "Accept": "application/json",
         }
 
-        if attachments:
-            multipart_data = {
-                'direct_cost': (None, json.dumps(direct_cost_data), 'application/json'),
-                'line_items': (None, json.dumps(line_items), 'application/json'),
+        # Prepare payload
+        payload = {
+            f'direct_cost[{key}]': str(value)
+            for key, value in direct_cost_data.items()
+        }
+
+        # Add line items to the payload
+        line_item_payload = []
+        for line_item in line_items:
+            line_item_dict = {}
+            for key, value in line_item.items():
+                line_item_dict[key] = value
+                
+            line_item_payload.append(line_item_dict)
+
+        payload['direct_cost[line_items]'] = line_item_payload
+
+        # Prepare attachments
+        files = []
+        for attachment in attachments:
+            mime_type, _ = mimetypes.guess_type(attachment)
+            if mime_type is None:
+                mime_type = 'application/octet-stream'
+            files.append(('attachments[]', (attachment, open(attachment, 'rb'), mime_type)))
+
+        # Make the request
+        response = self.post_request(
+            api_url=f"{self.endpoint}/{project_id}/direct_costs",
+            additional_headers=headers,
+            data=payload,
+            files=files
+        )
+
+        # Close the file objects
+        for file_tuple in files:
+            file_tuple[1][1].close()
+
+        return response
+    
+    def update(self, company_id, project_id, direct_cost_id, direct_cost_data={}, line_items=[], attachments=[]):
+        """
+        Creates a new Direct Cost item in the specified Project.
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        direct_cost_id : int
+            unique identifier for the direct cost
+        direct_cost_data : dict, default {}
+            the data for the new Direct Cost item
+        line_items : list, default []
+            the list of line items associated with the direct cost
+        attachments : list, default []
+            list of attachment file paths
+
+        Returns
+        -------
+        response : dict
+            response from the API containing the created Direct Cost item
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}",
+            "Accept": "application/json",
+        }
+
+        # Prepare payload
+        if direct_cost_data:
+            payload = {
+                f'direct_cost[{key}]': str(value)
+                for key, value in direct_cost_data.items()
             }
-
-            # Add attachments to multipart/form-data
-            for i, attachment in enumerate(attachments):
-                multipart_data[f'attachments[{i}]'] = (attachment, open(attachment, 'rb'))
-
-            response = self.post_request(
-                api_url=f"{self.endpoint}/{project_id}/direct_costs",
-                additional_headers=headers,
-                files=multipart_data
-            )
-
-            # Make sure to close the file objects after the request
-            for key in multipart_data:
-                if isinstance(multipart_data[key][1], bytes):
-                    multipart_data[key][1].close()
         else:
-            direct_cost_payload = {
-                "direct_cost": direct_cost_data,
-                "line_items": line_items
-            }
+            payload = {}
 
-            response = self.post_request(
-                api_url=f"{self.endpoint}/{project_id}/direct_costs",
-                additional_headers=headers,
-                data=direct_cost_payload
-            )
+        # Add line items to the payload
+        line_item_payload = []
+        for line_item in line_items:
+            line_item_dict = {}
+            for key, value in line_item.items():
+                line_item_dict[key] = value
+                
+            line_item_payload.append(line_item_dict)
+
+        payload['direct_cost[line_items]'] = line_item_payload
+
+        # Prepare attachments
+        files = []
+        for attachment in attachments:
+            mime_type, _ = mimetypes.guess_type(attachment)
+            if mime_type is None:
+                mime_type = 'application/octet-stream'
+            files.append(('attachments[]', (attachment, open(attachment, 'rb'), mime_type)))
+
+        # Make the request
+        response = self.patch_request(
+            api_url=f"{self.endpoint}/{project_id}/direct_costs/{direct_cost_id}",
+            additional_headers=headers,
+            data=payload,
+            files=files
+        )
+
+        # Close the file objects
+        for file_tuple in files:
+            file_tuple[1][1].close()
 
         return response
