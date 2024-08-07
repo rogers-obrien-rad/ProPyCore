@@ -1,20 +1,37 @@
-from .base import Base
-from ..exceptions import NotFoundItemError
+from ..base import Base
+from ...exceptions import NotFoundItemError
 
-class Directory(Base):
-    """
-    Wrapper class for Folders and Files - should NOT instantiate directly
-    Basic functionality for working with Folders and Files
-    """
+class Users(Base):
+    """Access user information on a Company and Project Level"""
 
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
 
-        self.endpoint = None # create dummy endpoint so the methods have a reference
-
-    def get(self, company_id, project_id=None, per_page=10000):
+    def get_url(self, company_id, project_id=None):
         """
-        Gets a list of all the projects from a certain company
+        Returns the url specific to Users at company or project level
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int, default None
+            unique identifier for the project
+            None specifies company-level
+
+        Returns
+        -------
+        <get_url> : str
+            url for Users request
+        """
+        if project_id is None:
+            return f"/rest/v1.1/companies/{company_id}/users"
+        else:
+            return f"/rest/v1.0/projects/{project_id}/users"
+
+    def get(self, company_id, project_id=None, per_page=1000):
+        """
+        Gets a list of all the users from the company or project level
 
         Parameters
         ----------
@@ -45,7 +62,6 @@ class Directory(Base):
                 "Procore-Company-Id": f"{company_id}"
             }
 
-            # url
             url = self.get_url(
                 company_id=company_id,
                 project_id=project_id
@@ -91,35 +107,7 @@ class Directory(Base):
             if user[key] == user_id:
                 return user
 
-        raise NotFoundItemError(f"Could not find {user_id}")
-
-class Users(Directory):
-    """Access user information on a Company and Project Level"""
-
-    def __init__(self, access_token, server_url) -> None:
-        super().__init__(access_token, server_url)
-
-    def get_url(self, company_id, project_id=None):
-        """
-        Returns the url specific to Users at company or project level
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int, default None
-            unique identifier for the project
-            None specifies company-level
-
-        Returns
-        -------
-        <get_url> : str
-            url for Users request
-        """
-        if project_id is None:
-            return f"/rest/v1.1/companies/{company_id}/users"
-        else:
-            return f"/rest/v1.0/projects/{project_id}/users"
+        raise NotFoundItemError(f"Could not find User {user_id}")
 
     def add(self, company_id, project_id, user_id, permission_template_id=None):
         """
@@ -136,7 +124,6 @@ class Users(Directory):
         permission_template_id : int, default None
             level of permissions to give the added user
         """
-        # 768372
         data = {
             "user":{
                 "permission_template_id": permission_template_id,
@@ -157,58 +144,3 @@ class Users(Directory):
             params=params,
             data=data
         )
-
-class Vendors(Directory):
-    """Access vendor information on a Company and Project Level"""
-
-    def __init__(self, access_token, server_url) -> None:
-        super().__init__(access_token, server_url)
-
-    def get_url(self, company_id, project_id=None):
-        """
-        Returns the url specific to Vendors at company or project level
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int, default None
-            unique identifier for the project
-            None specifies company-level
-
-        Returns
-        -------
-        <get_url> : str
-            url for Vendors request
-        """
-        if project_id is None:
-            # company level is included in the query parameters for this endpoint
-            return "/rest/v1.0/vendors"
-        else:
-            return f"/rest/v1.0/projects/{project_id}/vendors"
-
-class Trades(Directory):
-    """Access trade information on a Company Level only"""
-
-    def __init__(self, access_token, server_url) -> None:
-        super().__init__(access_token, server_url)
-
-    def get_url(self, company_id, project_id=None):
-        """
-        Returns the url specific to Trades at company level
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int, default None
-            unique identifier for the project
-            None specifies company-level
-
-        Returns
-        -------
-        <get_url> : str
-            url for Trades request
-        """
-        # can only access trades at the company level
-        return f"/rest/v1.0/companies/{company_id}/trades"

@@ -54,6 +54,10 @@ class InternalServerError(ProcoreException):
     """The rest Procore errors, 500 error."""
     pass
 
+class UnprocessableContentError(ProcoreException):
+    """Non-unique field, 422 error."""
+    pass
+
 def raise_exception(response):
     """
     Raises an exception based on the provided status code
@@ -71,6 +75,9 @@ def raise_exception(response):
 
     elif response.status_code == 404:
         raise NotFoundClientError('Client ID doesn\'t exist', response.text)
+
+    elif response.status_code == 422:
+        raise UnprocessableContentError('A field that needs a unique value already exists', response.text)
 
     elif response.status_code == 500:
         raise InternalServerError('Internal server error', response.text)
