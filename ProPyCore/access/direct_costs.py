@@ -105,7 +105,13 @@ class DirectCosts(Base):
             key = "invoice_number"
 
         for direct_cost in self.get(company_id=company_id, project_id=project_id):
-            if direct_cost[key] == identifier:
+            try:
+                dc_identifier = direct_cost[key]
+            except KeyError:
+                # raise_exception(f"Direct Cost does not have {key} parameter")
+                continue
+            
+            if dc_identifier == identifier:
                 direct_cost_info = self.show(
                     company_id=company_id,
                     project_id=project_id,
@@ -142,24 +148,13 @@ class DirectCosts(Base):
             "Accept": "application/json",
         }
 
-        # Prepare payload
+        # Prepare direct cost payload without line items as form data
         payload = {
             f'direct_cost[{key}]': str(value)
             for key, value in direct_cost_data.items()
         }
 
-        # Add line items to the payload
-        line_item_payload = []
-        for line_item in line_items:
-            line_item_dict = {}
-            for key, value in line_item.items():
-                line_item_dict[key] = value
-                
-            line_item_payload.append(line_item_dict)
-
-        payload['direct_cost[line_items]'] = line_item_payload
-
-        # Prepare attachments
+        # Prepare attachments as form data
         files = []
         for attachment in attachments:
             mime_type, _ = mimetypes.guess_type(attachment)
@@ -178,6 +173,14 @@ class DirectCosts(Base):
         # Close the file objects
         for file_tuple in files:
             file_tuple[1][1].close()
+
+        # Handle line items sequentially by patching because we can't use form data
+        if len(line_items) > 0:
+            direct_cost_id = response.get('id')
+
+            if direct_cost_id:
+                # Use the update method to add line items to the previously created Direct Cost item
+                self.update(company_id, project_id, direct_cost_id, line_items=line_items)
 
         return response
     
@@ -219,17 +222,6 @@ class DirectCosts(Base):
         else:
             payload = {}
 
-        # Add line items to the payload
-        line_item_payload = []
-        for line_item in line_items:
-            line_item_dict = {}
-            for key, value in line_item.items():
-                line_item_dict[key] = value
-                
-            line_item_payload.append(line_item_dict)
-
-        payload['direct_cost[line_items]'] = line_item_payload
-
         # Prepare attachments
         files = []
         for attachment in attachments:
@@ -249,5 +241,17 @@ class DirectCosts(Base):
         # Close the file objects
         for file_tuple in files:
             file_tuple[1][1].close()
+
+        # Handle line items separately to avoid form data
+        payload = {
+            'direct_cost': {
+                'line_items': line_items
+            }
+        }
+        _ = self.patch_request(
+            api_url=f"{self.endpoint}/{project_id}/direct_costs/{direct_cost_id}",
+            additional_headers=headers,
+            data=payload,
+        )
 
         return response

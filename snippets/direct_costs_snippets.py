@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     # Example 1
     # ---------
-    print("Example 1")
+    print("Example 1: Get All Direct Costs")
     dcs = connection.direct_costs.get(
         company_id=company["id"],
         project_id=project["id"]
@@ -51,16 +51,14 @@ if __name__ == "__main__":
     
     # Example 2
     # ---------
-    print("Example 2")
-    direct_cost_id=dcs[0]["id"]
-    print(direct_cost_id)
+    print("Example 2: Find Direct Cost by ID")
+    direct_cost_id = 95627654
     dc = connection.direct_costs.show(
         company_id=company["id"],
         project_id=project["id"],
         direct_cost_id=direct_cost_id
     )
 
-    print(f"Number of Direct Cost Items: {len(dcs)}")
     print(json.dumps(dc, indent=4))
 
     # Example 3
@@ -113,16 +111,18 @@ if __name__ == "__main__":
 
     line_items = [
         {
-            "manual_amount": 1000,
-            "wbs_code_id": 1989,
+            "wbs_code_id": 1752073765,
             "description": "100' of Copper Piping",
-            "direct_cost_id": 81753,
-            "origin_data": "OD-2398273424",
-            "origin_id": "px-1990",
-            "quantity": 82.0201,
-            "ref": "PQRS5678",
-            "unit_cost": 12.03,
+            "quantity": 82,
+            "unit_cost": 12,
             "uom": "cubic feet"
+        },
+        {
+            "wbs_code_id": 1728675525,
+            "description": "Project Manager",
+            "quantity": 2,
+            "unit_cost": 100000.0,
+            "uom": "ea"
         }
     ]
 
