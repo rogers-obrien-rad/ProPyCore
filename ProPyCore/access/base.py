@@ -89,13 +89,6 @@ class Base:
             for key, value in additional_headers.items():
                 headers[key] = value
 
-        # Log the request details
-        print("URL:", url)
-        print("Headers:", headers)
-        print("Data:", data)
-        if files:
-            print("Files:", files)
-
         # Make the request with file if necessary
         if files is None:
             response = requests.post(
