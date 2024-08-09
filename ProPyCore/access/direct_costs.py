@@ -255,3 +255,50 @@ class DirectCosts(Base):
         )
 
         return response
+    
+    def add_attachment(self, company_id, project_id, direct_cost_id, attachments):
+        """
+        Creates a new Direct Cost item in the specified Project.
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        direct_cost_id : int
+            unique identifier for the direct cost
+        attachments : list, default []
+            list of attachment file paths
+
+        Returns
+        -------
+        response : dict
+            response from the API containing the created Direct Cost item
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}",
+            "Accept": "application/json",
+        }
+
+        # Prepare attachments
+        files = []
+        for attachment in attachments:
+            mime_type, _ = mimetypes.guess_type(attachment)
+            if mime_type is None:
+                mime_type = 'application/octet-stream'
+            files.append(('attachments[]', (attachment, open(attachment, 'rb'), mime_type)))
+
+        # Make the request
+        response = self.patch_request(
+            api_url=f"{self.endpoint}/{project_id}/direct_costs/{direct_cost_id}",
+            additional_headers=headers,
+            data={},
+            files=files
+        )
+
+        # Close the file objects
+        for file_tuple in files:
+            file_tuple[1][1].close()
+
+        return response
