@@ -139,7 +139,7 @@ if __name__ == "__main__":
     # Example 5
     # ---------
     print("Example 5: Find by Invoice Number")
-    invoice_number = "Invoice 2024-12-07"
+    invoice_number = "Invoice # abc123"
     dc_by_invoice = connection.direct_costs.find(
         company_id=company["id"],
         project_id=project["id"],
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     print("Example 6: Update direct cost with attachment")
     attachments = [os.path.join(PATH_TO_FOLDER, "dummy", "direct_costs_module.pdf")]
 
-    created_direct_cost = connection.direct_costs.update(
+    created_direct_cost = connection.direct_costs.add_attachment(
         company_id=company["id"],
         project_id=project["id"],
         direct_cost_id=dc_by_invoice["id"],

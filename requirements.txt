@@ -1,5 +1,4 @@
 requests
-beautifulsoup4
 requests
 fuzzywuzzy
 python-Levenshtein

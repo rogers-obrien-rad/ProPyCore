@@ -1,8 +1,6 @@
 from .exceptions import *
 from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks, budgets, direct_costs
 import requests
-import urllib
-from bs4 import BeautifulSoup
 
 class Procore:
     """
@@ -59,36 +57,8 @@ class Procore:
         self.budgets = budgets.Budgets(access_token=self.__access_token, server_url=self.__base_url)
         self.direct_costs = direct_costs.DirectCosts(access_token=self.__access_token, server_url=self.__base_url)
 
-    def get_auth_code(self):
+    def get_access_token(self):
         """
-        Gets the 10-minute temporary authorization token
-        """
-        # create url
-        params = {
-            "client_id": self.__client_id,
-            "response_type": "code",
-            "redirect_uri":  self.__redirect_uri
-        }
-        url = self.__oauth_url + "/oauth/authorize?" + urllib.parse.urlencode(params)
-        # GET
-        response = requests.get(url, headers={
-            "content-type": "application/json"
-        })
-
-        auth_code = None # pre-allocate
-        if response.ok:
-            # use BS to parse the code from the returned html
-            soup = BeautifulSoup(response.text, 'html.parser')
-            for tag in soup.find_all("meta"):
-                if tag.get("name", None) == "csrf-token":
-                    auth_code = tag.get("content", None)
-        else:
-            raise_exception(response=response)
-
-        return auth_code
-
-    def get_access_token(self, code):
-        '''
         Gets access token from authorization code previously obtained from the get_auth_code call.
         
         Parameters
@@ -100,23 +70,22 @@ class Procore:
         -------
         <access_token> : str
             2-hour access token
-        '''
+        """
         client_auth = requests.auth.HTTPBasicAuth(self.__client_id, self.__client_secret)
-        post_data = {"grant_type": "client_credentials",
-                    "code": code,
-                    "redirect_uri": self.__redirect_uri
-                    }
+        post_data = {
+            "grant_type": "client_credentials",
+            "redirect_uri": self.__redirect_uri
+        }
         response = requests.post(self.__base_url+"/oauth/token", auth=client_auth, data=post_data)
         response_json = response.json()
 
-        return response_json["access_token"]#, response_json['created_at']
+        return response_json["access_token"]
 
     def reset_access_token(self):
         """
         Gets a new access token
         """
-        temp_code = self.get_auth_code()
-        self.__access_token = self.get_access_token(temp_code)
+        self.__access_token = self.get_access_token()
 
     def print_attributes(self):
         """
