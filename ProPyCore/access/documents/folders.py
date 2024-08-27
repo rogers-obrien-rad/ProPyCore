@@ -1,19 +1,18 @@
-from .base import Base
-from ..exceptions import NotFoundItemError, ProcoreException
+from ..base import Base
+from ...exceptions import NotFoundItemError, ProcoreException
 
 from warnings import warn
 from fuzzywuzzy import fuzz
 
-class Documents(Base):
+class Folders(Base):
     """
-    Wrapper class for Folders and Files - should NOT instantiate directly
-    Basic functionality for working with Folders and Files
+    Access to and working with Procore folders
     """
 
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
 
-        self.endpoint = None # create dummy endpoint so the methods have a reference
+        self.endpoint = "/rest/v1.0/folders"
 
     def show(self, company_id, project_id, doc_id):
         """
@@ -200,16 +199,6 @@ class Documents(Base):
             result["search_criteria"] = {"value":value, "match":score}
             return result
 
-class Folders(Documents):
-    """
-    Access to and working with Procore folders
-    """
-
-    def __init__(self, access_token, server_url) -> None:
-        super().__init__(access_token, server_url)
-
-        self.endpoint = "/rest/v1.0/folders"
-
     def root(self, company_id, project_id):
         """
         Gets the list of root folders and files
@@ -383,171 +372,6 @@ class Folders(Documents):
                     company_id=company_id,
                     project_id=project_id,
                     doc_id=folder["id"]
-                )
-
-        raise NotFoundItemError(f"Could not find document {identifier}")
-
-class Files(Documents):
-    """
-    Access to and working with Procore files
-    """
-
-    def __init__(self, access_token, server_url) -> None:
-        super().__init__(access_token, server_url)
-
-        self.endpoint = "/rest/v1.0/files"
-
-    def create(self, company_id, project_id, filepath, folder_id=None, description=None):
-        """
-        Creates a file 
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-        filepath : str
-            path to the file to upload
-        folder_id : int or str, default None
-            the id of the parent folder to place this folder
-            if not included, the folder will placed at the root
-        description : str, default None
-            optional description to include on the file
-
-        Returns
-        -------
-        doc_info : dict
-            request body
-        """
-        params = {
-            "project_id": project_id
-        }
-
-        headers = {
-            "Procore-Company-Id": f"{company_id}",
-        }
-
-        filename = filepath.rsplit('/',1)[-1]
-        data = {
-            "file[name]": f"{filename}",
-            "file[description]": "None" if description is None else description,
-        }
-
-        if folder_id is not None:
-            data["file[parent_id]"] = int(folder_id)
-
-        file = [
-            ("file[data]", open(filepath, "rb"))
-        ]
-
-        try:
-            doc_info = self.post_request(
-                api_url=self.endpoint,
-                additional_headers=headers,
-                params=params,
-                data=data,
-                files=file
-            )
-        except ProcoreException as e:
-            print(e)
-        
-        return doc_info
-
-    def update(self, company_id, project_id, doc_id, filepath=None, folder_id=None, filename=None, description=None, private=None):
-        """
-        Updates the given folder
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-        doc_id : int
-            unique identifier for the folder
-        folder_id : int, default None -> root
-            location where the folder exists
-        folder_name : str, default None
-            new name to assign to the folder
-        private : boolean, default None
-            permissions on the folder
-
-        Returns
-        -------
-        doc_info : dict
-            request body
-        """
-        params = {
-            "project_id": project_id
-        }
-
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        # building the body from available data
-        data = {}
-        for key, val in zip(["file[parent_id]","file[name]","file[description]","file[private]"], [folder_id, filename, description, private]):
-            if val is not None:
-                data[key] = val
-
-        if filepath is not None:
-            file = [
-                ("file[data]", open(filepath, "rb"))
-            ]
-
-            doc_info = self.patch_request(
-                api_url=f"{self.endpoint}/{doc_id}",
-                additional_headers=headers,
-                params=params,
-                data=data,
-                files=file
-            )
-        else:
-            doc_info = self.patch_request(
-                api_url=f"{self.endpoint}/{doc_id}",
-                additional_headers=headers,
-                params=params,
-                data=data,
-                files=True
-            )
-
-        return doc_info        
-    
-    def find(self, company_id, project_id, identifier, folder_id=None):
-        """
-        Finds the information from the folder name
-
-        Parameters
-        ----------
-        company : int or str
-            company id number or name
-        project : : int or str
-            project id number or name
-        identifier : str
-            name of the file or folder to look for
-        folder_id : int, default None
-            parent id to get subfolder in
-            None specifies to start at the root
-
-        Returns
-        -------
-        doc : dict
-            doc-specific dictionary
-        """
-        files = self.get(
-            company_id=company_id,
-            project_id=project_id,
-            folder_id=folder_id
-        )
-
-        for file in files:
-            if file["name"] == identifier:
-                return self.show(
-                    company_id=company_id,
-                    project_id=project_id,
-                    doc_id=file["id"]
                 )
 
         raise NotFoundItemError(f"Could not find document {identifier}")
