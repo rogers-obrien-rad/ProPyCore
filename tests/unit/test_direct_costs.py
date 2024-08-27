@@ -75,7 +75,7 @@ def test_create_direct_cost(direct_costs_instance, mocker):
                 'uom': 'cubic feet'
             }
         ],
-        'attachments': ["path/to/attachment1.pdf", "path/to/attachment2.pdf"]
+        'attachments': []
     }
 
     mocker.patch.object(direct_costs_instance, 'post_request', return_value=mock_response)
@@ -110,7 +110,7 @@ def test_create_direct_cost(direct_costs_instance, mocker):
         }
     ]
 
-    attachments = ["path/to/attachment1.pdf", "path/to/attachment2.pdf"]
+    attachments = []
 
     response = direct_costs_instance.create(
         company_id=123,

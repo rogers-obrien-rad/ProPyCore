@@ -44,13 +44,13 @@ class Procore:
         self.companies = companies.Companies(access_token=self.__access_token, server_url=self.__base_url)
         self.projects = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
         # Documents
-        self.__folders__ = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
-        self.__files__ = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
+        self.folders = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
+        self.files = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
         # Tools
-        self.__rfis__ = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
-        self.__submittals__ = submittals.Submittal(access_token=self.__access_token, server_url=self.__base_url)
-        self.__tasks__ = tasks.Task(access_token=self.__access_token, server_url=self.__base_url)
-        self.__tools__ = generic_tools.GenericTool(access_token=self.__access_token, server_url=self.__base_url)
+        self.rfis = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
+        self.submittals = submittals.Submittal(access_token=self.__access_token, server_url=self.__base_url)
+        self.tasks = tasks.Task(access_token=self.__access_token, server_url=self.__base_url)
+        self.tools = generic_tools.GenericTool(access_token=self.__access_token, server_url=self.__base_url)
         # People
         self.directory = directory.Directory(access_token=self.__access_token, server_url=self.__base_url)
         # Financials
