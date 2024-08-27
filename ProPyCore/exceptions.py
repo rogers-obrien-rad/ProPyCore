@@ -68,19 +68,19 @@ def raise_exception(response):
         valid get/request code
     """
     if response.status_code == 401:
-        raise UnauthorizedClientError('Wrong client secret or/and refresh token', response.text)
+        raise UnauthorizedClientError('401: Wrong client secret or/and refresh token', response.text)
     
     elif response.status_code == 403:
-        raise NoPrivilegeError(f"Data connection app or permission template does not allow creation of files", response.text)
+        raise NoPrivilegeError(f"403: Data connection app or permission template does not allow creation of files", response.text)
 
     elif response.status_code == 404:
-        raise NotFoundClientError('Client ID doesn\'t exist', response.text)
+        raise NotFoundClientError('404: Client ID doesn\'t exist', response.text)
 
     elif response.status_code == 422:
-        raise UnprocessableContentError('A field that needs a unique value already exists', response.text)
+        raise UnprocessableContentError('422: A field that needs a unique value already exists', response.text)
 
     elif response.status_code == 500:
-        raise InternalServerError('Internal server error', response.text)
+        raise InternalServerError('500: Internal server error', response.text)
 
     else:
         raise ProcoreException('Error: {0}'.format(response.status_code), response.text)
