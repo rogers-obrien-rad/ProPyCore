@@ -75,3 +75,36 @@ class Projects(Base):
                 return project
 
         raise NotFoundItemError(f"Could not find project {identifier}")
+    
+    def get_type(self, company_id, project_id):
+        """
+        Gets the type for the given project
+
+        Parameters
+        ----------
+        company_id : int
+            The identifier for the company
+        project_id : int
+            The identifier for the project
+
+        Returns
+        -------
+        <type_name> : str
+            Project type name
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+        # Get the projects from the company endpoint which has the type_name field
+        company_projects = self.get_request(
+            api_url=f"/rest/v1.0/companies/{company_id}/projects",
+            additional_headers=headers,
+            params={}
+        )
+
+        # Search for the project with the matching project_id and return the type_name
+        for project in company_projects:
+            if project.get("id") == project_id:
+                return project.get("type_name")
+
+        raise NotFoundItemError(f"Could not find project {project_id}")
