@@ -13,7 +13,7 @@ class Companies(Base):
 
     def get(self, page=1, per_page=100):
         """
-        Gets all companies with the app installed
+        Gets all companies where the data connection app is installed
 
         Parameters
         ----------
@@ -91,7 +91,7 @@ class Companies(Base):
 
         return projects
     
-    def get_regions(self, company_id, page=1, per_page=100):
+    def list_regions(self, company_id, page=1, per_page=100):
         """
         Gets all regions for a specified company
 
@@ -126,7 +126,7 @@ class Companies(Base):
 
         return regions
 
-    def get_project_types(self, company_id, page=1, per_page=100):
+    def list_project_types(self, company_id, page=1, per_page=100):
         """
         Gets all project types for a specified company
 
@@ -160,3 +160,38 @@ class Companies(Base):
         )
 
         return project_types
+    
+    def list_project_stages(self, company_id, page=1, per_page=100):
+        """
+        Gets all project stages for a specified company
+
+        Parameters
+        ----------
+        company_id : int
+            The identifier for the company
+        per_page : int, default 100
+            Number of project types to include per page
+
+        Returns
+        -------
+        stages : list of dict
+            List where each value is a dict with the project type's details
+        """
+        endpoint = f"{self.endpoint}/{company_id}/project_stages"
+
+        params = {
+            "page": page,
+            "per_page": per_page
+        }
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        stages = self.get_request(
+            api_url=endpoint,
+            additional_headers=headers,
+            params=params
+        )
+
+        return stages
