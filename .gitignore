@@ -220,3 +220,6 @@ replay_pid*
 # PHP
 *vendor*
 *.lock
+
+# snippet testing files
+*snippets_*
