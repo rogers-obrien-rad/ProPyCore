@@ -91,7 +91,7 @@ class Companies(Base):
 
         return projects
     
-    def get_regions(self, company_id, page=1, per_page=100):
+    def list_regions(self, company_id, page=1, per_page=100):
         """
         Gets all regions for a specified company
 
@@ -126,7 +126,7 @@ class Companies(Base):
 
         return regions
 
-    def get_project_types(self, company_id, page=1, per_page=100):
+    def list_project_types(self, company_id, page=1, per_page=100):
         """
         Gets all project types for a specified company
 
