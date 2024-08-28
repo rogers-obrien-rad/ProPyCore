@@ -71,7 +71,7 @@ def raise_exception(response):
         raise UnauthorizedClientError('401: Wrong client secret or/and refresh token', response.text)
     
     elif response.status_code == 403:
-        raise NoPrivilegeError(f"403: Data connection app or permission template does not allow creation of files", response.text)
+        raise NoPrivilegeError(f"403: Data connection app or permission template does not have access to this endpoint", response.text)
 
     elif response.status_code == 404:
         raise NotFoundClientError('404: Client ID doesn\'t exist', response.text)
