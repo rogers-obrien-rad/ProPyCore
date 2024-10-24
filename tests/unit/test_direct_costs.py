@@ -2,10 +2,13 @@ import pytest
 from ProPyCore.access.direct_costs import DirectCosts
 from ProPyCore.exceptions import NotFoundItemError
 
-# Fixture for DirectCosts instance
+## Fixture for DirectCosts instance
 @pytest.fixture
 def direct_costs_instance(mocker):
-    mocker.patch('ProPyCore.access.direct_costs.Base.__init__', return_value=None)  # Mock the base class initializer
+    # Allow Base class to initialize normally to set attributes like server_url
+    mocker.patch.object(DirectCosts, 'get_request')
+    mocker.patch.object(DirectCosts, 'post_request')
+    mocker.patch.object(DirectCosts, 'patch_request')
     return DirectCosts('mock_access_token', 'mock_server_url')
 
 def test_get_direct_costs(direct_costs_instance, mocker):
