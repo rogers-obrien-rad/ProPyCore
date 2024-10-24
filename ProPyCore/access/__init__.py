@@ -8,3 +8,4 @@ from .projects import *
 from .rfis import *
 from .submittals import *
 from .tasks import *
+from .cost_codes import *
