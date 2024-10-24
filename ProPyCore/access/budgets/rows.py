@@ -66,7 +66,7 @@ class BudgetRows(Base):
             key = "id"
         else:
             key = "cost_code"
-        for row in self.get_budget_rows(company_id=company_id, project_id=project_id, budget_view_id=budget_view_id):
+        for row in self.get(company_id=company_id, project_id=project_id, budget_view_id=budget_view_id):
             if row[key] == identifier:
                 return row
         raise NotFoundItemError(f"Could not find row {identifier}")

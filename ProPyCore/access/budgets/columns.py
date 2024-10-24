@@ -67,7 +67,7 @@ class BudgetColumns(Base):
         else:
             key = "name"
 
-        for column in self.get_budget_columns(company_id=company_id, project_id=project_id, budget_view_id=budget_view_id):
+        for column in self.get(company_id=company_id, project_id=project_id, budget_view_id=budget_view_id):
             if column[key] == identifier:
                 return column
 
