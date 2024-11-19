@@ -31,20 +31,31 @@ class RFI(Base):
         rfis : dict
             available rfi data
         """
-        params = {
-            "page": page,
-            "per_page": per_page
-        }
-
         headers = {
             "Procore-Company-Id": f"{company_id}"
         }
+        n_rfis = 1
+        page = 1
+        rfis = []
+        while n_rfis > 0:
+            params = {
+                "page": page,
+                "per_page": 100
+            }
 
-        rfis = self.get_request(
-            api_url=f"{self.endpoint}/{project_id}/rfis",
-            additional_headers=headers,
-            params=params
-        )
+            headers = {
+                "Procore-Company-Id": f"{company_id}"
+            }
+
+            rfi_selection = self.get_request(
+                api_url=f"{self.endpoint}/{project_id}/rfis",
+                additional_headers=headers,
+                params=params
+            )
+
+            n_rfis = len(rfi_selection)
+            rfis += rfi_selection
+            page += 1 
 
         return rfis
 
