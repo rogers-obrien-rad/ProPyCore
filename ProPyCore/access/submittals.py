@@ -1,3 +1,4 @@
+import asyncio
 from .base import Base
 from ..exceptions import *
 
@@ -7,12 +8,17 @@ class Submittal(Base):
     """
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
-
         self.endpoint = "/rest/v1.1/projects"
 
     def get(self, company_id, project_id):
         """
-        Gets all the available Submittals
+        Synchronous wrapper for the async_get method.
+        """
+        return asyncio.run(self.async_get(company_id, project_id))
+
+    async def async_get(self, company_id, project_id):
+        """
+        Asynchronous implementation of fetching all available Submittals.
 
         Parameters
         ----------
@@ -26,39 +32,24 @@ class Submittal(Base):
         submittals : dict
             available submittal data
         """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
+        headers = {"Procore-Company-Id": f"{company_id}"}
+        api_url = f"{self.endpoint}/{project_id}/submittals"
 
-        n_submittals = 1
-        page = 1
-        submittals = []
-        while n_submittals > 0:
+        async def fetch_page(page):
+            params = {"page": page, "per_page": 100}
+            return await self.get_request_async(api_url, additional_headers=headers, params=params)
 
-            params = {
-                "page": page,
-                "per_page": 100
-            }
+        # Create tasks for multiple pages
+        tasks = [fetch_page(page) for page in range(1, 101)]  # Adjust range as needed
+        results = await asyncio.gather(*tasks)
 
-            headers = {
-                "Procore-Company-Id": f"{company_id}"
-            }
-
-            submittal_selection = self.get_request(
-                api_url=f"{self.endpoint}/{project_id}/submittals",
-                additional_headers=headers,
-                params=params
-            )
-
-            n_submittals = len(submittal_selection)
-            submittals += submittal_selection
-            page += 1 
-
+        # Flatten results
+        submittals = [item for sublist in results for item in sublist if sublist]
         return submittals
 
     def show(self, company_id, project_id, submittal_id):
         """
-        Shows the Submittal info
+        Shows the Submittal info.
 
         Parameters
         ----------
@@ -74,21 +65,16 @@ class Submittal(Base):
         submittal_info : dict
             specific submittal information
         """
-
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
+        headers = {"Procore-Company-Id": f"{company_id}"}
         submittal_info = self.get_request(
             api_url=f"{self.endpoint}/{project_id}/submittals/{submittal_id}",
             additional_headers=headers,
         )
-
         return submittal_info
 
     def find(self, company_id, project_id, identifier):
         """
-        Finds specified submittal
+        Finds specified submittal.
 
         Parameters
         ----------
@@ -104,18 +90,18 @@ class Submittal(Base):
         submittal_info : dict
             submittal data
         """
+        submittals = self.get(company_id=company_id, project_id=project_id)
         if isinstance(identifier, int):
             key = "id"
         else:
             key = "title"
 
-        for submittal in self.get(company_id=company_id, project_id=project_id):
+        for submittal in submittals:
             if submittal[key] == identifier:
-                submittal_info = self.show(
+                return self.show(
                     company_id=company_id,
                     project_id=project_id,
                     submittal_id=submittal["id"]
                 )
-                return submittal_info
 
         raise NotFoundItemError(f"Could not find Submittal {identifier}")
