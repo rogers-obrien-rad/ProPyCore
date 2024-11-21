@@ -1,4 +1,4 @@
 requests
-requests
 fuzzywuzzy
 python-Levenshtein
+aiohttp
