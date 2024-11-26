@@ -58,42 +58,6 @@ class Base:
             return response.json()
         else:
             raise_exception(response)
-
-    async def get_request_async(self, api_url, additional_headers=None, params=None):
-        """
-        Create an asynchronous HTTP GET request
-
-        Parameters
-        ----------
-        api_url : str
-            endpoint for the specific API call
-        additional_headers : dict, default None
-            additional headers beyond Authorization
-        params : dict, default None
-            GET parameters to parse
-
-        Returns
-        -------
-        response : dict
-            GET response in JSON
-        """
-        if params is None:
-            url = self.__server_url + api_url
-        else:
-            url = self.__server_url + api_url + "?" + urllib.parse.urlencode(params)
-
-        headers = {"Authorization": f"Bearer {self.__access_token}"}
-        if additional_headers:
-            headers.update(additional_headers)
-
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, headers=headers) as response:
-                if response.status == 200:
-                    return await response.json()
-                else:
-                    # Handle exceptions asynchronously
-                    text = await response.text()
-                    raise_exception(response, additional_info=text)
     
     def post_request(self, api_url, additional_headers=None, params=None, data=None, files=None):
         """

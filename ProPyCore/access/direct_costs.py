@@ -14,7 +14,7 @@ class DirectCosts(Base):
 
         self.endpoint = "/rest/v1.1/projects"
 
-    def get(self, company_id, project_id, page=1, per_page=10000):
+    def get(self, company_id, project_id, page=1, per_page=100):
         """
         Gets all the available Direct Costs
 
@@ -75,7 +75,7 @@ class DirectCosts(Base):
         }
 
         direct_cost_item = self.get_request(
-            api_url=f"{self.endpoint}/{project_id}//direct_costs/{direct_cost_id}",
+            api_url=f"{self.endpoint}/{project_id}/direct_costs/{direct_cost_id}",
             additional_headers=headers,
         )
 

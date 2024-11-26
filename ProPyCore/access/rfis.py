@@ -11,7 +11,7 @@ class RFI(Base):
 
         self.endpoint = "/rest/v1.0/projects"
 
-    def get(self, company_id, project_id, page=1, per_page=10000):
+    def get(self, company_id, project_id, page=1, per_page=100):
         """
         Gets all the available RFIs
 
@@ -23,7 +23,7 @@ class RFI(Base):
             unique identifier for the project
         page : int, default 1
             page number
-        per_page : int, default 10000
+        per_page : int, default 100
             number of companies to include
 
         Returns
