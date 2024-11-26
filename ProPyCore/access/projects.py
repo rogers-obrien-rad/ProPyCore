@@ -11,7 +11,7 @@ class Projects(Base):
 
         self.endpoint = "/rest/v1.1/projects"
 
-    def get(self, company_id, per_page=100):
+    def get(self, company_id, per_page=300):
         """
         Gets a list of all the projects from a certain company
 
@@ -19,8 +19,8 @@ class Projects(Base):
         ----------
         company_id : int
             unique identifier for the company
-        per_page : int, default 100
-            number of companies to include
+        per_page : int, default 300
+            number of companies to include. Max is 300 per v1.1 API.
 
         Returns
         -------

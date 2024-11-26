@@ -1,5 +1,7 @@
 import urllib
 import requests
+import aiohttp
+import asyncio
 
 from ..exceptions import raise_exception
 
@@ -56,7 +58,7 @@ class Base:
             return response.json()
         else:
             raise_exception(response)
-
+    
     def post_request(self, api_url, additional_headers=None, params=None, data=None, files=None):
         """
         Create a HTTP Post request

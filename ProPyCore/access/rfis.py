@@ -40,7 +40,7 @@ class RFI(Base):
         while n_rfis > 0:
             params = {
                 "page": page,
-                "per_page": 100
+                "per_page": per_page
             }
 
             headers = {

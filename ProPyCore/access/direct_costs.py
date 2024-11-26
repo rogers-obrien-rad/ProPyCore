@@ -75,7 +75,7 @@ class DirectCosts(Base):
         }
 
         direct_cost_item = self.get_request(
-            api_url=f"{self.endpoint}/{project_id}//direct_costs/{direct_cost_id}",
+            api_url=f"{self.endpoint}/{project_id}/direct_costs/{direct_cost_id}",
             additional_headers=headers,
         )
 
