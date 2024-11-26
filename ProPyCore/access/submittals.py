@@ -1,4 +1,3 @@
-import asyncio
 from .base import Base
 from ..exceptions import *
 
@@ -10,15 +9,9 @@ class Submittal(Base):
         super().__init__(access_token, server_url)
         self.endpoint = "/rest/v1.1/projects"
 
-    def get(self, company_id, project_id):
+    def get(self, company_id, project_id, page=1, per_page=10000):
         """
-        Synchronous wrapper for the async_get method.
-        """
-        return asyncio.run(self.async_get(company_id, project_id))
-
-    async def async_get(self, company_id, project_id):
-        """
-        Asynchronous implementation of fetching all available Submittals.
+        Gets all the available submittals
 
         Parameters
         ----------
@@ -26,25 +19,42 @@ class Submittal(Base):
             unique identifier for the company
         project_id : int
             unique identifier for the project
+        page : int, default 1
+            page number
+        per_page : int, default 10000
+            number of companies to include
 
         Returns
         -------
         submittals : dict
-            available submittal data
+            available rfi data
         """
-        headers = {"Procore-Company-Id": f"{company_id}"}
-        api_url = f"{self.endpoint}/{project_id}/submittals"
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+        n_submittals = 1
+        page = 1
+        submittals = []
+        while n_submittals > 0:
+            params = {
+                "page": page,
+                "per_page": per_page
+            }
 
-        async def fetch_page(page):
-            params = {"page": page, "per_page": 100}
-            return await self.get_request_async(api_url, additional_headers=headers, params=params)
+            headers = {
+                "Procore-Company-Id": f"{company_id}"
+            }
 
-        # Create tasks for multiple pages
-        tasks = [fetch_page(page) for page in range(1, 101)]  # Adjust range as needed
-        results = await asyncio.gather(*tasks)
+            submittal_selection = self.get_request(
+                api_url=f"{self.endpoint}/{project_id}/submittals",
+                additional_headers=headers,
+                params=params
+            )
 
-        # Flatten results
-        submittals = [item for sublist in results for item in sublist if sublist]
+            n_submittals = len(submittal_selection)
+            submittals += submittal_selection
+            page += 1 
+
         return submittals
 
     def show(self, company_id, project_id, submittal_id):

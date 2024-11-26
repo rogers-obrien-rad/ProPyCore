@@ -11,13 +11,13 @@ class Companies(Base):
 
         self.endpoint = "/rest/v1.0/companies"
 
-    def get(self, page=1, per_page=100):
+    def get(self, page=1, per_page=10000):
         """
         Gets all companies where the data connection app is installed
 
         Parameters
         ----------
-        per_page : int, default 100
+        per_page : int, default 10000
             number of companies to include
 
         Returns

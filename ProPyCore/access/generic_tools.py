@@ -10,7 +10,7 @@ class GenericTool(Base):
 
         self.endpoint = "/rest/v1.0/companies"
 
-    def get_tools(self, company_id, per_page=100):
+    def get_tools(self, company_id, per_page=10000):
         """
         Gets all the available generic tools
 
@@ -18,7 +18,7 @@ class GenericTool(Base):
         ----------
         company_id : int
             unique identifier for the company
-        per_page : int, default 100
+        per_page : int, default 10000
             number of generic tools to find per page
 
         Returns

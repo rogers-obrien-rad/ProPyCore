@@ -11,7 +11,7 @@ class CostCodes(Base):
 
         self.endpoint = "/rest/v1.0/cost_codes"
 
-    def get(self, company_id, project_id, per_page=100):
+    def get(self, company_id, project_id, per_page=10000):
         """
         Gets a list of all the cost codes from a certain project
 
@@ -21,7 +21,7 @@ class CostCodes(Base):
             unique identifier for the company
         project_id : int
             unique identifier for the project
-        per_page : int, default 100
+        per_page : int, default 10000
             number of companies to include
 
         Returns

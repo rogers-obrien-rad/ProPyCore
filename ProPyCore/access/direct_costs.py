@@ -14,7 +14,7 @@ class DirectCosts(Base):
 
         self.endpoint = "/rest/v1.1/projects"
 
-    def get(self, company_id, project_id, page=1, per_page=100):
+    def get(self, company_id, project_id, page=1, per_page=10000):
         """
         Gets all the available Direct Costs
 
