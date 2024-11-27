@@ -1,7 +1,5 @@
 import urllib
 import requests
-import aiohttp
-import asyncio
 
 from ..exceptions import raise_exception
 

@@ -12,7 +12,7 @@ requirements = [
 
 setup(
     name="ProPyCore",
-    version="0.2.2",
+    version="0.3.0",
     author="Hagen E. Fritz",
     author_email="hfritz@r-o.com",
     description="Interact with Procore through Python for data connection applications",
