@@ -24,7 +24,7 @@ class RFI(Base):
         page : int, default 1
             page number
         per_page : int, default 100
-            number of companies to include
+            number of rfis to include per page
 
         Returns
         -------
@@ -41,10 +41,6 @@ class RFI(Base):
             params = {
                 "page": page,
                 "per_page": per_page
-            }
-
-            headers = {
-                "Procore-Company-Id": f"{company_id}"
             }
 
             rfi_selection = self.get_request(
