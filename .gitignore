@@ -224,3 +224,4 @@ replay_pid*
 # snippet testing files
 *snippets_*
 specs/
+sample_responses/
