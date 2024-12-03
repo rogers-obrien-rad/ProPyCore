@@ -1,5 +1,5 @@
 from ..base import Base
-from ...exceptions import NotFoundItemError, ProcoreException
+from ...exceptions import NotFoundItemError, ProcoreException, WrongParamsError
 
 from warnings import warn
 from fuzzywuzzy import fuzz
