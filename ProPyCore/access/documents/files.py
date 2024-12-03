@@ -1,5 +1,5 @@
 from ..base import Base
-from ...exceptions import NotFoundItemError, ProcoreException
+from ...exceptions import NotFoundItemError, ProcoreException, WrongParamsError
 from warnings import warn
 from fuzzywuzzy import fuzz
 
@@ -66,17 +66,7 @@ class Files(Base):
 
         return doc_info
 
-    def update(
-        self,
-        company_id,
-        project_id,
-        doc_id,
-        filepath=None,
-        folder_id=None,
-        filename=None,
-        description=None,
-        private=None,
-    ):
+    def update(self, company_id,project_id,doc_id,filepath=None,folder_id=None,filename=None,description=None,private=None):
         """
         Updates the given folder.
 

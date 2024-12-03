@@ -23,7 +23,7 @@ class Timecards(Base):
         page : int, default 1
             page number
         per_page : int, default 100
-            number of rfis to include per page
+            number of timecards to include per page
 
         Returns
         -------
@@ -75,7 +75,7 @@ class Timecards(Base):
         page : int, default 1
             page number
         per_page : int, default 100
-            number of rfis to include per page
+            number of timecards to include per page
 
         Returns
         -------
