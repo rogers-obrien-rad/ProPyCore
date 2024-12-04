@@ -39,6 +39,8 @@ jobs:
         env:
           CLIENT_ID: ${{ secrets.CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          SANDBOX_COMPANY_ID: ${{ secrets.SANDBOX_COMPANY_ID }}
+          SANDBOX_PROJECT_ID: ${{ secrets.SANDBOX_PROJECT_ID }}
           REDIRECT_URI: "urn:ietf:wg:oauth:2.0:oob"
           OAUTH_URL: "https://sandbox.procore.com"
           BASE_URL: "https://sandbox.procore.com"

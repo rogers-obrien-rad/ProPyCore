@@ -1,31 +1,8 @@
 import pytest
 import os
-import json
-from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 from ProPyCore.procore import Procore
-
-# Directories (relative to the script location)
-BASE_DIR = Path(__file__).parent
-OUTPUT_DIR = BASE_DIR / "samples_responses"
-LOG_DIR = BASE_DIR / "logs"
-
-def custom_log(message, level="INFO"):
-    """
-    Custom logging function to append messages to the log file.
-
-    Parameters
-    ----------
-    message : str
-        The message to log.
-    level : str
-        The logging level (e.g., INFO, DEBUG, ERROR).
-    """
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    log_message = f"{timestamp} - {level} - {message}\n"
-    with open(LOG_DIR / "timecard_integration.log", "a") as log_file:
-        log_file.write(log_message)
 
 class TestTimecardsIntegration:
     @pytest.fixture(scope="module")
@@ -34,7 +11,6 @@ class TestTimecardsIntegration:
         Fixture to establish a Procore connection using sandbox credentials.
         """
         load_dotenv()
-        custom_log("Loading environment variables and initializing Procore connection.")
 
         connection = Procore(
             client_id=os.getenv("CLIENT_ID"),
@@ -46,86 +22,103 @@ class TestTimecardsIntegration:
 
         return connection
 
-    def save_response(self, filename, data):
+    def validate_timecard_structure(self, timecard):
         """
-        Utility function to save API response data to a JSON file.
+        Validate the structure and required fields of a timecard entry.
         """
-        filepath = os.path.join(OUTPUT_DIR, filename)
-        with open(filepath, "w") as file:
-            json.dump(data, file, indent=4)
-        custom_log(f"Response saved to {filepath}")
-
+        assert isinstance(timecard, dict), "Timecard entry is not a dictionary"
+        required_fields = ["id", "created_at", "updated_at"]
+        for field in required_fields:
+            assert field in timecard, f"Timecard entry missing required field: {field}"
+        
     def test_get_for_current_day(self, procore_connection):
         """
-        Test fetching timecards for a specific project and save the response.
+        Test fetching timecards for the current day.
         """
         company_id = int(os.getenv("SANDBOX_COMPANY_ID"))
         project_id = int(os.getenv("SANDBOX_PROJECT_ID"))
 
-        custom_log(f"Fetching timecards for company_id={company_id}, project_id={project_id}.")
-        timecards = procore_connection.time.timecards.get_for_day(
-            company_id=company_id,
-            project_id=project_id,
-            page=1,
-            per_page=10,
-        )
-        custom_log(f"Found {len(timecards)} timecards for today.")
+        try:
+            timecards = procore_connection.time.timecards.get_for_day(
+                company_id=company_id,
+                project_id=project_id,
+                page=1,
+                per_page=10,
+            )
 
-        # Save the response to a JSON file
-        self.save_response(f"timecards_daily_project.json", timecards)
+            # Validate response
+            assert isinstance(timecards, list), "Timecards response is not a list"
+            for timecard in timecards:
+                self.validate_timecard_structure(timecard)
 
-        # Validate response
-        assert isinstance(timecards, list), "Timecards response is not a list."
-        if timecards:
-            assert isinstance(timecards[0], dict), "Timecard entry is not a dictionary."
-            assert "id" in timecards[0], "Timecard entry does not contain 'id'."
+        except Exception as e:
+            pytest.fail(f"Failed to fetch current day timecards: {str(e)}")
 
     def test_get_for_specified_day(self, procore_connection):
         """
-        Test fetching timecards for a specific project and save the response.
+        Test fetching timecards for a specific day.
         """
         company_id = int(os.getenv("SANDBOX_COMPANY_ID"))
         project_id = int(os.getenv("SANDBOX_PROJECT_ID"))
 
-        custom_log(f"Fetching timecards for company_id={company_id}, project_id={project_id}.")
-        d = datetime(2024,11,26)
-        timecards = procore_connection.time.timecards.get_for_day(
-            company_id=company_id,
-            project_id=project_id,
-            entry_date=d,
-            page=1,
-            per_page=10,
-        )
-        custom_log(f"Found {len(timecards)} timecards for {datetime.strftime(d, '$Y-$m-$d')}.")
+        test_date = datetime(2024, 11, 26)
+        
+        try:
+            timecards = procore_connection.time.timecards.get_for_day(
+                company_id=company_id,
+                project_id=project_id,
+                entry_date=test_date,
+                page=1,
+                per_page=10,
+            )
 
-        # Save the response to a JSON file
-        self.save_response(f"timecards_daily_project.json", timecards)
+            # Validate response
+            assert isinstance(timecards, list), "Timecards response is not a list"
+            for timecard in timecards:
+                self.validate_timecard_structure(timecard)
 
-        # Validate response
-        assert isinstance(timecards, list), "Timecards response is not a list."
-        if timecards:
-            assert isinstance(timecards[0], dict), "Timecard entry is not a dictionary."
-            assert "id" in timecards[0], "Timecard entry does not contain 'id'."
+        except Exception as e:
+            pytest.fail(f"Failed to fetch timecards for {test_date.strftime('%Y-%m-%d')}: {str(e)}")
 
     def test_get_for_pay_period(self, procore_connection):
         """
-        Test fetching timecards for a pay period and save the response.
+        Test fetching timecards for a pay period.
         """
         company_id = int(os.getenv("SANDBOX_COMPANY_ID"))
 
-        custom_log(f"Fetching timecards for company_id={company_id} for a pay period.")
-        timecards = procore_connection.time.timecards.get_for_pay_period(
-            company_id=company_id,
-            page=1,
-            per_page=10,
-        )
-        custom_log(f"Found {len(timecards)} timecards for the current pay period.")
+        try:
+            timecards = procore_connection.time.timecards.get_for_pay_period(
+                company_id=company_id,
+                page=1,
+                per_page=10,
+            )
 
-        # Save the response to a JSON file
-        self.save_response(f"timecards_pay_period.json", timecards)
+            # Validate response
+            assert isinstance(timecards, list), "Timecards response is not a list"
+            for timecard in timecards:
+                assert isinstance(timecard, dict), "Timecard entry is not a dictionary"
+                assert "timecard_entries" in timecard, "Timecard entry does not contain 'timecard_entries' field"
+                if "timecard_entries" in timecard and timecard["timecard_entries"]:
+                    for entry in timecard["timecard_entries"]:
+                        assert isinstance(entry, dict), "Timecard entry is not a dictionary"
+                        assert "hours" in entry, "Timecard entry missing hours field"
 
-        # Validate response
-        assert isinstance(timecards, list), "Timecards response is not a list."
-        if timecards:
-            assert isinstance(timecards[0], dict), "Timecard entry is not a dictionary."
-            assert "timecard_entries" in timecards[0], "Timecard entry does not contain 'timecard_entries' field."
+        except Exception as e:
+            pytest.fail(f"Failed to fetch pay period timecards: {str(e)}")
+
+    def test_invalid_project_id(self, procore_connection):
+        """
+        Test behavior with an invalid project ID.
+        """
+        company_id = int(os.getenv("SANDBOX_COMPANY_ID"))
+        invalid_project_id = 999999999  # Using an invalid project ID
+
+        with pytest.raises(Exception) as exc_info:
+            procore_connection.time.timecards.get_for_day(
+                company_id=company_id,
+                project_id=invalid_project_id,
+                page=1,
+                per_page=10,
+            )
+        
+        assert exc_info.value is not None, "Expected an error for invalid project ID"
