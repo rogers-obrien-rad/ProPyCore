@@ -106,3 +106,53 @@ class Timecards(Base):
             page += 1 
 
         return timecards
+
+    def get_for_specified_period(self, company_id, start_date, end_date, page=1, per_page=100):
+        """
+        Return a list of all timecard data for the given date range (inclusive on both ends)
+        https://developers.procore.com/reference/rest/timesheets?version=latest#list-timecard-data
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        start_date : datetime
+            start date of pay period (inclusive)
+        end_date : datetime
+            end date of pay period (inclusive)
+        page : int, default 1
+            page number
+        per_page : int, default 100
+            number of timecards to include per page
+
+        Returns
+        -------
+        timecards : list of dict
+            available timecard data
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        n_timecards = 1
+        timecards = []
+        while n_timecards > 0:
+            params = {
+                "company_id": company_id,
+                "page": page,
+                "per_page": per_page,
+                "start_date": datetime.strftime(start_date, "%Y-%m-%d"),
+                "end_date": datetime.strftime(end_date, "%Y-%m-%d")
+            }
+
+            timecard_selection = self.get_request(
+                api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timesheets",
+                additional_headers=headers,
+                params=params
+            )
+
+            n_timecards = len(timecard_selection)
+            timecards += timecard_selection
+            page += 1 
+
+        return timecards

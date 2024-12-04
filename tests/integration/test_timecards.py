@@ -13,8 +13,8 @@ class TestTimecardsIntegration:
         load_dotenv()
 
         connection = Procore(
-            client_id=os.getenv("CLIENT_ID"),
-            client_secret=os.getenv("CLIENT_SECRET"),
+            client_id=os.getenv("PROCORE_CLIENT_ID"),
+            client_secret=os.getenv("PROCORE_CLIENT_SECRET"),
             redirect_uri="urn:ietf:wg:oauth:2.0:oob",  # default for data connection apps
             oauth_url="https://app.procore.com",  # default for data connection apps
             base_url="https://app.procore.com",  # default for data connection apps
@@ -105,6 +105,37 @@ class TestTimecardsIntegration:
 
         except Exception as e:
             pytest.fail(f"Failed to fetch pay period timecards: {str(e)}")
+
+    def test_get_for_specified_period(self, procore_connection):
+        """
+        Test fetching timecards for a specific date range.
+        """
+        company_id = int(os.getenv("SANDBOX_COMPANY_ID"))
+        
+        start_date = datetime(2024, 11, 22)
+        end_date = datetime(2024, 11, 28)
+        
+        try:
+            timecards = procore_connection.time.timecards.get_for_specified_period(
+                company_id=company_id,
+                start_date=start_date,
+                end_date=end_date,
+                page=1,
+                per_page=100,
+            )
+
+            # Validate response
+            assert isinstance(timecards, list), "Timecards response is not a list"
+            for timecard in timecards:
+                assert isinstance(timecard, dict), "Timecard entry is not a dictionary"
+                assert "timecard_entries" in timecard, "Timecard entry does not contain 'timecard_entries' field"
+                if "timecard_entries" in timecard and timecard["timecard_entries"]:
+                    for entry in timecard["timecard_entries"]:
+                        assert isinstance(entry, dict), "Timecard entry is not a dictionary"
+                        assert "hours" in entry, "Timecard entry missing hours field"
+
+        except Exception as e:
+            pytest.fail(f"Failed to fetch timecards for period {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}: {str(e)}")
 
     def test_invalid_project_id(self, procore_connection):
         """
