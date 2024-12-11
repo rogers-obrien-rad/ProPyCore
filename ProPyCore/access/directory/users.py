@@ -79,24 +79,58 @@ class Users(Base):
 
         return users
 
+    def show(self, company_id, project_id, user_id):
+        """
+        Shows a user's details
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int, default None
+            unique identifier for the project
+            None specifies company-level
+        user_id : int
+            unique identifier for the user
+
+        Returns
+        -------
+        user : dict
+            user-specific dictionary
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        if project_id is None:
+            url = f"/rest/v1.3/companies/{company_id}/users/{user_id}"
+        else:
+            url = f"/rest/v1.0/projects/{project_id}/users/{user_id}"
+    
+        return self.get_request(
+            api_url=url,
+            additional_headers=headers,
+        )
+    
     def find(self, company_id, user_id, project_id=None,):
         """
-        Finds a user based on the identifier
+        Finds a user based on their Procore identifier
 
         Parameters
         ----------
         company_id : int
             company id that the project is under
         user_id : int or str
-            project id number or company name
+            user id number - can be in an integer or string format
         project_id : int, default None
             unique identifier for the project
             None specifies company-level
         
         Returns
         -------
-        project : dict
-            project-specific dictionary
+        user : dict
+            user-specific dictionary
         """
         if isinstance(user_id, int):
             key = "id"
@@ -108,6 +142,31 @@ class Users(Base):
                 return user
 
         raise NotFoundItemError(f"Could not find User {user_id}")
+    
+    def find_by_email(self, company_id, email, project_id=None,):
+        """
+        Finds a user based on their email
+
+        Parameters
+        ----------
+        company_id : int
+            company id that the project is under
+        email : str
+            user's email address
+        project_id : int, default None
+            unique identifier for the project
+            None specifies company-level
+        
+        Returns
+        -------
+        user : dict
+            user-specific dictionary
+        """
+        for user in self.get(company_id=company_id, project_id=project_id):
+            if user["email_address"] == email:
+                return user
+
+        raise NotFoundItemError(f"Could not find User with email {email}")
 
     def add(self, company_id, project_id, user_id, permission_template_id=None):
         """
