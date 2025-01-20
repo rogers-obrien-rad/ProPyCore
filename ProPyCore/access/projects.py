@@ -11,9 +11,10 @@ class Projects(Base):
 
         self.endpoint = "/rest/v1.1/projects"
 
-    def get(self, company_id, per_page=300):
+    def get(self, company_id, status="All",per_page=300):
         """
         Gets a list of all the projects from a certain company
+        https://developers.procore.com/reference/rest/projects?version=latest#list-projects
 
         Parameters
         ----------
@@ -21,6 +22,8 @@ class Projects(Base):
             unique identifier for the company
         per_page : int, default 300
             number of companies to include. Max is 300 per v1.1 API.
+        status : str enum, default "All"
+            status of the projects to get must be one of: ["Active", "Inactive", "All"]
 
         Returns
         -------
@@ -34,7 +37,8 @@ class Projects(Base):
             params = {
                 "company_id": company_id,
                 "page": page,
-                "per_page": per_page
+                "per_page": per_page,
+                "filters[by_status]": status
             }
             
             projects_per_page = self.get_request(
