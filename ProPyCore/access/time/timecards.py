@@ -156,3 +156,137 @@ class Timecards(Base):
             page += 1 
 
         return timecards
+
+    def get_time_types(self, company_id):
+        """
+        Gets the time types at the company level
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        
+        Returns
+        -------
+        <time_types> : list of dict
+            list where each value is a dict with a time type's information
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        return self.get_request(
+            api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timecard_time_types",
+            additional_headers=headers
+        )
+        
+    def find_time_type(self, company_id, time_type_identifier):
+        """
+        Finds a specific time type at the company level.
+
+        Parameters
+        ----------
+        company_id : int
+            Unique identifier for the company.
+        time_type_identifier : str or int
+            Unique identifier for the time type.
+            If integer, match 'id' field.
+            If string, match 'name' field.
+        
+        Returns
+        -------
+        matched : dict
+            The time type information if found, otherwise None.
+        """
+        try:
+            # Fetch all time types for the company
+            time_types = self.get_time_types(company_id)
+
+            # Determine if identifier is int or str
+            if isinstance(time_type_identifier, int):
+                # Match by 'id' field
+                matched = next((tt for tt in time_types if tt['id'] == time_type_identifier), None)
+            elif isinstance(time_type_identifier, str):
+                # Match by 'name' field (case-insensitive)
+                matched = next((tt for tt in time_types if tt['name'].lower() == time_type_identifier.lower()), None)
+            else:
+                raise ValueError("time_type_identifier must be either an integer (id) or a string (name).")
+
+            return matched
+        except Exception as e:
+            print(f"Error finding time type: {e}")
+            return None
+
+    def create_in_project(self, company_id, project_id, data):
+        """
+        Create a new timecard in a given a project.
+        https://developers.procore.com/reference/rest/timecard-entries?version=latest#create-timecard-entry-project
+
+        Parameters
+        ----------
+        company_id : int
+            Unique identifier for the company.
+        project_id : int
+            Procore's unique identifier for the project.
+        data : dict
+            Timecard data to create.
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        # Check and handle 'hours'
+        if "hours" in data:
+            data["hours"] = str(data["hours"])  # Convert to str to ensure Procore accepts it
+        else:
+            raise ValueError("Input data must have an 'hours' field.")
+
+        # Check party ID (person's ID)
+        if "party_id" in data:
+            data["party_id"] = int(data["party_id"]) # Convert to int to be safe
+        else:
+            raise ValueError("Input data must have a 'party_id' field.")
+
+        # Check and handle 'timecard_time_type_id'
+        if "timecard_time_type_id" not in data:
+            # Default to 'Salary' time type
+            salary_time_type = self.find_time_type(company_id, "Salary")
+            if not salary_time_type:
+                raise ValueError("Could not find the 'Salary' time type.")
+            data["timecard_time_type_id"] = salary_time_type["id"]
+        else:
+            time_type_id = data["timecard_time_type_id"]
+
+            if isinstance(time_type_id, int):
+                # If int, assume it's valid
+                pass
+            elif isinstance(time_type_id, str):
+                # If str, use find_time_type to resolve
+                resolved_time_type = self.find_time_type(company_id, time_type_id)
+                if not resolved_time_type:
+                    raise ValueError(f"Time type '{time_type_id}' not found.")
+                data["timecard_time_type_id"] = resolved_time_type["id"]
+            else:
+                raise ValueError("'timecard_time_type_id' must be an integer or string.")
+
+        # Handle 'date' and 'datetime'
+        today = datetime.now()
+        if "date" not in data and "datetime" not in data:
+            # Both empty, default to today
+            data["date"] = today.strftime("%Y-%m-%d")
+            data["datetime"] = today.strftime("%Y-%m-%dT12:00:00Z")
+        elif "date" not in data:
+            # 'date' is empty, use the date from 'datetime'
+            dt = datetime.strptime(data["datetime"], "%Y-%m-%dT%H:%M:%SZ")
+            data["date"] = dt.strftime("%Y-%m-%d")
+        elif "datetime" not in data:
+            # 'datetime' is empty, use the 'date' and default time
+            dt_date = datetime.strptime(data["date"], "%Y-%m-%d")
+            data["datetime"] = dt_date.strftime("%Y-%m-%dT12:00:00Z")
+
+        # Perform the POST request
+        return self.post_request(
+            api_url=f"{self.endpoint}/v1.0/projects/{project_id}/timecard_entries",
+            additional_headers=headers,
+            data=data
+        )
