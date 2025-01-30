@@ -91,13 +91,19 @@ class Base:
 
         # Make the request with file if necessary
         if files is None:
-            response = requests.post(
+            headers["Content-Type"] = "application/json"
+            response = requests.request(
+                "POST",
                 url,
                 headers=headers,
-                data=data 
+                json=data  # Use json parameter instead of data to properly serialize
             )
+            print(f"Request URL: {response.request.url}")
+            print(f"Request Headers: {response.request.headers}")
+            print(f"Request Data: {response.request.body}")
         elif data is None:
-            response = requests.post(
+            response = requests.request(
+                "POST",
                 url,
                 headers=headers,
                 files=files  # use files for multipart/form-data
