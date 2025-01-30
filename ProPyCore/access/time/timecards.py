@@ -1,10 +1,16 @@
+import json
+
 from datetime import datetime
 from ..base import Base
+from ..directory.users import Users
+from ..cost_codes import CostCodes
 
 class Timecards(Base):
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
         self.endpoint = "/rest" # very basic since timecards can be at project and company levels
+        self.users = Users(access_token, server_url)
+        self.cost_codes = CostCodes(access_token, server_url)
 
     def get_for_day(self, company_id, project_id, entry_date=None, page=1, per_page=100):
         """
@@ -231,10 +237,6 @@ class Timecards(Base):
         data : dict
             Timecard data to create.
         """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
         # Check and handle 'hours'
         if "hours" in data:
             data["hours"] = str(data["hours"])  # Convert to str to ensure Procore accepts it
@@ -243,9 +245,16 @@ class Timecards(Base):
 
         # Check party ID (person's ID)
         if "party_id" in data:
-            data["party_id"] = int(data["party_id"]) # Convert to int to be safe
+            if isinstance(data["party_id"], int):
+                # Assume it is valid user ID
+                pass
+            else:
+                # send party id to users.find() to resolve - it will take care of name vs email field based on the value
+                user = self.users.find(company_id, data["party_id"])
+                data["party_id"] = int(user["id"])
         else:
-            raise ValueError("Input data must have a 'party_id' field.")
+            pass
+            #raise ValueError("Input data must have a 'party_id' field.")
 
         # Check and handle 'timecard_time_type_id'
         if "timecard_time_type_id" not in data:
@@ -253,7 +262,7 @@ class Timecards(Base):
             salary_time_type = self.find_time_type(company_id, "Salary")
             if not salary_time_type:
                 raise ValueError("Could not find the 'Salary' time type.")
-            data["timecard_time_type_id"] = salary_time_type["id"]
+            data["timecard_time_type_id"] = int(salary_time_type["id"])
         else:
             time_type_id = data["timecard_time_type_id"]
 
@@ -265,9 +274,28 @@ class Timecards(Base):
                 resolved_time_type = self.find_time_type(company_id, time_type_id)
                 if not resolved_time_type:
                     raise ValueError(f"Time type '{time_type_id}' not found.")
-                data["timecard_time_type_id"] = resolved_time_type["id"]
+                data["timecard_time_type_id"] = int(resolved_time_type["id"])
             else:
                 raise ValueError("'timecard_time_type_id' must be an integer or string.")
+
+        # Check and handle cost code and line item type IDs
+        need_cost_code = "cost_code_id" not in data or not isinstance(data["cost_code_id"], int)
+        need_line_item = "line_item_type_id" not in data or not isinstance(data["line_item_type_id"], int)
+
+        if need_cost_code or need_line_item:
+            # Make the API call once if we need either value
+            cost_code_data = self.cost_codes.find(company_id, project_id, data["cost_code_id"])
+            if cost_code_data:
+                if need_cost_code:
+                    data["cost_code_id"] = int(cost_code_data["id"])
+                if need_line_item:
+                    line_item_types = cost_code_data.get("line_item_types", [])
+                    if not line_item_types:
+                        raise ValueError(f"No line item types found for cost code {cost_code_data['id']}")
+
+                    data["line_item_type_id"] = int(line_item_types[0]["id"]) # Take the first one
+            else:
+                raise ValueError(f"Cost code '{data['cost_code_id']}' not found in project '{project_id}'.")
 
         # Handle 'date' and 'datetime'
         today = datetime.now()
@@ -284,9 +312,18 @@ class Timecards(Base):
             dt_date = datetime.strptime(data["date"], "%Y-%m-%d")
             data["datetime"] = dt_date.strftime("%Y-%m-%dT12:00:00Z")
 
+        print(json.dumps({"timecard_entry": data}, indent=4))
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
         # Perform the POST request
         return self.post_request(
-            api_url=f"{self.endpoint}/v1.0/projects/{project_id}/timecard_entries",
+            api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timecard_entries",
             additional_headers=headers,
-            data=data
+            data={
+                "project_id": project_id,
+                "timecard_entry": data
+            }
         )
