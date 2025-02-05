@@ -2,14 +2,14 @@ import json
 
 from datetime import datetime
 from ..base import Base
-from ..directory.users import Users
+from ..directory.people import People
 from ..cost_codes import CostCodes
 
 class Timecards(Base):
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
         self.endpoint = "/rest" # very basic since timecards can be at project and company levels
-        self.users = Users(access_token, server_url)
+        self.people = People(access_token, server_url)
         self.cost_codes = CostCodes(access_token, server_url)
 
     def get_for_day(self, company_id, project_id, entry_date=None, page=1, per_page=100):
@@ -246,15 +246,15 @@ class Timecards(Base):
         # Check party ID (person's ID)
         if "party_id" in data:
             if isinstance(data["party_id"], int):
-                # Assume it is valid user ID
+                # Assume it is valid person ID
                 pass
             else:
-                # send party id to users.find() to resolve - it will take care of name vs email field based on the value
-                user = self.users.find(company_id, data["party_id"])
-                data["party_id"] = int(user["id"])
+                # send party id to people.find() to resolve - it will take care of name vs email field based on the value
+                person = self.people.find(company_id, data["party_id"])
+                data["party_id"] = int(person["id"])
         else:
             pass
-            #raise ValueError("Input data must have a 'party_id' field.")
+            raise ValueError("Input data must have a 'party_id' field.")
 
         # Check and handle 'timecard_time_type_id'
         if "timecard_time_type_id" not in data:
