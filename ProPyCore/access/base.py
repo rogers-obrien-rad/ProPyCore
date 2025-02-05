@@ -51,6 +51,11 @@ class Base:
                 headers[key] = value
 
         response = requests.get(url, headers=headers)
+        '''
+        print(f"Request URL: {response.request.url}")
+        print(f"Request Headers: {response.request.headers}")
+        print(f"Request Response: {response.json()}")
+        '''
         
         if response.ok:
             return response.json()
@@ -91,13 +96,21 @@ class Base:
 
         # Make the request with file if necessary
         if files is None:
-            response = requests.post(
+            headers["Content-Type"] = "application/json"
+            response = requests.request(
+                "POST",
                 url,
                 headers=headers,
-                data=data 
+                json=data  # Use json parameter instead of data to properly serialize
             )
+            '''
+            print(f"Request URL: {response.request.url}")
+            print(f"Request Headers: {response.request.headers}")
+            print(f"Request Data: {response.request.body}")
+            '''
         elif data is None:
-            response = requests.post(
+            response = requests.request(
+                "POST",
                 url,
                 headers=headers,
                 files=files  # use files for multipart/form-data
@@ -108,8 +121,10 @@ class Base:
         if response.ok:
             return response.json()
         else:
+            '''
             print("Response Status Code:", response.status_code)
             print("Response Text:", response.text)
+            '''
             raise_exception(response)
 
     def patch_request(self, api_url, additional_headers=None, params=None, data=None, files=False):

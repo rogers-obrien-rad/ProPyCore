@@ -83,11 +83,14 @@ class CostCodes(Base):
             "project_id": project_id
         }
 
-        cost_code_info = self.get_request(
-            api_url=f"{self.endpoint}/cost_codes/{cost_code_id}",
-            additional_headers=headers,
-            params=params
-        )
+        try:
+            cost_code_info = self.get_request(
+                api_url=f"{self.endpoint}/{cost_code_id}",
+                additional_headers=headers,
+                params=params
+            )
+        except Exception as e:
+            raise NotFoundItemError(f"Could not find Cost Code {identifier}")
 
         return cost_code_info
 
