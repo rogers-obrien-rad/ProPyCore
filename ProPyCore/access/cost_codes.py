@@ -90,7 +90,7 @@ class CostCodes(Base):
                 params=params
             )
         except Exception as e:
-            raise NotFoundItemError(f"Could not find Cost Code {identifier}")
+            raise NotFoundItemError(f"Could not find Cost Code {cost_code_id}")
 
         return cost_code_info
 

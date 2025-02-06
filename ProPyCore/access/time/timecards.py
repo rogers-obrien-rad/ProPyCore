@@ -12,162 +12,6 @@ class Timecards(Base):
         self.people = People(access_token, server_url)
         self.cost_codes = CostCodes(access_token, server_url)
 
-    def get_for_day(self, company_id, project_id, entry_date=None, page=1, per_page=100):
-        """
-        Returns a list of all daily timecard data for a given project
-        https://developers.procore.com/reference/rest/timecard-entries?version=latest
-        
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        project_id : int
-            unique identifier for the project
-        entry_date : datetime, default None
-            date to pull timecards
-            None specifies current day
-        page : int, default 1
-            page number
-        per_page : int, default 100
-            number of timecards to include per page
-
-        Returns
-        -------
-        timecards : list of dict
-            available timecard data
-        """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        n_timecards = 1
-        timecards = []
-        while n_timecards > 0:
-            if entry_date is None:
-                params = {
-                    "project_id": project_id,
-                    "page": page,
-                    "per_page": per_page
-                }
-            else:
-                params = {
-                    "project_id": project_id,
-                    "page": page,
-                    "per_page": per_page,
-                    "log_date": datetime.strftime(entry_date, "%Y-%m-%d")
-                }
-
-            timecard_selection = self.get_request(
-                api_url=f"{self.endpoint}/v1.0/projects/{project_id}/timecard_entries",
-                additional_headers=headers,
-                params=params
-            )
-
-            n_timecards = len(timecard_selection)
-            timecards += timecard_selection
-            page += 1 
-
-        return timecards
-
-    def get_for_pay_period(self, company_id, page=1, per_page=100):
-        """
-        Return a list of all timecard data for the given pay period
-        https://developers.procore.com/reference/rest/timesheets?version=latest#list-timecard-data
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        page : int, default 1
-            page number
-        per_page : int, default 100
-            number of timecards to include per page
-
-        Returns
-        -------
-        timecards : list of dict
-            available timecard data
-        """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        n_timecards = 1
-        timecards = []
-        while n_timecards > 0:
-            params = {
-                "company_id": company_id,
-                "page": page,
-                "per_page": per_page
-            }
-
-            timecard_selection = self.get_request(
-                api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timesheets",
-                additional_headers=headers,
-                params=params
-            )
-
-            n_timecards = len(timecard_selection)
-            timecards += timecard_selection
-            page += 1 
-
-        return timecards
-
-    def get_for_specified_period(self, company_id, start_date, end_date, page=1, per_page=100, party_id=None):
-        """
-        Return a list of all timecard data for the given date range (inclusive on both ends)
-        https://developers.procore.com/reference/rest/timesheets?version=latest#list-timecard-data
-
-        Parameters
-        ----------
-        company_id : int
-            unique identifier for the company
-        start_date : datetime
-            start date of pay period (inclusive)
-        end_date : datetime
-            end date of pay period (inclusive)
-        page : int, default 1
-            page number
-        per_page : int, default 100
-            number of timecards to include per page
-        party_id : int, default None
-            procore People ID to filter by if included
-
-        Returns
-        -------
-        timecards : list of dict
-            available timecard data
-        """
-        headers = {
-            "Procore-Company-Id": f"{company_id}"
-        }
-
-        n_timecards = 1
-        timecards = []
-        while n_timecards > 0:
-            params = {
-                "company_id": company_id,
-                "page": page,
-                "per_page": per_page,
-                "start_date": datetime.strftime(start_date, "%Y-%m-%d"),
-                "end_date": datetime.strftime(end_date, "%Y-%m-%d")
-            }
-
-            if party_id is not None:
-                params["filters[party_id]"] = party_id
-
-            timecard_selection = self.get_request(
-                api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timesheets",
-                additional_headers=headers,
-                params=params
-            )
-
-            n_timecards = len(timecard_selection)
-            timecards += timecard_selection
-            page += 1 
-
-        return timecards
-
     def get_time_types(self, company_id):
         """
         Gets the time types at the company level
@@ -227,6 +71,118 @@ class Timecards(Base):
         except Exception as e:
             print(f"Error finding time type: {e}")
             return None
+    
+    def get_for_day(self, company_id, project_id, entry_date=None, page=1, per_page=100):
+        """
+        Returns a list of all daily timecard data for a given project
+        https://developers.procore.com/reference/rest/timecard-entries?version=latest
+        
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        entry_date : datetime, default None
+            date to pull timecards
+            None specifies current day
+        page : int, default 1
+            page number
+        per_page : int, default 100
+            number of timecards to include per page
+
+        Returns
+        -------
+        timecards : list of dict
+            available timecard data
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        n_timecards = 1
+        timecards = []
+        while n_timecards > 0:
+            if entry_date is None:
+                params = {
+                    "project_id": project_id,
+                    "page": page,
+                    "per_page": per_page
+                }
+            else:
+                params = {
+                    "project_id": project_id,
+                    "page": page,
+                    "per_page": per_page,
+                    "log_date": datetime.strftime(entry_date, "%Y-%m-%d")
+                }
+
+            timecard_selection = self.get_request(
+                api_url=f"{self.endpoint}/v1.0/projects/{project_id}/timecard_entries",
+                additional_headers=headers,
+                params=params
+            )
+
+            n_timecards = len(timecard_selection)
+            timecards += timecard_selection
+            page += 1 
+
+        return timecards
+
+    def get_for_specified_period(self, company_id, start_date, end_date, page=1, per_page=100, party_id=None):
+        """
+        Return a list of all timecard data for the given date range (inclusive on both ends)
+        https://developers.procore.com/reference/rest/timecard-entries?version=latest#list-timecard-entries-company
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        start_date : datetime
+            start date of pay period (inclusive)
+        end_date : datetime
+            end date of pay period (inclusive)
+        page : int, default 1
+            page number
+        per_page : int, default 100
+            number of timecards to include per page
+        party_id : int, default None
+            procore People ID to filter by if included
+
+        Returns
+        -------
+        timecards : list of dict
+            available timecard data
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        n_timecards = 1
+        timecards = []
+        while n_timecards > 0:
+            params = {
+                "company_id": company_id,
+                "page": page,
+                "per_page": per_page,
+                "start_date": datetime.strftime(start_date, "%Y-%m-%d"),
+                "end_date": datetime.strftime(end_date, "%Y-%m-%d")
+            }
+
+            if party_id is not None:
+                params["filters[party_id]"] = party_id
+
+            timecard_selection = self.get_request(
+                api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timecard_entries",
+                additional_headers=headers,
+                params=params
+            )
+
+            n_timecards = len(timecard_selection)
+            timecards += timecard_selection
+            page += 1 
+
+        return timecards
 
     def create_in_project(self, company_id, project_id, data):
         """
@@ -316,8 +272,6 @@ class Timecards(Base):
             # 'datetime' is empty, use the 'date' and default time
             dt_date = datetime.strptime(data["date"], "%Y-%m-%d")
             data["datetime"] = dt_date.strftime("%Y-%m-%dT12:00:00Z")
-
-        print(json.dumps({"timecard_entry": data}, indent=4))
 
         headers = {
             "Procore-Company-Id": f"{company_id}"
