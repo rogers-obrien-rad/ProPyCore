@@ -1,7 +1,5 @@
 from datetime import datetime
 from ..base import Base
-from ..directory.people import People
-from ..cost_codes import CostCodes
 
 class Timesheets(Base):
     def __init__(self, access_token, server_url) -> None:
