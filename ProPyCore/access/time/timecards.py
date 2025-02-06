@@ -1,5 +1,3 @@
-import json
-
 from datetime import datetime
 from ..base import Base
 from ..directory.people import People
@@ -184,7 +182,7 @@ class Timecards(Base):
 
         return timecards
 
-    def create_in_project(self, company_id, project_id, data):
+    def create(self, company_id, project_id, data):
         """
         Create a new timecard in a given a project.
         https://developers.procore.com/reference/rest/timecard-entries?version=latest#create-timecard-entry-project
@@ -285,4 +283,39 @@ class Timecards(Base):
                 "project_id": project_id,
                 "timecard_entry": data
             }
+        )
+
+    def update(self, company_id, project_id, timecard_id, data):
+        """
+        Updates the given timecard with the provided data
+        https://developers.procore.com/reference/rest/timecard-entries?version=latest#update-timecard-entry-company
+
+        Parameters
+        ----------
+        company_id : int
+            Unique identifier for the company.
+        project_id : int
+            Procore's unique identifier for the project.
+        timecard_id : int
+            Timecard unique identifier.
+        data : dict
+            Timecard data to patch.
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}",
+            "Content-Type": "application/json"
+        }
+
+        if "date" not in data.keys():
+            raise ValueError("You must provide a 'date' value when updating a timecard entry.")
+            
+        update_data = {
+            "project_id": project_id,
+            "timecard_entry": data
+        }
+
+        return self.patch_request(
+            api_url=f"{self.endpoint}/v1.0/companies/{company_id}/timecard_entries/{timecard_id}",
+            data=update_data,
+            additional_headers=headers
         )
