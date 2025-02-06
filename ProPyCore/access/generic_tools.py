@@ -10,7 +10,7 @@ class GenericTool(Base):
 
         self.endpoint = "/rest/v1.0/companies"
 
-    def get_tools(self, company_id, per_page=100):
+    def get(self, company_id, per_page=100):
         """
         Gets all the available generic tools
 
@@ -44,7 +44,7 @@ class GenericTool(Base):
 
         return tools
     
-    def find_tool(self, company_id, identifier):
+    def find(self, company_id, identifier):
         """
         Finds a tools based on the identifier: id or title
 
@@ -71,7 +71,7 @@ class GenericTool(Base):
 
         raise NotFoundItemError(f"Could not find tool {identifier}")
     
-    def get_tool_items(self, company_id, project_id, tool_id):
+    def get_items(self, company_id, project_id, tool_id):
         """
         Gets all the available items for a specific tool
 
@@ -122,7 +122,7 @@ class GenericTool(Base):
         else:
             raise NotFoundItemError(f"No items are available in Project {project_id} for tool {tool_id}")
     
-    def create_tool_item(self, company_id, project_id, tool_id, data):
+    def create_item(self, company_id, project_id, tool_id, data):
         """
         Create new item for a specific tool
 
@@ -161,7 +161,7 @@ class GenericTool(Base):
         
         return item_info
     
-    def find_tool_item(self, company_id, project_id, tool_id, identifier):
+    def find_item(self, company_id, project_id, tool_id, identifier):
         """
         Finds a specific generic tool item based on the identifier
 
@@ -198,7 +198,7 @@ class GenericTool(Base):
 
         raise NotFoundItemError(f"Could not find tool item {identifier}")
     
-    def update_tool_item(self, company_id, project_id, tool_id, item_id, data):
+    def update_item(self, company_id, project_id, tool_id, item_id, data):
         """
         Updates item for a specific tool
 
@@ -236,7 +236,7 @@ class GenericTool(Base):
         
         return item_info
     
-    def delete_tool_item(self, company_id, project_id, tool_id, item_id):
+    def delete_item(self, company_id, project_id, tool_id, item_id):
         """
         Updates item for a specific tool
 
@@ -270,7 +270,7 @@ class GenericTool(Base):
         
         return "200: Success"
     
-    def get_tool_statuses(self, company_id, tool_id):
+    def get_statuses(self, company_id, tool_id):
         """
         Gets all the available statuses for a specific tool
 
@@ -298,7 +298,7 @@ class GenericTool(Base):
         
         return status_info
     
-    def get_tool_created_statuses(self, company_id, tool_id):
+    def get_created_statuses(self, company_id, tool_id):
         """
         Gets statuses that were created for a specific tool. Does not include the default statuses that each tool will have.
 
@@ -326,7 +326,7 @@ class GenericTool(Base):
         
         return status_info
     
-    def create_tool_status(self, company_id, tool_id, data):
+    def create_status(self, company_id, tool_id, data):
         """
         Create new status for a specific tool
 
@@ -360,7 +360,7 @@ class GenericTool(Base):
         
         return status_info
     
-    def delete_tool_status(self, company_id, tool_id, status_id):
+    def delete_status(self, company_id, tool_id, status_id):
         """
         Delete status for a specific tool
 
