@@ -3,4 +3,4 @@ from .utils import *
 from .exceptions import *
 from .procore import Procore
 
-__version__ = "0.5.3"
+__version__ = "0.5.4"
