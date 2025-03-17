@@ -65,7 +65,7 @@ class GenericTool(Base):
         else:
             key = "title"
 
-        for tool in self.get_tools(company_id=company_id):
+        for tool in self.get(company_id=company_id):
             if tool[key] == identifier:
                 return tool
 

@@ -11,3 +11,4 @@ from .tasks import *
 from .cost_codes import *
 from .time import *
 from .quality import *
+from .photos import *

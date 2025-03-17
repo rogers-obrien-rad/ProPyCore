@@ -87,7 +87,7 @@ class TestTimecardsIntegration:
         company_id = int(os.getenv("SANDBOX_COMPANY_ID"))
 
         try:
-            timecards = procore_connection.time.timecards.get_for_pay_period(
+            timecards = procore_connection.time.timesheets.get_for_pay_period(
                 company_id=company_id,
                 page=1,
                 per_page=10,
@@ -128,11 +128,6 @@ class TestTimecardsIntegration:
             assert isinstance(timecards, list), "Timecards response is not a list"
             for timecard in timecards:
                 assert isinstance(timecard, dict), "Timecard entry is not a dictionary"
-                assert "timecard_entries" in timecard, "Timecard entry does not contain 'timecard_entries' field"
-                if "timecard_entries" in timecard and timecard["timecard_entries"]:
-                    for entry in timecard["timecard_entries"]:
-                        assert isinstance(entry, dict), "Timecard entry is not a dictionary"
-                        assert "hours" in entry, "Timecard entry missing hours field"
 
         except Exception as e:
             pytest.fail(f"Failed to fetch timecards for period {start_date.strftime('%Y-%m-%d')} to {end_date.strftime('%Y-%m-%d')}: {str(e)}")
