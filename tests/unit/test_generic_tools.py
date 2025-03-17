@@ -13,7 +13,7 @@ def test_get_tools(generic_tool_instance, mocker):
     mock_response = [{'id': 1, 'title': 'Tool 1'}, {'id': 2, 'title': 'Tool 2'}]
     mocker.patch.object(generic_tool_instance, 'get_request', return_value=mock_response)
 
-    response = generic_tool_instance.get_tools(123)
+    response = generic_tool_instance.get(123)
 
     assert isinstance(response, list)
     assert response == mock_response
@@ -22,9 +22,9 @@ def test_get_tools(generic_tool_instance, mocker):
 def test_find_tool_by_id(generic_tool_instance, mocker):
     # Mock the get_tools method
     mock_response = [{'id': 1, 'title': 'Tool 1'}, {'id': 2, 'title': 'Tool 2'}]
-    mocker.patch.object(generic_tool_instance, 'get_tools', return_value=mock_response)
+    mocker.patch.object(generic_tool_instance, 'get', return_value=mock_response)
 
-    tool = generic_tool_instance.find_tool(123, 1)
+    tool = generic_tool_instance.find(123, 1)
 
     assert tool == {'id': 1, 'title': 'Tool 1'}
 
@@ -32,8 +32,8 @@ def test_find_tool_by_id(generic_tool_instance, mocker):
 def test_find_tool_by_title(generic_tool_instance, mocker):
     # Mock the get_tools method
     mock_response = [{'id': 1, 'title': 'Tool 1'}, {'id': 2, 'title': 'Tool 2'}]
-    mocker.patch.object(generic_tool_instance, 'get_tools', return_value=mock_response)
+    mocker.patch.object(generic_tool_instance, 'get', return_value=mock_response)
 
-    tool = generic_tool_instance.find_tool(123, 'Tool 2')
+    tool = generic_tool_instance.find(123, 'Tool 2')
 
     assert tool == {'id': 2, 'title': 'Tool 2'}
