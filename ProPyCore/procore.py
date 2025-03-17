@@ -1,5 +1,5 @@
 from .exceptions import *
-from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks, budgets, direct_costs, cost_codes, time, quality
+from .access import companies, generic_tools, projects, documents, rfis, directory, submittals, tasks, budgets, direct_costs, cost_codes, time, quality, photos
 import requests
 
 class Procore:
@@ -46,6 +46,7 @@ class Procore:
         # Documents
         self.folders = documents.Folders(access_token=self.__access_token, server_url=self.__base_url)
         self.files = documents.Files(access_token=self.__access_token, server_url=self.__base_url)
+        self.photos = photos.Photos(access_token=self.__access_token, server_url=self.__base_url)
         # Tools
         self.rfis = rfis.RFI(access_token=self.__access_token, server_url=self.__base_url)
         self.submittals = submittals.Submittal(access_token=self.__access_token, server_url=self.__base_url)
