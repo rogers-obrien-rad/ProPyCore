@@ -1,0 +1,59 @@
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install dependencies
+        run: pip install setuptools wheel twine
+
+      - name: Clean dist folder
+        run: rm -rf dist
+
+      - name: Build the distribution
+        run: python setup.py sdist bdist_wheel
+
+      - name: Upload to PyPI
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload --non-interactive --skip-existing dist/*
+
+      - name: Extract changelog for release
+        id: changelog
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          awk "/^## ${VERSION} /,/^## /" CHANGELOG.md | head -n -1 > RELEASE_NOTES.md || true
+          echo "changelog_exists=$(if [ -s RELEASE_NOTES.md ]; then echo true; else echo false; fi)" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        if: steps.changelog.outputs.changelog_exists == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          body_path: RELEASE_NOTES.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub Release (no changelog fallback)
+        if: steps.changelog.outputs.changelog_exists != 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
