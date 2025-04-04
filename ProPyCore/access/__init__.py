@@ -12,3 +12,4 @@ from .cost_codes import *
 from .time import *
 from .quality import *
 from .photos import *
+from .permissions import *
