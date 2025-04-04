@@ -1,3 +1,4 @@
+from turtle import position
 from .base import Base
 from ..exceptions import NotFoundItemError
 
@@ -127,3 +128,43 @@ class CostCodes(Base):
                 return cost_code_info
 
         raise NotFoundItemError(f"Could not find Cost Code {identifier}")
+
+    def create(self, company_id, project_id, name, code, position=1):
+        """
+        Creates a new cost code
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+        name : str
+            name of the cost code
+
+        Returns
+        -------
+        cost_code_info : dict
+            cost code data
+        """
+
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+
+        data = {
+            "project_id": project_id,
+            "cost_code": {
+                "position": position,
+                "code": code,
+                "name": name
+            }
+        }
+
+        cost_code_info = self.post_request(
+            api_url=self.endpoint,
+            additional_headers=headers,
+            data=data
+        )
+
+        return cost_code_info
