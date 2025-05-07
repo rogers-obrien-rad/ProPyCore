@@ -1,4 +1,3 @@
-from turtle import position
 from .base import Base
 from ..exceptions import NotFoundItemError
 

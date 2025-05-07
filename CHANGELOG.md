@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.1] - 2025-05-07
+
+### Added
+* `cost_codes`: create endpoint for cost codes: `get()`, `show()`, `find()`, `create()`, `update()`, `delete()` methods
+
 ## [0.6.0] - 2025-04-04
 
 ### Added
