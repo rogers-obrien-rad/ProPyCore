@@ -1,9 +1,14 @@
 # Changelog
 
-## [0.6.2] - 2025-05-13
+## [0.6.3] - 2025-05-13
 
 ### Added
 * `documents.files`: add `view` parameter to `get()` and `search()` methods
+* `documents.files`: add `file_types` parameter to `get()` and `search()` methods
+* `documents.files`: add `private` parameter to `get()` method
+
+### Changed
+* `base`: remove debug print statements
 
 ## [0.6.1] - 2025-05-07
 

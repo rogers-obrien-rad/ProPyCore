@@ -43,7 +43,7 @@ class Base:
         if params is None:
             url = self.__server_url + api_url
         else:
-            url = self.__server_url + api_url + "?" + urllib.parse.urlencode(params)
+            url = self.__server_url + api_url + "?" + urllib.parse.urlencode(params, doseq=True)
 
         headers = {"Authorization": f"Bearer {self.__access_token}"}
         if additional_headers is not None:
@@ -51,11 +51,6 @@ class Base:
                 headers[key] = value
 
         response = requests.get(url, headers=headers)
-        '''
-        print(f"Request URL: {response.request.url}")
-        print(f"Request Headers: {response.request.headers}")
-        print(f"Request Response: {response.json()}")
-        '''
         
         if response.ok:
             return response.json()
