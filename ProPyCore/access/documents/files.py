@@ -225,7 +225,7 @@ class Files(Base):
 
         return doc_info
 
-    def get(self, company_id, project_id, folder_id=None, view="normal"):
+    def get(self, company_id, project_id, folder_id=None, view="normal", file_types=None):
         """
         Gets all documents in a project.
 
@@ -239,6 +239,8 @@ class Files(Base):
             ID of parent folder.
         view : str, default "normal"
             View to use for the request: "normal" or "extended"
+        file_types : list of str, default None
+            List of file type extensions to filter by.
 
         Returns
         -------
@@ -258,9 +260,12 @@ class Files(Base):
                 "per_page": 10000,
                 "filters[document_type]": doc_type,
                 "filters[is_in_recycle_bin]": False,
+                "filters[private]": False,
             }
             if folder_id is not None:
                 params["filters[folder_id]"] = folder_id
+            if file_types is not None:
+                params["filters[file_type]"] = file_types
 
             headers = {
                 "Procore-Company-Id": f"{company_id}",
@@ -288,7 +293,7 @@ class Files(Base):
                 f"from Parent ID {folder_id if folder_id is not None else 'Root'}",
             )
 
-    def search(self, company_id, project_id, value, folder_id=None, view="normal"):
+    def search(self, company_id, project_id, value, folder_id=None, view="normal", file_types=[]):
         """
         Searches through all available files to find the closest match to the given value.
 
@@ -302,6 +307,8 @@ class Files(Base):
             Search criteria.
         folder_id : int, default None
             ID of parent folder.
+        file_types : list of str, default []
+            List of file type extensions to filter by.
 
         Returns
         -------
@@ -313,6 +320,7 @@ class Files(Base):
             project_id=project_id,
             folder_id=folder_id,
             view=view,
+            file_types=file_types,
         )
 
         doc_type = self.endpoint.split("/")[-1][:-1]
