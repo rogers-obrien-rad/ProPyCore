@@ -225,7 +225,7 @@ class Files(Base):
 
         return doc_info
 
-    def get(self, company_id, project_id, folder_id=None):
+    def get(self, company_id, project_id, folder_id=None, view="normal"):
         """
         Gets all documents in a project.
 
@@ -235,6 +235,10 @@ class Files(Base):
             Unique identifier for the company.
         project_id : int
             Unique identifier for the project.
+        folder_id : int, default None
+            ID of parent folder.
+        view : str, default "normal"
+            View to use for the request: "normal" or "extended"
 
         Returns
         -------
@@ -248,7 +252,7 @@ class Files(Base):
         docs = []
         while n_docs > 0:
             params = {
-                "view": "normal",
+                "view": view,
                 "sort": "name",
                 "page": page,
                 "per_page": 10000,
@@ -284,7 +288,7 @@ class Files(Base):
                 f"from Parent ID {folder_id if folder_id is not None else 'Root'}",
             )
 
-    def search(self, company_id, project_id, value, folder_id=None):
+    def search(self, company_id, project_id, value, folder_id=None, view="normal"):
         """
         Searches through all available files to find the closest match to the given value.
 
@@ -308,6 +312,7 @@ class Files(Base):
             company_id=company_id,
             project_id=project_id,
             folder_id=folder_id,
+            view=view,
         )
 
         doc_type = self.endpoint.split("/")[-1][:-1]

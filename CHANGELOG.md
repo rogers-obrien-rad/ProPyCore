@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.2] - 2025-05-13
+
+### Added
+* `documents.files`: add `view` parameter to `get()` and `search()` methods
+
 ## [0.6.1] - 2025-05-07
 
 ### Added
