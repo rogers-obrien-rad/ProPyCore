@@ -40,6 +40,9 @@ class Procore:
         self.reset_access_token()
 
         # create instances of procore endpoints
+        self._init_endpoints()
+
+    def _init_endpoints(self):
         # General
         self.companies = companies.Companies(access_token=self.__access_token, server_url=self.__base_url)
         self.projects = projects.Projects(access_token=self.__access_token, server_url=self.__base_url)
@@ -93,6 +96,7 @@ class Procore:
         Gets a new access token
         """
         self.__access_token = self.get_access_token()
+        self._init_endpoints()
 
     def print_attributes(self):
         """
