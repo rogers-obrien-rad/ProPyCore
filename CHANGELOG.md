@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.6.4] - 2025-05-28
+
+### Added
+* `directory.ipynb`: add snippets for trades, users, and vendors directory endpoints in snippet
+
+### Changed
+* `procore.py`: update refresh token process so that the submodules are reinitialized with the new access token
+
 ## [0.6.3] - 2025-05-13
 
 ### Added

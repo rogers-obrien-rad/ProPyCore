@@ -39,8 +39,9 @@ class Trades(Base):
                 "Procore-Company-Id": f"{company_id}"
             }
 
+            url = f"{self.endpoint}/{company_id}/trades"
             trades_per_page = self.get_request(
-                api_url=f"{self.endpoint}/{company_id}/trades",
+                api_url=url,
                 additional_headers=headers,
                 params=params
             )
@@ -72,7 +73,8 @@ class Trades(Base):
         else:
             key = "name"
 
-        for trade in self.get(company_id=company_id):
+        all_trades = self.get(company_id=company_id)
+        for trade in all_trades:
             if trade[key] == user_id:
                 return trade
 
