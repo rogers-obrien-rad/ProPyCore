@@ -7,9 +7,33 @@ class Submittal(Base):
     """
     def __init__(self, access_token, server_url) -> None:
         super().__init__(access_token, server_url)
-        self.endpoint = "/rest/v1.1/projects"
+        self.endpoint = "/rest" # Different version numbers for different endpoints so limited to this
 
-    def get(self, company_id, project_id, page=1, per_page=100):
+    def get_statuses(self, company_id, project_id):
+        """
+        Gets all the available submittal statuses
+
+        Parameters
+        ----------
+        company_id : int
+            unique identifier for the company
+        project_id : int
+            unique identifier for the project
+
+        Returns
+        -------
+        submittal_statuses : dict
+            available submittal statuses
+        """
+        headers = {
+            "Procore-Company-Id": f"{company_id}"
+        }
+        return self.get_request(
+            api_url=f"{self.endpoint}/v1.0/projects/{project_id}/submittals/filter_options/status_id",
+            additional_headers=headers
+        )
+
+    def get(self, company_id, project_id, page=1, per_page=100, status_ids=None):
         """
         Gets all the available submittals
 
@@ -23,6 +47,8 @@ class Submittal(Base):
             page number
         per_page : int, default 100
             number of companies to include
+        status_ids : list of int or str, default None
+            filter by status ID
 
         Returns
         -------
@@ -41,12 +67,18 @@ class Submittal(Base):
                 "per_page": per_page
             }
 
+            if status_ids is not None:
+                if isinstance(status_ids, list):
+                    params["filters[status_id]"] = [str(status_id) for status_id in status_ids]
+                else:
+                    params["filters[status_id]"] = [str(status_ids)]
+
             headers = {
                 "Procore-Company-Id": f"{company_id}"
             }
 
             submittal_selection = self.get_request(
-                api_url=f"{self.endpoint}/{project_id}/submittals",
+                api_url=f"{self.endpoint}/v1.1/projects/{project_id}/submittals",
                 additional_headers=headers,
                 params=params
             )
@@ -77,7 +109,7 @@ class Submittal(Base):
         """
         headers = {"Procore-Company-Id": f"{company_id}"}
         submittal_info = self.get_request(
-            api_url=f"{self.endpoint}/{project_id}/submittals/{submittal_id}",
+            api_url=f"{self.endpoint}/v1.1/projects/{project_id}/submittals/{submittal_id}",
             additional_headers=headers,
         )
         return submittal_info
