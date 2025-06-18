@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.0] - 2025-06-18
+
+### Added
+* `submittals`: create endpoint for `get_statuses()`
+* `change_events`: create endpoints for `get_statuses()`, `get()`, `show()`, and `find()`
+* `change_events.ipynb`: add snippets for change events endpoints
+
+### Changed
+* snippets: more testing of companies, projects, and submittals
+
 ## [0.6.4] - 2025-05-28
 
 ### Added
